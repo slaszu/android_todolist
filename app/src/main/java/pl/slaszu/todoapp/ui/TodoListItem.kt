@@ -26,8 +26,8 @@ import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 @Composable
 fun TodoListItem(
     text: String,
-    modifier: Modifier = Modifier,
-    onCheck: () -> Unit
+    onCheck: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
