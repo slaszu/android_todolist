@@ -4,28 +4,30 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import pl.slaszu.todoapp.domain.TodoModel
 
 @Composable
 fun TodoList(
-    items: List<String>,
+    items: List<TodoModel>,
+    onCheck: (TodoModel, Boolean) -> Unit,
     modifier: Modifier = Modifier
-    ) {
+) {
     LazyColumn {
-        items(items) { text ->
+        items(items) { item ->
             TodoListItem(
-                text = text,
-                onCheck = {}
+                item = item,
+                onCheckedChange = { checked -> onCheck(item, checked) },
+                modifier = modifier
             )
         }
     }
 }
 
-
-@Preview
-@Composable
-fun TodoListPreview() {
-    TodoList(
-        items = List(5) { i -> "Task number $i" }
-    )
-}
+//
+//@Preview
+//@Composable
+//fun TodoListPreview() {
+//    TodoList(
+//        items = List(5) { i -> "Task number $i" }
+//    )
+//}

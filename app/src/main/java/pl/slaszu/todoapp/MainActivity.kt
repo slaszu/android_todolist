@@ -10,7 +10,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
+import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.ui.TodoList
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 
@@ -23,6 +25,7 @@ class MainActivity : ComponentActivity() {
             TodoAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MainScreen(
+                        todoViewModel = viewModel(),
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -33,10 +36,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(
+    todoViewModel: TodoViewModel?,
     modifier: Modifier = Modifier
 ) {
     TodoList(
-        items = listOf("andrzej", "roman", "stefan")
+        items = todoViewModel?.todoList?: List(10) { TodoModel("Item") },
+        onCheck = { item, checked -> todoViewModel?.toggleDone(item,checked) },
+        //modifier = modifier
     )
 }
 
@@ -44,6 +50,11 @@ fun MainScreen(
 @Composable
 fun MainScreenPreview() {
     TodoAppTheme {
-        MainScreen()
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            MainScreen(
+                todoViewModel = null,
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
     }
 }
