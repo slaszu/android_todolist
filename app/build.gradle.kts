@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    kotlin("plugin.serialization") version "2.0.21"
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -52,6 +54,9 @@ android {
 }
 
 dependencies {
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+    implementation("androidx.datastore:datastore:1.1.1")
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
