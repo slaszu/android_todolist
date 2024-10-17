@@ -23,8 +23,10 @@ class TodoViewModel @Inject constructor(
         favoriteRepository.getData()
     ) { todoList: List<TodoModel>, favorite: FavoriteData ->
         todoList.forEach { todo ->
-            if (todo.id == favorite.favorite.toInt()) {
+            if (todo.id == favorite.favorite.toIntOrNull()) {
                 todo.done = true
+            } else {
+                todo.done = false
             }
 
         }
@@ -38,7 +40,10 @@ class TodoViewModel @Inject constructor(
 
     fun toggleDone(item: TodoModel, checked: Boolean) {
         this.viewModelScope.launch {
-            val favorite = FavoriteData(item.id.toString())
+            var favorite = FavoriteData(item.id.toString())
+            if (!checked) {
+                favorite = favorite.copy(favorite = "0")
+            }
             favoriteRepository.saveData(favorite)
             Log.d("myapp", favorite.toString())
         }
