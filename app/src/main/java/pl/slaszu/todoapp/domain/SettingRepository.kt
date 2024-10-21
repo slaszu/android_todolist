@@ -4,11 +4,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class FavoriteData(
+data class Setting(
     val favorite: String = "3"
 )
 
-interface FavoriteRepository {
-    fun getData(): Flow<FavoriteData>
-    suspend fun saveData(data: FavoriteData)
+interface SettingRepository {
+    fun getData(): Flow<Setting>
+    suspend fun saveData(data: Setting)
 }

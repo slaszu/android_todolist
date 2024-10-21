@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import pl.slaszu.todoapp.TodoViewModel
-import pl.slaszu.todoapp.ui.TodoList
+import pl.slaszu.todoapp.ui.element.TodoList
 
 @Composable
 fun FavoriteListScreen(
@@ -16,7 +16,7 @@ fun FavoriteListScreen(
     Column {
         Text(text = "Favorite")
         TodoList(
-            items = todoViewModel.todoList.collectAsStateWithLifecycle(
+            items = todoViewModel.todoListFlow.collectAsStateWithLifecycle(
                 initialValue = emptyList()
             ).value.filter {
                 it.done

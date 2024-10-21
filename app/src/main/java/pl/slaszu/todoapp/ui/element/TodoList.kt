@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.ui
+package pl.slaszu.todoapp.ui.element
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items

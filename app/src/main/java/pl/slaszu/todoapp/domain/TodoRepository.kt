@@ -1,19 +1,23 @@
 package pl.slaszu.todoapp.domain
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.coroutines.flow.Flow
 
 
-class TodoModel(
-    val id: Int,
-    var text: String,
-    initialChecked: Boolean = false
-) {
-    var done by mutableStateOf(initialChecked)
-}
+@Entity(tableName = "todo")
+data class TodoModel(
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    @ColumnInfo(name = "text") val text: String,
+    @ColumnInfo(name = "done") val done: Boolean = false,
+    @ColumnInfo(name = "priority") val priority: Int = 0,
+)
 
 interface TodoRepository {
     fun getTodoList(): Flow<List<TodoModel>>
+
+    suspend fun save(todoItem: TodoModel)
+
+    suspend fun delete(todoItem: TodoModel)
 }

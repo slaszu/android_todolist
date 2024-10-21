@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import pl.slaszu.todoapp.TodoViewModel
-import pl.slaszu.todoapp.ui.TodoList
+import pl.slaszu.todoapp.ui.element.TodoList
 
 @Composable
 fun TodoListScreen(
@@ -16,7 +16,7 @@ fun TodoListScreen(
     Column {
         Text(text = "List")
         TodoList(
-            items = todoViewModel.todoList.collectAsStateWithLifecycle(
+            items = todoViewModel.todoListFlow.collectAsStateWithLifecycle(
                 initialValue = emptyList()
             ).value,
             onCheck = { item, checked -> todoViewModel.toggleDone(item, checked) },

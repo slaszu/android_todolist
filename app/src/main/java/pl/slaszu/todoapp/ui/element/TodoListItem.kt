@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.ui
+package pl.slaszu.todoapp.ui.element
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth

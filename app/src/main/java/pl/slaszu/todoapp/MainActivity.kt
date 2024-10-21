@@ -4,21 +4,26 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults.outlinedButtonColors
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import pl.slaszu.todoapp.ui.element.BottomBar
+import pl.slaszu.todoapp.ui.element.TopBar
 import pl.slaszu.todoapp.ui.screen.FavoriteListScreen
 import pl.slaszu.todoapp.ui.screen.Routes
 import pl.slaszu.todoapp.ui.screen.TodoListScreen
@@ -36,21 +41,13 @@ class MainActivity : ComponentActivity() {
             TodoAppTheme {
                 Scaffold(
                     topBar = {
-                        Row {
-                            Button(
-                                colors = outlinedButtonColors(),
-                                onClick = { navController.navigate(Routes.TODO_LIST.name) }
-                            ) {
-                                Text("List")
-                            }
-                            Button(
-                                onClick = { navController.navigate(Routes.FAVORITE_LIST.name) }
-                            ) {
-                                Text("Favorite")
-                            }
-                        }
+                        TopBar(
+                            navController = navController
+                        )
                     },
-                    modifier = Modifier.fillMaxSize()
+                    bottomBar = {
+                        BottomBar()
+                    },
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
