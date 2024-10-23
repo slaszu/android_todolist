@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TodoApp</string>
+    <string name="todo_form_text_label">Co jest do zrobienia ?</string>
+    <string name="todo_form_save_btn">Zapisz</string>
 </resources>

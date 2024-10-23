@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "todo")
 data class TodoModel(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int? = null,
     @ColumnInfo(name = "text") val text: String,
     @ColumnInfo(name = "done") val done: Boolean = false,
     @ColumnInfo(name = "priority") val priority: Int = 0,

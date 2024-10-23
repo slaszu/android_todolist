@@ -59,11 +59,6 @@ class MainActivity : ComponentActivity() {
                                 todoViewModel = todoViewModel,
                             )
                         }
-                        composable(route = Routes.FAVORITE_LIST.name) {
-                            FavoriteListScreen(
-                                todoViewModel = todoViewModel,
-                            )
-                        }
                     }
                 }
             }

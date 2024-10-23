@@ -32,7 +32,7 @@ object RoomProviders {
     }
 }
 
-@Database(entities = [TodoModel::class], version = 1)
+@Database(entities = [TodoModel::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun todoModelDao(): TodoModelDao
 }
