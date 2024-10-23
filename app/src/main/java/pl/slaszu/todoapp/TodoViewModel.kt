@@ -42,4 +42,10 @@ class TodoViewModel @Inject constructor(
             Log.d("myapp", favorite.toString())
         }
     }
+
+    fun save(item: TodoModel) {
+        this.viewModelScope.launch {
+            todoRepository.save(item)
+        }
+    }
 }

@@ -15,9 +15,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.ui.screen.Routes
@@ -27,11 +29,10 @@ import pl.slaszu.todoapp.ui.screen.Routes
 fun TopBar(
     navController: NavController,
 ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination?.route ?: Routes.TODO_LIST.name
+
     TopAppBar(
-//        colors = TopAppBarDefaults.topAppBarColors(
-//            containerColor = MaterialTheme.colorScheme.primaryContainer,
-//            titleContentColor = MaterialTheme.colorScheme.primary,
-//        ),
         title = {
             Text(stringResource(R.string.top_bar_title))
         },
@@ -48,11 +49,12 @@ fun TopBar(
             }
         },
         navigationIcon = {
+            if (currentDestination == Routes.TODO_LIST.name) return@TopAppBar
+
             IconButton(
                 onClick = {
                     navController.navigate(Routes.TODO_LIST.name)
-                },
-                enabled = navController.currentDestination?.route != Routes.TODO_LIST.name
+                }
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,

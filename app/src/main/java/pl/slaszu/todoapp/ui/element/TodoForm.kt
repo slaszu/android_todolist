@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,11 +29,11 @@ fun TodoForm(
     onSave: (TodoModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val text by remember { mutableStateOf(item.text ?: "") }
+    var text by remember { mutableStateOf(item.text ?: "") }
     Column {
         OutlinedTextField(
             value = text,
-            onValueChange = {},
+            onValueChange = { text = it },
             label = {
                 Text(stringResource(R.string.todo_form_text_label))
             },
