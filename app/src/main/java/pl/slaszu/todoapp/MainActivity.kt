@@ -1,6 +1,7 @@
 package pl.slaszu.todoapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,12 +12,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
-import pl.slaszu.todoapp.domain.TodoModel
-import pl.slaszu.todoapp.ui.element.BottomBar
 import pl.slaszu.todoapp.ui.element.TodoForm
 import pl.slaszu.todoapp.ui.element.TopBar
-import pl.slaszu.todoapp.ui.screen.Routes
+import pl.slaszu.todoapp.ui.navigation.TodoAppRouteEditOrNewForm
+import pl.slaszu.todoapp.ui.navigation.TodoAppRouteList
 import pl.slaszu.todoapp.ui.screen.TodoListScreen
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 
@@ -33,26 +34,30 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopBar(
+                            todoViewModel = todoViewModel,
                             navController = navController
                         )
                     }
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Routes.TODO_LIST.name,
+                        startDestination = TodoAppRouteList,
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        composable(route = Routes.TODO_LIST.name) {
+                        composable<TodoAppRouteList> {
                             TodoListScreen(
                                 todoViewModel = todoViewModel,
+                                navController = navController
                             )
                         }
-                        composable(route = Routes.TODO_FORM.name) {
+                        composable<TodoAppRouteEditOrNewForm> { navStackEntry ->
+                            Log.d("myapp","recreate composable")
+
                             TodoForm(
-                                item = TodoModel(text = ""),
+                                item = todoViewModel.todoEditModel.value,
                                 onSave = { item ->
                                     todoViewModel.save(item)
-                                    navController.navigate(Routes.TODO_LIST.name)
+                                    navController.navigate(TodoAppRouteList)
                                 }
                             )
                         }

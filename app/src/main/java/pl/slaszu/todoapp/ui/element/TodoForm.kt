@@ -1,5 +1,6 @@
 package pl.slaszu.todoapp.ui.element
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,15 +26,24 @@ import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 
 @Composable
 fun TodoForm(
-    item: TodoModel,
+    item: TodoModel?,
     onSave: (TodoModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var text by remember { mutableStateOf(item.text ?: "") }
+    if (item == null) {
+        Text("Loading...")
+        return
+    }
+
+    Log.d("myapp", "TodoForm: ${item.toString()}")
+
+    var text by remember { mutableStateOf(item.text) }
     Column {
         OutlinedTextField(
             value = text,
-            onValueChange = { text = it },
+            onValueChange = {
+                text = it
+            },
             label = {
                 Text(stringResource(R.string.todo_form_text_label))
             },

@@ -15,6 +15,9 @@ interface TodoModelDao {
     @Query("SELECT * from todo ORDER BY priority")
     fun loadTodoList(): Flow<List<TodoModel>>
 
+    @Query("SELECT * from todo where id = :id")
+    fun loadTodoById(id: Int): Flow<TodoModel?>
+
     @Upsert
     suspend fun upsert(todoItem: TodoModel)
 
@@ -30,6 +33,10 @@ class TodoRoomRepository @Inject constructor(
 
     override fun getTodoList(): Flow<List<TodoModel>> {
         return this.dao.loadTodoList()
+    }
+
+    override fun getById(id: Int): Flow<TodoModel?> {
+        return this.dao.loadTodoById(id)
     }
 
     override suspend fun save(todoItem: TodoModel) {
