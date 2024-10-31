@@ -12,7 +12,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
 import pl.slaszu.todoapp.ui.element.TodoForm
 import pl.slaszu.todoapp.ui.element.TopBar
@@ -34,8 +33,8 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopBar(
-                            todoViewModel = todoViewModel,
-                            navController = navController
+                            navController = navController,
+                            onAddClick = { todoViewModel.loadTodoItemToEditForm(null) }
                         )
                     }
                 ) { innerPadding ->
@@ -51,8 +50,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable<TodoAppRouteEditOrNewForm> { navStackEntry ->
-                            Log.d("myapp","recreate composable")
-
                             TodoForm(
                                 item = todoViewModel.todoEditModel.value,
                                 onSave = { item ->

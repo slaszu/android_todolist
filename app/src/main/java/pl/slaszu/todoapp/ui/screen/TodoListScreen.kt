@@ -27,7 +27,7 @@ fun TodoListScreen(
                 todoViewModel.loadTodoItemToEditForm(item.id)
                 navController.navigate(TodoAppRouteEditOrNewForm(todoId = item.id))
             },
-            onDelete = {},
+            onDelete = { item -> todoViewModel.delete(item) },
             modifier = modifier
         )
     }

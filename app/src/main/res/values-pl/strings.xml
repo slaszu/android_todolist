@@ -3,4 +3,8 @@
     <string name="app_name">TodoApp</string>
     <string name="todo_form_text_label">Co jest do zrobienia ?</string>
     <string name="todo_form_save_btn">Zapisz</string>
+    <string name="todo_delete_confirm_title">Uwaga</string>
+    <string name="todo_delete_confirm_text">Napewno chcesz usunąć ten wpis ?</string>
+    <string name="btn_delete">Usuń</string>
+    <string name="btn_back">Wróć</string>
 </resources>

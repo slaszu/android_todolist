@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">TodoApp</string>
-    <string name="top_bar_title">Simple Todo App</string>
+    <string name="top_bar_title" translatable="false">Simple Todo App</string>
     <string name="todo_form_text_label">What to do ?</string>
     <string name="todo_form_save_btn">Save</string>
+    <string name="todo_delete_confirm_title">Warning</string>
+    <string name="todo_delete_confirm_text">Are You sure to delete this item ?</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_back">Back</string>
 </resources>
