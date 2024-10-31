@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,9 +37,10 @@ fun TodoForm(
         return
     }
 
-    Log.d("myapp", "TodoForm: ${item.toString()}")
-
     var text by remember { mutableStateOf(item.text) }
+    var done by remember { mutableStateOf(item.done) }
+
+
     Column {
         OutlinedTextField(
             value = text,
@@ -52,6 +55,27 @@ fun TodoForm(
                 .padding(10.dp)
                 .fillMaxWidth()
         )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.padding(10.dp).fillMaxWidth()
+        ) {
+
+            Text(
+                text = "Wykonane",
+                modifier = Modifier.padding(10.dp)
+            )
+            Switch(
+                checked = done,
+                onCheckedChange = {
+                    done = it
+                }
+            )
+
+        }
+
+
         Row(
             horizontalArrangement = Arrangement.End,
             modifier = Modifier
@@ -59,7 +83,7 @@ fun TodoForm(
                 .padding(horizontal = 10.dp)
         ) {
             Button(
-                onClick = { onSave(item.copy(text = text)) },
+                onClick = { onSave(item.copy(text = text, done = done)) },
             ) {
                 Text(stringResource(R.string.todo_form_save_btn))
             }
