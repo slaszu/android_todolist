@@ -1,6 +1,5 @@
 package pl.slaszu.todoapp.ui.element
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,11 +58,13 @@ fun TodoForm(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.End,
-            modifier = Modifier.padding(10.dp).fillMaxWidth()
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth()
         ) {
 
             Text(
-                text = "Wykonane",
+                text = stringResource(R.string.todo_form_is_finished),
                 modifier = Modifier.padding(10.dp)
             )
             Switch(
