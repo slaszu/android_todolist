@@ -5,6 +5,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     kotlin("plugin.serialization") version "2.0.21"
     alias(libs.plugins.kotlin.compose)
+    id("androidx.room")
 }
 
 android {
@@ -50,6 +51,10 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 }
 
