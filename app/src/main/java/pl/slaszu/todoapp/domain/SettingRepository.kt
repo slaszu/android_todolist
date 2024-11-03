@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Setting(
-    val favorite: String = "3"
+    val showDone: Boolean = true
 )
 
 interface SettingRepository {

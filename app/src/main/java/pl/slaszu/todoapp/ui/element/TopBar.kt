@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -57,7 +58,7 @@ fun TopBar(
                 onClick = { onOptionClick() }
             ) {
                 Icon(
-                    Icons.Filled.MoreVert,
+                    Icons.Filled.Menu,
                     contentDescription = "More options"
                 )
             }

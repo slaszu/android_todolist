@@ -30,7 +30,6 @@ class TodoRoomRepository @Inject constructor(
     private val dao: TodoModelDao
 ) : TodoRepository {
 
-
     override fun getTodoList(): Flow<List<TodoModel>> {
         return this.dao.loadTodoList()
     }

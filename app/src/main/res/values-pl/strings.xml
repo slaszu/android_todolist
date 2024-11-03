@@ -7,4 +7,5 @@
     <string name="todo_delete_confirm_text">Napewno chcesz usunąć ten wpis ?</string>
     <string name="btn_delete">Usuń</string>
     <string name="btn_back">Wróć</string>
+    <string name="setting_show_done">Pokazać zakończone zadania ?</string>
 </resources>

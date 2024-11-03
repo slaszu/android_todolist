@@ -1,6 +1,7 @@
 package pl.slaszu.todoapp.data.di
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
@@ -52,7 +53,9 @@ object Providers {
                             input.readBytes().decodeToString()
                         )
                     } catch (serialization: SerializationException) {
-                        throw CorruptionException("Unable to read UserPrefs", serialization)
+                        Log.d("myapp", serialization?.message ?: "SerializationException but no message :/")
+                        //throw CorruptionException("Unable to read UserPrefs", serialization)
+                        return defaultValue
                     }
                 }
 
@@ -61,7 +64,7 @@ object Providers {
                 }
             },
             produceFile = {
-                appContext.dataStoreFile("data_store_favorite.pb")
+                appContext.dataStoreFile("data_store_setting.pb")
             }
         )
     }
