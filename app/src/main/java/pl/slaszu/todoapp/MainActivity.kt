@@ -20,13 +20,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import pl.slaszu.todoapp.domain.Setting
-import pl.slaszu.todoapp.ui.element.TodoForm
-import pl.slaszu.todoapp.ui.element.TodoList
-import pl.slaszu.todoapp.ui.element.TodoListSettings
-import pl.slaszu.todoapp.ui.element.TopBar
+import pl.slaszu.todoapp.ui.element.form.TodoForm
+import pl.slaszu.todoapp.ui.element.list.TodoList
+import pl.slaszu.todoapp.ui.element.list.TodoListSettings
+import pl.slaszu.todoapp.ui.element.list.TopBar
 import pl.slaszu.todoapp.ui.navigation.TodoAppRouteEditOrNewForm
 import pl.slaszu.todoapp.ui.navigation.TodoAppRouteList
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
+import pl.slaszu.todoapp.ui.view_model.TodoFormViewModel
+import pl.slaszu.todoapp.ui.view_model.TodoListViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -35,18 +37,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-            val todoViewModel: TodoViewModel = viewModel()
+            val todoListViewModel: TodoListViewModel = viewModel()
+            val todoFormViewModel: TodoFormViewModel = viewModel()
+
             var toggleOptions by remember { mutableStateOf(false) }
 
-            val setting = todoViewModel.settingFlow.collectAsStateWithLifecycle(Setting()).value
-            val todoList = todoViewModel.todoListFlow.collectAsStateWithLifecycle(emptyList()).value
+            val setting = todoListViewModel.settingFlow.collectAsStateWithLifecycle(Setting()).value
+            val todoList =
+                todoListViewModel.todoListFlow.collectAsStateWithLifecycle(emptyList()).value
 
             TodoAppTheme {
                 Scaffold(
                     topBar = {
                         TopBar(
                             navController = navController,
-                            onAddClick = { todoViewModel.loadTodoItemToEditForm(null) },
+                            onAddClick = { todoFormViewModel.loadTodoItemToEditForm(null) },
                             onOptionClick = { toggleOptions = !toggleOptions }
                         )
                     }
@@ -58,7 +63,7 @@ class MainActivity : ComponentActivity() {
                         if (toggleOptions) {
                             TodoListSettings(
                                 setting = setting,
-                                onChange = { setting -> todoViewModel.saveSetting(setting) }
+                                onChange = { setting -> todoListViewModel.saveSetting(setting) }
                             )
                         }
                         NavHost(
@@ -69,23 +74,23 @@ class MainActivity : ComponentActivity() {
                                 TodoList(
                                     items = todoList,
                                     onCheck = { item, checked ->
-                                        todoViewModel.check(
+                                        todoListViewModel.check(
                                             item,
                                             checked
                                         )
                                     },
                                     onEdit = { item ->
-                                        todoViewModel.loadTodoItemToEditForm(item.id)
+                                        todoFormViewModel.loadTodoItemToEditForm(item.id)
                                         navController.navigate(TodoAppRouteEditOrNewForm(todoId = item.id))
                                     },
-                                    onDelete = { item -> todoViewModel.delete(item) },
+                                    onDelete = { item -> todoListViewModel.delete(item) },
                                 )
                             }
                             composable<TodoAppRouteEditOrNewForm> { navStackEntry ->
                                 TodoForm(
-                                    item = todoViewModel.todoEditModel.value,
+                                    todoFormViewModel = todoFormViewModel,
                                     onSave = { item ->
-                                        todoViewModel.save(item)
+                                        todoFormViewModel.save(item)
                                         navController.navigate(TodoAppRouteList)
                                     }
                                 )

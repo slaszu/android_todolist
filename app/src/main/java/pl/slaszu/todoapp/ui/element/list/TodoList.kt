@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.ui.element
+package pl.slaszu.todoapp.ui.element.list
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.domain.TodoModelFake
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 
 @Composable
@@ -36,14 +37,17 @@ fun TodoList(
     modifier: Modifier = Modifier
 ) {
     LazyColumn {
-        items(items) { todoItem ->
-            TodoListItem(
-                item = todoItem,
-                onCheckItem = { checked -> onCheck(todoItem, checked) },
-                onEditItem = { onEdit(todoItem) },
-                onDeleteItem = { onDelete(todoItem) },
-                modifier = modifier
-            )
+        items(
+            items = items
+        ) { todoItem ->
+                TodoListItem(
+                    item = todoItem,
+                    onCheckItem = { checked -> onCheck(todoItem, checked) },
+                    onEditItem = { onEdit(todoItem) },
+                    onDeleteItem = { onDelete(todoItem) },
+                    modifier = modifier
+                )
+
         }
     }
 }
@@ -121,7 +125,7 @@ fun TodoListPreview() {
         Scaffold() { it ->
             TodoList(
                 items = List(5) { i ->
-                    TodoModel(text = "Todo item nr $i")
+                    TodoModelFake(text = "Todo item nr $i")
                 },
                 onCheck = { _, _ -> },
                 onEdit = {},

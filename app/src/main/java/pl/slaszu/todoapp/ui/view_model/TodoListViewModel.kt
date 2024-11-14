@@ -1,7 +1,5 @@
-package pl.slaszu.todoapp
+package pl.slaszu.todoapp.ui.view_model
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,18 +9,18 @@ import pl.slaszu.todoapp.domain.PresentationService
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.SettingRepository
 import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.domain.TodoModelFactory
 import pl.slaszu.todoapp.domain.TodoRepository
 import javax.inject.Inject
 
+
 @HiltViewModel
-class TodoViewModel @Inject constructor(
-    private val todoRepository: TodoRepository,
+class TodoListViewModel @Inject constructor(
+    private val todoRepository: TodoRepository<TodoModel>,
+    private val todoModelFactory: TodoModelFactory<TodoModel>,
     private val settingRepository: SettingRepository,
     private val sortService: PresentationService
 ) : ViewModel() {
-
-    var todoEditModel = mutableStateOf<TodoModel?>(null)
-        private set
 
     val todoListFlow = combine(
         todoRepository.getTodoList(),
@@ -39,27 +37,11 @@ class TodoViewModel @Inject constructor(
         }
     }
 
-    fun loadTodoItemToEditForm(id: Int?) {
-
-        if (id == null) {
-            todoEditModel.value = TodoModel()
-            return
-        }
-
-        Log.d("myapp", "loadTodoEditModel")
-        this.viewModelScope.launch {
-            todoRepository.getById(id).collect { item ->
-                todoEditModel.value = item ?: TodoModel()
-                Log.d("myapp", "vieModel->load: ${item.toString()}")
-            }
-        }
-    }
-
     fun check(item: TodoModel, checked: Boolean) {
         this.viewModelScope.launch {
             todoRepository.save(
                 item.copy(
-                    done = checked
+                    "done" to checked
                 )
             )
         }
@@ -71,9 +53,4 @@ class TodoViewModel @Inject constructor(
         }
     }
 
-    fun save(item: TodoModel) {
-        this.viewModelScope.launch {
-            todoRepository.save(item)
-        }
-    }
 }

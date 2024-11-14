@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.ui.element
+package pl.slaszu.todoapp.ui.element.list
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons

@@ -1,48 +1,30 @@
 package pl.slaszu.todoapp.data
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Query
-import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
-import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.data.room.TodoModelDao
+import pl.slaszu.todoapp.data.room.TodoModelEntity
 import pl.slaszu.todoapp.domain.TodoRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Dao
-interface TodoModelDao {
-    @Query("SELECT * from todo ORDER BY priority")
-    fun loadTodoList(): Flow<List<TodoModel>>
-
-    @Query("SELECT * from todo where id = :id")
-    fun loadTodoById(id: Int): Flow<TodoModel?>
-
-    @Upsert
-    suspend fun upsert(todoItem: TodoModel)
-
-    @Delete
-    suspend fun delete(todoItem: TodoModel)
-}
-
 @Singleton
 class TodoRoomRepository @Inject constructor(
     private val dao: TodoModelDao
-) : TodoRepository {
+) : TodoRepository<TodoModelEntity> {
 
-    override fun getTodoList(): Flow<List<TodoModel>> {
+    override fun getTodoList(): Flow<List<TodoModelEntity>> {
         return this.dao.loadTodoList()
     }
 
-    override fun getById(id: Int): Flow<TodoModel?> {
+    override fun getById(id: Int): Flow<TodoModelEntity?> {
         return this.dao.loadTodoById(id)
     }
 
-    override suspend fun save(todoItem: TodoModel) {
+    override suspend fun save(todoItem: TodoModelEntity) {
         this.dao.upsert(todoItem)
     }
 
-    override suspend fun delete(todoItem: TodoModel) {
+    override suspend fun delete(todoItem: TodoModelEntity) {
         this.dao.delete(todoItem)
     }
 }
