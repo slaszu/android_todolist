@@ -12,9 +12,6 @@ fun LocalDateTime.toEpochMillis(): Long =
 fun Long.toLocalDateTime(): LocalDateTime =
     LocalDateTime.ofEpochSecond(this / 1000, 0, ZoneOffset.UTC)
 
-fun LocalDateTime.print(): String =
-    "${this.printDate()} ${this.printTime()}"
-
 fun LocalDateTime.printDate(): String =
     this.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
 
@@ -36,7 +33,3 @@ fun LocalDateTime.clearTime(): LocalDateTime {
 fun LocalDateTime.setTime(hour: Int, minute: Int): LocalDateTime {
     return this.clearTime().withHour(hour).withMinute(minute).withSecond(1);
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-fun TimePickerState.toMillis(): Int =
-    (this.hour.times(60 * 60) + this.minute.times(60)).times(1000)

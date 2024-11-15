@@ -1,6 +1,5 @@
 package pl.slaszu.todoapp.ui.element.form
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,7 +38,6 @@ import pl.slaszu.todoapp.domain.printTime
 import pl.slaszu.todoapp.domain.setTime
 import pl.slaszu.todoapp.domain.toEpochMillis
 import pl.slaszu.todoapp.domain.toLocalDateTime
-import pl.slaszu.todoapp.domain.toMillis
 import pl.slaszu.todoapp.ui.view_model.TodoFormViewModel
 import java.util.Calendar
 
@@ -68,8 +66,8 @@ fun TodoForm(
     )
     val currentTime = Calendar.getInstance()
     val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
-        initialMinute = currentTime.get(Calendar.MINUTE),
+        initialHour = todoLocalDateTime?.hour ?: currentTime.get(Calendar.HOUR_OF_DAY),
+        initialMinute = todoLocalDateTime?.minute ?: currentTime.get(Calendar.MINUTE),
         is24Hour = true,
     )
 
@@ -217,7 +215,15 @@ fun TodoForm(
                 .padding(horizontal = 10.dp)
         ) {
             Button(
-                onClick = { onSave(item.copy("text" to text, "done" to done)) },
+                onClick = {
+                    onSave(
+                        item.copy(
+                            "text" to text,
+                            "done" to done,
+                            "startDate" to todoLocalDateTime
+                        )
+                    )
+                },
             ) {
                 Text(stringResource(R.string.todo_form_save_btn))
             }

@@ -9,7 +9,7 @@ interface TodoModel {
     val priority: Int
     val startDate: LocalDateTime?
 
-    fun copy(vararg fields: Pair<String, Any>): TodoModel
+    fun copy(vararg fields: Pair<String, Any?>): TodoModel
 }
 
 interface TodoModelFactory<T:TodoModel> {
@@ -23,7 +23,7 @@ data class TodoModelFake(
     override val priority: Int = 0,
     override val startDate: LocalDateTime? = null
 ) : TodoModel {
-    override fun copy(vararg fields: Pair<String, Any>): TodoModel {
+    override fun copy(vararg fields: Pair<String, Any?>): TodoModel {
         throw NotImplementedError(message = "${this::class}.copy error")
     }
 }

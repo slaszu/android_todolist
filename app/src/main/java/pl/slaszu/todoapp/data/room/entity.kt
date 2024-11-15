@@ -16,7 +16,7 @@ data class TodoModelEntity(
     @ColumnInfo(name = "priority") override val priority: Int = 0,
     @ColumnInfo(name = "start_date") override val startDate: LocalDateTime? = null
 ) : TodoModel {
-    override fun copy(vararg fields: Pair<String, Any>): TodoModel {
+    override fun copy(vararg fields: Pair<String, Any?>): TodoModel {
         val fieldMap = fields.toMap()
         return this.copy(
             text = fieldMap.getOrDefault("text", this.text) as String,
