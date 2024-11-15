@@ -88,7 +88,7 @@ class MainActivity : ComponentActivity() {
                             }
                             composable<TodoAppRouteEditOrNewForm> { navStackEntry ->
                                 TodoForm(
-                                    todoFormViewModel = todoFormViewModel,
+                                    item = todoFormViewModel.todoEditModel.value,
                                     onSave = { item ->
                                         todoFormViewModel.save(item)
                                         navController.navigate(TodoAppRouteList)

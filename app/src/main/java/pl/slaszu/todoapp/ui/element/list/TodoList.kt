@@ -1,5 +1,6 @@
 package pl.slaszu.todoapp.ui.element.list
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,12 +22,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.TodoModelFake
+import pl.slaszu.todoapp.domain.utils.printStartDate
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
+import pl.slaszu.todoapp.ui.theme.Typography
+import java.time.LocalDateTime
 
 @Composable
 fun TodoList(
@@ -40,13 +46,13 @@ fun TodoList(
         items(
             items = items
         ) { todoItem ->
-                TodoListItem(
-                    item = todoItem,
-                    onCheckItem = { checked -> onCheck(todoItem, checked) },
-                    onEditItem = { onEdit(todoItem) },
-                    onDeleteItem = { onDelete(todoItem) },
-                    modifier = modifier
-                )
+            TodoListItem(
+                item = todoItem,
+                onCheckItem = { checked -> onCheck(todoItem, checked) },
+                onEditItem = { onEdit(todoItem) },
+                onDeleteItem = { onDelete(todoItem) },
+                modifier = modifier
+            )
 
         }
     }
@@ -76,13 +82,21 @@ fun TodoListItem(
             modifier = modifier.weight(0.1f)
         )
 
-        Text(
-            text = item.text,
-            textDecoration = TextDecoration.LineThrough.takeIf { item.done },
+        Column(
             modifier = modifier
                 .weight(0.9f)
                 .padding(start = 16.dp)
-        )
+        ) {
+            Text(
+                text = item.text,
+                textDecoration = TextDecoration.LineThrough.takeIf { item.done },
+                )
+
+            Text(
+                text = item.printStartDate("No date", "Time not set"),
+                style = Typography.labelSmall,
+            )
+        }
 
         IconButton(
             onClick = { onEditItem() }
@@ -125,7 +139,7 @@ fun TodoListPreview() {
         Scaffold() { it ->
             TodoList(
                 items = List(5) { i ->
-                    TodoModelFake(text = "Todo item nr $i")
+                    TodoModelFake(text = "Todo item nr $i", startDate = LocalDateTime.now())
                 },
                 onCheck = { _, _ -> },
                 onEdit = {},

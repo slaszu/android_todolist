@@ -1,5 +1,6 @@
 package pl.slaszu.todoapp.ui.element.form
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
@@ -28,27 +30,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.TodoModel
-import pl.slaszu.todoapp.domain.clearTime
-import pl.slaszu.todoapp.domain.isTimeSet
-import pl.slaszu.todoapp.domain.printDate
-import pl.slaszu.todoapp.domain.printTime
-import pl.slaszu.todoapp.domain.setTime
-import pl.slaszu.todoapp.domain.toEpochMillis
-import pl.slaszu.todoapp.domain.toLocalDateTime
-import pl.slaszu.todoapp.ui.view_model.TodoFormViewModel
+import pl.slaszu.todoapp.domain.TodoModelFake
+import pl.slaszu.todoapp.domain.utils.clearTime
+import pl.slaszu.todoapp.domain.utils.isTimeSet
+import pl.slaszu.todoapp.domain.utils.printDate
+import pl.slaszu.todoapp.domain.utils.printTime
+import pl.slaszu.todoapp.domain.utils.setTime
+import pl.slaszu.todoapp.domain.utils.toEpochMillis
+import pl.slaszu.todoapp.domain.utils.toLocalDateTime
+import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoForm(
-    todoFormViewModel: TodoFormViewModel,
+    item: TodoModel?,
     onSave: (TodoModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val item = todoFormViewModel.todoEditModel.value
     if (item == null) {
         Text("Loading...")
         return
@@ -102,6 +105,7 @@ fun TodoForm(
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth()
+                .clickable { chooseDateDialog = true }
         ) {
 
             Text(
@@ -146,6 +150,7 @@ fun TodoForm(
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxWidth()
+                    .clickable { chooseTimeDialog = true }
             ) {
 
                 Text(
@@ -231,18 +236,18 @@ fun TodoForm(
     }
 }
 
-//@Preview
-//@Composable
-//fun TodoFormPreview() {
-//    TodoAppTheme {
-//        Scaffold() { it ->
-//            TodoForm(
-//                item = TodoModelFake(
-//                    text = ""
-//                ),
-//                onSave = { item -> println(item) },
-//                modifier = Modifier.padding(it)
-//            )
-//        }
-//    }
-//}
+@Preview
+@Composable
+fun TodoFormPreview() {
+    TodoAppTheme {
+        Scaffold() { it ->
+            TodoForm(
+                item = TodoModelFake(
+                    text = ""
+                ),
+                onSave = { item -> println(item) },
+                modifier = Modifier.padding(it)
+            )
+        }
+    }
+}
