@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "pl.slaszu.todoapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "pl.slaszu.todoapp"

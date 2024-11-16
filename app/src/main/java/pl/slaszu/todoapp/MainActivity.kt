@@ -13,12 +13,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import pl.slaszu.todoapp.domain.NotificationService
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoList
@@ -29,12 +32,26 @@ import pl.slaszu.todoapp.ui.navigation.TodoAppRouteList
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import pl.slaszu.todoapp.ui.view_model.TodoFormViewModel
 import pl.slaszu.todoapp.ui.view_model.TodoListViewModel
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var notificationService: NotificationService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+
+
+        notificationService.createNotificationChannel()
+
+        val notification = notificationService.buildNotification("Testowe powidomienie")
+
+        notificationService.sendNotification(notification)
+
         setContent {
             val navController = rememberNavController()
             val todoListViewModel: TodoListViewModel = viewModel()
@@ -101,6 +118,8 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+
 }
 
 
