@@ -22,11 +22,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.TodoModelFake
 import pl.slaszu.todoapp.domain.utils.printStartDate
@@ -37,6 +39,7 @@ import java.time.LocalDateTime
 @Composable
 fun TodoList(
     items: List<TodoModel>,
+    setting:Setting,
     onCheck: (TodoModel, Boolean) -> Unit,
     onEdit: (TodoModel) -> Unit,
     onDelete: (TodoModel) -> Unit,
@@ -48,6 +51,7 @@ fun TodoList(
         ) { todoItem ->
             TodoListItem(
                 item = todoItem,
+                setting = setting,
                 onCheckItem = { checked -> onCheck(todoItem, checked) },
                 onEditItem = { onEdit(todoItem) },
                 onDeleteItem = { onDelete(todoItem) },
@@ -61,6 +65,7 @@ fun TodoList(
 @Composable
 fun TodoListItem(
     item: TodoModel,
+    setting: Setting,
     onCheckItem: (Boolean) -> Unit,
     onEditItem: () -> Unit,
     onDeleteItem: () -> Unit,
@@ -91,11 +96,18 @@ fun TodoListItem(
                 text = item.text,
                 textDecoration = TextDecoration.LineThrough.takeIf { item.done },
                 )
-
-            Text(
-                text = item.printStartDate("No date", "Time not set"),
-                style = Typography.labelSmall,
-            )
+            if (item.startDate != null && !setting.notificationAllowed) {
+                Text(
+                    text = "Notifications not allowed by user !",
+                    style = Typography.labelSmall,
+                    color = Color.Red
+                )
+            } else {
+                Text(
+                    text = item.printStartDate("No date", "Time not set"),
+                    style = Typography.labelSmall,
+                )
+            }
         }
 
         IconButton(
@@ -141,6 +153,7 @@ fun TodoListPreview() {
                 items = List(5) { i ->
                     TodoModelFake(text = "Todo item nr $i", startDate = LocalDateTime.now())
                 },
+                setting = Setting(),
                 onCheck = { _, _ -> },
                 onEdit = {},
                 onDelete = {},

@@ -1,6 +1,8 @@
 package pl.slaszu.todoapp.data
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import pl.slaszu.todoapp.data.room.TodoModelDao
 import pl.slaszu.todoapp.data.room.TodoModelEntity
 import pl.slaszu.todoapp.domain.TodoRepository
@@ -21,11 +23,15 @@ class TodoRoomRepository @Inject constructor(
     }
 
     override suspend fun save(todoItem: TodoModelEntity) {
-        this.dao.upsert(todoItem)
+        withContext(Dispatchers.IO) {
+            dao.upsert(todoItem)
+        }
     }
 
     override suspend fun delete(todoItem: TodoModelEntity) {
-        this.dao.delete(todoItem)
+        withContext(Dispatchers.IO) {
+            dao.delete(todoItem)
+        }
     }
 }
 

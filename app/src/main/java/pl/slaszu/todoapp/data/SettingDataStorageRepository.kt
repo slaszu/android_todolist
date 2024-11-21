@@ -1,7 +1,9 @@
 package pl.slaszu.todoapp.data
 
 import androidx.datastore.core.DataStore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.SettingRepository
 import javax.inject.Inject
@@ -16,6 +18,8 @@ class SettingDataStorageRepository @Inject constructor(
     }
 
     override suspend fun saveData(data: Setting) {
-        this.dataStorage.updateData { data }
+        withContext(Dispatchers.IO) {
+            dataStorage.updateData { data }
+        }
     }
 }

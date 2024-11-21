@@ -9,7 +9,6 @@ import pl.slaszu.todoapp.domain.PresentationService
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.SettingRepository
 import pl.slaszu.todoapp.domain.TodoModel
-import pl.slaszu.todoapp.domain.TodoModelFactory
 import pl.slaszu.todoapp.domain.TodoRepository
 import javax.inject.Inject
 
@@ -17,7 +16,6 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoListViewModel @Inject constructor(
     private val todoRepository: TodoRepository<TodoModel>,
-    private val todoModelFactory: TodoModelFactory<TodoModel>,
     private val settingRepository: SettingRepository,
     private val sortService: PresentationService
 ) : ViewModel() {
