@@ -41,7 +41,9 @@ class ReminderService(
         return PendingIntent.getBroadcast(
             context,
             item.id.toInt(),
-            Intent(context, ReminderReceiver::class.java),
+            Intent(context, ReminderReceiver::class.java).apply {
+                putExtra("ITEM_ID", item.id)
+            },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }

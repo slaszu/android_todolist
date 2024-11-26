@@ -1,18 +1,12 @@
 package pl.slaszu.todoapp.domain.notification
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.provider.Settings
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import pl.slaszu.todoapp.MainActivity
@@ -20,76 +14,48 @@ import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.TodoModel
 
 class NotificationService(
-    private val activity: Activity
+    private val context: Context
 ) {
     companion object {
         const val CHANNEL_ID = "todoapp_channel_unique_identifier"
         const val CHANNEL_NAME = "TodoApp"
-        const val NOTIFICATION_REQUEST_CODE = 1
     }
 
-    private val notificationPermission = Manifest.permission.POST_NOTIFICATIONS
+    fun sendNotification(item: TodoModel) {
 
-    fun hasPermission(): Boolean =
-        ActivityCompat.checkSelfPermission(
-            activity,
-            this.notificationPermission
-        ) == PackageManager.PERMISSION_GRANTED
+        requireNotNull(item.id)
+        requireNotNull(item.startDate)
 
-    fun openSettingActivity() {
-        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-            putExtra(Settings.EXTRA_APP_PACKAGE, activity.packageName)
-            //putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID)
-        }
-        activity.startActivity(intent)
-    }
 
-    fun askPermissionRequest() {
-        ActivityCompat.requestPermissions(
-            activity,
-            arrayOf(this.notificationPermission),
-            NOTIFICATION_REQUEST_CODE
-        )
-    }
+        val notificationManagerCompat = NotificationManagerCompat.from(context)
+        if (notificationManagerCompat.areNotificationsEnabled()) {
 
-    fun isPermissionGranted(permissions: Array<String>, grantResults: IntArray): Boolean {
-        permissions.forEachIndexed { index, s ->
-            if (s == notificationPermission) {
-                return grantResults[index] == PackageManager.PERMISSION_GRANTED
-            }
-        }
-        return false;
-    }
-
-    @SuppressLint("MissingPermission")
-    fun sendNotification(notification: Notification) {
-        if (this.hasPermission()) {
-            val notificationManagerCompat = NotificationManagerCompat.from(activity)
-            notificationManagerCompat.notify(1, notification)
+            notificationManagerCompat.notify(1, this.buildNotification(item))
         }
     }
 
-    fun buildNotification(todo: TodoModel): Notification {
-        return buildNotification(todo.text, todo.id)
-    }
+    private fun buildNotification(item: TodoModel): Notification {
 
-    private fun buildNotification(text: String, uniqueId: Long = 0): Notification {
         Log.d("myapp", "buildNotification")
+
+        requireNotNull(item.id)
+        requireNotNull(item.startDate)
+
         // Create an explicit intent for an Activity in your app.
-        val intent = Intent(activity, MainActivity::class.java).apply {
+        val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("ITEM_ID", item.id)
         }
 
-        intent.putExtra("uniqueId", uniqueId)
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
-            activity, 0, intent, PendingIntent.FLAG_IMMUTABLE
+            context, 0, intent, PendingIntent.FLAG_IMMUTABLE
         )
 
-        return NotificationCompat.Builder(activity, CHANNEL_ID)
+        return NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.baseline_access_time_filled_24)
             .setContentTitle("TodoApp")
-            .setContentText(text)
+            .setContentText(item.text)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             // Set the intent that fires when the user taps the notification.
             .setContentIntent(pendingIntent)
@@ -104,7 +70,7 @@ class NotificationService(
         val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance)
         // Register the channel with the system.
         val notificationManager: NotificationManager =
-            activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
 }

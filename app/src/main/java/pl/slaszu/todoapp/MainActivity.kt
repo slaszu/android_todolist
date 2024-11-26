@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.SettingRepository
-import pl.slaszu.todoapp.domain.notification.NotificationService
+import pl.slaszu.todoapp.domain.notification.NotificationPermissionService
 import pl.slaszu.todoapp.domain.reminder.ReminderService
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoList
@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var settingRepository: SettingRepository
 
-    private val notificationService = NotificationService(this)
+    private val notificationPermissionService = NotificationPermissionService(this)
 
     private val reminderService = ReminderService(this)
 
@@ -57,10 +57,10 @@ class MainActivity : ComponentActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            NotificationService.NOTIFICATION_REQUEST_CODE
+            NotificationPermissionService.NOTIFICATION_REQUEST_CODE
             -> {
                 this.updateNotificationAllowed(
-                    allowed = this.notificationService.isPermissionGranted(
+                    allowed = this.notificationPermissionService.isPermissionGranted(
                         permissions,
                         grantResults
                     )
@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                             TodoListSettings(
                                 setting = setting,
                                 onChange = { setting -> todoListViewModel.saveSetting(setting) },
-                                onNotificationClick = { notificationService.openSettingActivity() }
+                                onNotificationClick = { notificationPermissionService.openSettingActivity() }
                             )
                         }
                         NavHost(
@@ -155,10 +155,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun checkNotification() {
-        this.notificationService.createNotificationChannel()
-
         this.updateNotificationAllowed(
-            allowed = this.notificationService.hasPermission()
+            allowed = this.notificationPermissionService.hasPermission()
         )
 
 //        val extras = this.intent.extras
