@@ -1,5 +1,6 @@
 package pl.slaszu.todoapp.ui.view_model
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,8 +20,8 @@ class TodoFormViewModel @Inject constructor(
     var todoEditModel = mutableStateOf<TodoModel?>(null)
         private set
 
-    fun loadTodoItemToEditForm(id: Int?) {
-        if (id == null) {
+    fun loadTodoItemToEditForm(id: Long) {
+        if (id == 0.toLong()) {
             todoEditModel.value = todoModelFactory.createDefault()
             return
         }
@@ -32,11 +33,10 @@ class TodoFormViewModel @Inject constructor(
         }
     }
 
-
-
-    fun save(item: TodoModel) {
+    fun save(item: TodoModel, callback: (TodoModel) -> Unit) {
         this.viewModelScope.launch {
-            todoRepository.save(item)
+            val savedItem = todoRepository.save(item)
+            callback(savedItem)
         }
     }
 }

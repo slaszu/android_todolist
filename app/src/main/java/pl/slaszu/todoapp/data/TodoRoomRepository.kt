@@ -18,15 +18,16 @@ class TodoRoomRepository @Inject constructor(
         return this.dao.loadTodoList()
     }
 
-    override fun getById(id: Int): Flow<TodoModelEntity?> {
+    override fun getById(id: Long): Flow<TodoModelEntity?> {
         return this.dao.loadTodoById(id)
     }
 
-    override suspend fun save(todoItem: TodoModelEntity) {
+    override suspend fun save(todoItem: TodoModelEntity): TodoModelEntity =
         withContext(Dispatchers.IO) {
-            dao.upsert(todoItem)
+            val id = dao.upsert(todoItem)
+            return@withContext todoItem.takeIf { id < 0 } ?: todoItem.copy(id = id)
         }
-    }
+
 
     override suspend fun delete(todoItem: TodoModelEntity) {
         withContext(Dispatchers.IO) {

@@ -9,5 +9,5 @@ sealed interface TodoAppRoute
 data object TodoAppRouteList: TodoAppRoute
 
 @Serializable
-data class TodoAppRouteEditOrNewForm(val todoId: Int? = null): TodoAppRoute
+data class TodoAppRouteEditOrNewForm(val todoId: Long = 0): TodoAppRoute
 

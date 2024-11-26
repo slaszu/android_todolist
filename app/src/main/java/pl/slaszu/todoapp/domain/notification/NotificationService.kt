@@ -73,16 +73,14 @@ class NotificationService(
         return buildNotification(todo.text, todo.id)
     }
 
-    private fun buildNotification(text: String, uniqueId: Int? = null): Notification {
+    private fun buildNotification(text: String, uniqueId: Long = 0): Notification {
         Log.d("myapp", "buildNotification")
         // Create an explicit intent for an Activity in your app.
         val intent = Intent(activity, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        uniqueId?.let { uId ->
-            intent.putExtra("uniqueId", uId)
-        }
+        intent.putExtra("uniqueId", uniqueId)
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
             activity, 0, intent, PendingIntent.FLAG_IMMUTABLE

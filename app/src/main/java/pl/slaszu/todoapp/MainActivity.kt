@@ -1,9 +1,6 @@
 package pl.slaszu.todoapp
 
-import android.app.ComponentCaller
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -29,6 +26,7 @@ import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.SettingRepository
 import pl.slaszu.todoapp.domain.notification.NotificationService
+import pl.slaszu.todoapp.domain.reminder.ReminderService
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoList
 import pl.slaszu.todoapp.ui.element.list.TodoListSettings
@@ -47,6 +45,8 @@ class MainActivity : ComponentActivity() {
     lateinit var settingRepository: SettingRepository
 
     private val notificationService = NotificationService(this)
+
+    private val reminderService = ReminderService(this)
 
     // TODO: change it to "ActivityResultContract" solution
     @Deprecated("This method has been deprecated")
@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         TopBar(
                             navController = navController,
-                            onAddClick = { todoFormViewModel.loadTodoItemToEditForm(null) },
+                            onAddClick = { todoFormViewModel.loadTodoItemToEditForm(0) },
                             onOptionClick = { toggleOptions = !toggleOptions }
                         )
                     }
@@ -122,6 +122,7 @@ class MainActivity : ComponentActivity() {
                                         )
                                     },
                                     onEdit = { item ->
+                                        toggleOptions = false
                                         todoFormViewModel.loadTodoItemToEditForm(item.id)
                                         navController.navigate(TodoAppRouteEditOrNewForm(todoId = item.id))
                                     },
@@ -132,8 +133,10 @@ class MainActivity : ComponentActivity() {
                                 TodoForm(
                                     item = todoFormViewModel.todoEditModel.value,
                                     onSave = { item ->
-                                        todoFormViewModel.save(item)
                                         navController.navigate(TodoAppRouteList)
+                                        todoFormViewModel.save(item) {
+                                            reminderService.schedule(item)
+                                        }
                                     }
                                 )
                             }

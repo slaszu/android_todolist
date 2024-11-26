@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @Entity(tableName = "todo")
 data class TodoModelEntity(
-    @PrimaryKey(autoGenerate = true) override val id: Int? = null,
+    @PrimaryKey(autoGenerate = true) override val id: Long = 0,
     @ColumnInfo(name = "text") override val text: String = "",
     @ColumnInfo(name = "done") override val done: Boolean = false,
     @ColumnInfo(name = "priority") override val priority: Int = 0,

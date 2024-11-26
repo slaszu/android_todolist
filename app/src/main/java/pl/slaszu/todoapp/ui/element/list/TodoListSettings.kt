@@ -14,6 +14,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,20 +29,22 @@ fun TodoListSettings(
     onNotificationClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(modifier = Modifier.padding(10.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.End,
             modifier = Modifier.fillMaxWidth()
         ) {
 
-            Text(text = stringResource(R.string.setting_show_done))
+            Text(
+                text = stringResource(R.string.setting_show_done),
+                modifier = Modifier.padding(10.dp, 0.dp)
+            )
             Switch(
                 checked = setting.showDone,
                 onCheckedChange = { change ->
                     onChange(setting.copy(showDone = change))
-                },
-                modifier = Modifier.padding(10.dp)
+                }
             )
         }
 
@@ -52,13 +55,18 @@ fun TodoListSettings(
         ) {
 
             if (setting.notificationAllowed) {
-                Text(text = "Notifications allowed")
+                Text(
+                    text = "Notifications allowed",
+                    color = Color.Gray
+                )
             } else {
-                Text(text = "Notification not allowed")
+                Text(
+                    text = "Notification not allowed",
+                    modifier = Modifier.padding(10.dp, 0.dp)
+                )
                 TextButton(
                     onClick = onNotificationClick,
-                    colors = ButtonDefaults.buttonColors(),
-                    modifier = Modifier.padding(10.dp)
+                    colors = ButtonDefaults.buttonColors()
                 ) {
                     Text(
                         text = "Open settings"
@@ -77,7 +85,7 @@ fun TodoListSettingPreview() {
     TodoAppTheme {
         Scaffold() { it ->
             TodoListSettings(
-                setting = Setting(),
+                setting = Setting(true, true),
                 onChange = {},
                 onNotificationClick = {},
                 modifier = Modifier.padding(it)

@@ -3,7 +3,7 @@ package pl.slaszu.todoapp.domain
 import java.time.LocalDateTime
 
 interface TodoModel {
-    val id: Int?
+    val id: Long
     val text: String
     val done: Boolean
     val priority: Int
@@ -17,7 +17,7 @@ interface TodoModelFactory<T:TodoModel> {
 }
 
 data class TodoModelFake(
-    override val id: Int? = null,
+    override val id: Long = 0,
     override val text: String = "fake",
     override val done: Boolean = false,
     override val priority: Int = 0,
