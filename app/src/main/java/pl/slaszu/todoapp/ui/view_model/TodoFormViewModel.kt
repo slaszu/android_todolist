@@ -1,6 +1,5 @@
 package pl.slaszu.todoapp.ui.view_model
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,9 +26,8 @@ class TodoFormViewModel @Inject constructor(
         }
 
         this.viewModelScope.launch {
-            todoRepository.getById(id).collect { item ->
-                todoEditModel.value = item ?: todoModelFactory.createDefault()
-            }
+            val item = todoRepository.getById(id)
+            todoEditModel.value = item ?: todoModelFactory.createDefault()
         }
     }
 

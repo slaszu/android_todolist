@@ -7,11 +7,11 @@ import pl.slaszu.todoapp.domain.notification.NotificationService
 @HiltAndroidApp
 class TodoApp : Application() {
 
-    private val notificationService = NotificationService(this)
-
-    override fun onCreate() {
-        super.onCreate()
-
-        notificationService.createNotificationChannel()
-    }
+//    private val notificationService = NotificationService(this)
+//
+//    override fun onCreate() {
+//        super.onCreate()
+//
+//        notificationService.createNotificationChannel()
+//    }
 }

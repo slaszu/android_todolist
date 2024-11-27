@@ -30,14 +30,12 @@ class ReminderReceiver : BroadcastReceiver() {
         val itemId = intent.getLongExtra("ITEM_ID", 0)
 
         runBlocking {
-            repository.getById(itemId).collect { item ->
-                if (item != null) {
-                    Log.d("myapp", "Receiver: notification send")
-                    notificationService.sendNotification(item)
-                }
-                Log.d("myapp", "Receiver: flow canceled")
-            }
-        }
+            val item = repository.getById(itemId) ?: return@runBlocking
+            Log.d("myapp", "Receiver: notification send")
+            notificationService.sendNotification(item)
 
+            Log.d("myapp", "Receiver: flow canceled")
+        }
     }
+
 }

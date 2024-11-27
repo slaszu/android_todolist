@@ -18,7 +18,7 @@ class TodoRoomRepository @Inject constructor(
         return this.dao.loadTodoList()
     }
 
-    override fun getById(id: Long): Flow<TodoModelEntity?> {
+    override suspend fun getById(id: Long): TodoModelEntity? {
         return this.dao.loadTodoById(id)
     }
 

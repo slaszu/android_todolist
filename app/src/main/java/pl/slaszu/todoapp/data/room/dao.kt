@@ -12,7 +12,7 @@ interface TodoModelDao {
     fun loadTodoList(): Flow<List<TodoModelEntity>>
 
     @Query("SELECT * from todo where id = :id")
-    fun loadTodoById(id: Long): Flow<TodoModelEntity?>
+    suspend fun loadTodoById(id: Long): TodoModelEntity?
 
     @Upsert
     suspend fun upsert(todoItem: TodoModelEntity): Long
