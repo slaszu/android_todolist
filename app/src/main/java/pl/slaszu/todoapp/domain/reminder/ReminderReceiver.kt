@@ -34,7 +34,7 @@ class ReminderReceiver : BroadcastReceiver() {
             Log.d("myapp", "Receiver: notification send")
             notificationService.sendNotification(item)
 
-            Log.d("myapp", "Receiver: flow canceled")
+            Log.d("myapp", "Receiver: coroutine done")
         }
     }
 

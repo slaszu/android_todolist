@@ -18,9 +18,10 @@ class TodoRoomRepository @Inject constructor(
         return this.dao.loadTodoList()
     }
 
-    override suspend fun getById(id: Long): TodoModelEntity? {
-        return this.dao.loadTodoById(id)
-    }
+    override suspend fun getById(id: Long): TodoModelEntity? =
+        withContext(Dispatchers.IO) {
+            return@withContext dao.loadTodoById(id)
+        }
 
     override suspend fun save(todoItem: TodoModelEntity): TodoModelEntity =
         withContext(Dispatchers.IO) {

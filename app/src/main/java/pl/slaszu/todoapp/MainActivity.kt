@@ -14,12 +14,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.Setting
+import pl.slaszu.todoapp.domain.SettingRepository
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionService
 import pl.slaszu.todoapp.domain.reminder.ReminderService
 import pl.slaszu.todoapp.ui.element.form.TodoForm
@@ -31,12 +36,17 @@ import pl.slaszu.todoapp.ui.navigation.TodoAppRouteList
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import pl.slaszu.todoapp.ui.view_model.TodoFormViewModel
 import pl.slaszu.todoapp.ui.view_model.TodoListViewModel
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-//    @Inject
-//    lateinit var settingRepository: SettingRepository
+    @Inject
+    lateinit var settingRepository: SettingRepository
+
+    private val notificationPermissionService = NotificationPermissionService(this)
+
+    private val reminderService = ReminderService(this)
 
 
 //    // TODO: change it to "ActivityResultContract" solution
@@ -66,9 +76,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val notificationPermissionService = NotificationPermissionService(this)
-
-        val reminderService = ReminderService(this)
 
 
         setContent {
@@ -151,33 +158,19 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun checkNotification() {
-//        this.updateNotificationAllowed(
-//            allowed = this.notificationPermissionService.hasPermission()
-//        )
-
-//        val extras = this.intent.extras
-//        Log.d("myapp", "Extra key value :" + extras?.getInt("test"))
-
-
-//        this.notificationService.askPermissionRequest()
-
-//        val notificationService = NotificationService(this)
-//        notificationService.createNotificationChannel()
-//
-//        val notification = notificationService.buildNotification("Testowe powidomienie")
-//
-//        notificationService.sendNotification(notification)
+        this.updateNotificationAllowed(
+            allowed = this.notificationPermissionService.hasPermission()
+        )
     }
 
-//    private fun updateNotificationAllowed(allowed: Boolean) {
-//        lifecycleScope.launch {
-//            settingRepository.getData().cancellable().collect { setting ->
-//                settingRepository.saveData(setting.copy(notificationAllowed = allowed))
-//                this.cancel()
-//            }
-//
-//        }
-//    }
+    private fun updateNotificationAllowed(allowed: Boolean) {
+        lifecycleScope.launch {
+            settingRepository.getData().cancellable().collect { setting ->
+                settingRepository.saveData(setting.copy(notificationAllowed = allowed))
+                this.cancel()
+            }
+        }
+    }
 
 
 }
