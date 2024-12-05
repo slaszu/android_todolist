@@ -27,6 +27,7 @@ fun TodoListSettings(
     setting: Setting,
     onChange: (Setting) -> Unit,
     onNotificationClick: () -> Unit,
+    onReminderClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = Modifier.padding(10.dp)) {
@@ -74,6 +75,33 @@ fun TodoListSettings(
                 }
             }
         }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
+            if (setting.reminderAllowed) {
+                Text(
+                    text = "Reminders allowed",
+                    color = Color.Gray
+                )
+            } else {
+                Text(
+                    text = "Reminders not allowed",
+                    modifier = Modifier.padding(10.dp, 0.dp)
+                )
+                TextButton(
+                    onClick = onReminderClick,
+                    colors = ButtonDefaults.buttonColors()
+                ) {
+                    Text(
+                        text = "Open settings"
+                    )
+                }
+            }
+        }
     }
 
     HorizontalDivider()
@@ -85,9 +113,10 @@ fun TodoListSettingPreview() {
     TodoAppTheme {
         Scaffold() { it ->
             TodoListSettings(
-                setting = Setting(true, true),
+                setting = Setting(true, true, reminderAllowed = false),
                 onChange = {},
                 onNotificationClick = {},
+                onReminderClick = {},
                 modifier = Modifier.padding(it)
             )
         }

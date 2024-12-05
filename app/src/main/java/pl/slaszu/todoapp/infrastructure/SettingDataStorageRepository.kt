@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.data
+package pl.slaszu.todoapp.infrastructure
 
 import androidx.datastore.core.DataStore
 import kotlinx.coroutines.Dispatchers

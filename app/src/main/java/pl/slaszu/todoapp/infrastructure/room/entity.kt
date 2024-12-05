@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.data.room
+package pl.slaszu.todoapp.infrastructure.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

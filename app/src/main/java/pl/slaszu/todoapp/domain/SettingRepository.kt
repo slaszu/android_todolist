@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Setting(
     val showDone: Boolean = true,
-    val notificationAllowed: Boolean = false
+    val notificationAllowed: Boolean = false,
+    val reminderAllowed: Boolean = false
 )
 
 interface SettingRepository {

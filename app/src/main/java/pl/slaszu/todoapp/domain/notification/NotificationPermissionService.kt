@@ -14,12 +14,12 @@ class NotificationPermissionService(
         const val NOTIFICATION_REQUEST_CODE = 1
     }
 
-    private val notificationPermission = Manifest.permission.POST_NOTIFICATIONS
+    private val permission = Manifest.permission.POST_NOTIFICATIONS
 
     fun hasPermission(): Boolean =
         ActivityCompat.checkSelfPermission(
             activity,
-            this.notificationPermission
+            this.permission
         ) == PackageManager.PERMISSION_GRANTED
 
     fun openSettingActivity() {
@@ -33,14 +33,14 @@ class NotificationPermissionService(
     fun askPermissionRequest() {
         ActivityCompat.requestPermissions(
             activity,
-            arrayOf(this.notificationPermission),
+            arrayOf(this.permission),
             NOTIFICATION_REQUEST_CODE
         )
     }
 
     fun isPermissionGranted(permissions: Array<String>, grantResults: IntArray): Boolean {
         permissions.forEachIndexed { index, s ->
-            if (s == notificationPermission) {
+            if (s == permission) {
                 return grantResults[index] == PackageManager.PERMISSION_GRANTED
             }
         }

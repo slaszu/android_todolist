@@ -26,6 +26,8 @@ import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.SettingRepository
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionService
+import pl.slaszu.todoapp.domain.reminder.ReminderPermission
+import pl.slaszu.todoapp.infrastructure.reminder.ReminderPermissionService
 import pl.slaszu.todoapp.domain.reminder.ReminderService
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoList
@@ -45,6 +47,9 @@ class MainActivity : ComponentActivity() {
     lateinit var settingRepository: SettingRepository
 
     private val notificationPermissionService = NotificationPermissionService(this)
+
+    @Inject
+    lateinit var reminderPermissionService: ReminderPermission
 
     private val reminderService = ReminderService(this)
 
@@ -107,7 +112,8 @@ class MainActivity : ComponentActivity() {
                             TodoListSettings(
                                 setting = setting,
                                 onChange = { setting -> todoListViewModel.saveSetting(setting) },
-                                onNotificationClick = { notificationPermissionService.openSettingActivity() }
+                                onNotificationClick = { notificationPermissionService.openSettingActivity() },
+                                onReminderClick = { reminderPermissionService.openSettingActivity() }
                             )
                         }
                         NavHost(
@@ -137,8 +143,8 @@ class MainActivity : ComponentActivity() {
                                     item = todoFormViewModel.todoEditModel.value,
                                     onSave = { item ->
                                         navController.navigate(TodoAppRouteList)
-                                        todoFormViewModel.save(item) {
-                                            reminderService.schedule(item)
+                                        todoFormViewModel.save(item) { savedItem ->
+                                            reminderService.schedule(savedItem)
                                         }
                                     }
                                 )
@@ -149,24 +155,30 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        this.checkNotification()
+        this.checkSystemSettings()
     }
 
     override fun onRestart() {
         super.onRestart()
-        this.checkNotification()
+        this.checkSystemSettings()
     }
 
-    private fun checkNotification() {
-        this.updateNotificationAllowed(
-            allowed = this.notificationPermissionService.hasPermission()
+    private fun checkSystemSettings() {
+        this.updateSystemSettings(
+            notificationAllowed = this.notificationPermissionService.hasPermission(),
+            reminderAllowed = this.reminderPermissionService.hasPermission()
         )
     }
 
-    private fun updateNotificationAllowed(allowed: Boolean) {
+    private fun updateSystemSettings(notificationAllowed: Boolean, reminderAllowed: Boolean) {
         lifecycleScope.launch {
             settingRepository.getData().cancellable().collect { setting ->
-                settingRepository.saveData(setting.copy(notificationAllowed = allowed))
+                settingRepository.saveData(
+                    setting.copy(
+                        notificationAllowed = notificationAllowed,
+                        reminderAllowed = reminderAllowed
+                    )
+                )
                 this.cancel()
             }
         }
