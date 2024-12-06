@@ -31,6 +31,7 @@ import pl.slaszu.todoapp.infrastructure.reminder.ReminderPermissionService
 import pl.slaszu.todoapp.domain.reminder.ReminderService
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoList
+import pl.slaszu.todoapp.ui.element.list.TodoListScreen
 import pl.slaszu.todoapp.ui.element.list.TodoListSettings
 import pl.slaszu.todoapp.ui.element.list.TopBar
 import pl.slaszu.todoapp.ui.navigation.TodoAppRouteEditOrNewForm
@@ -121,8 +122,9 @@ class MainActivity : ComponentActivity() {
                             startDestination = TodoAppRouteList
                         ) {
                             composable<TodoAppRouteList> {
-                                TodoList(
-                                    items = todoList,
+                                TodoListScreen(
+                                    generalItemList = todoList,
+                                    timelineItemList = todoList,
                                     setting = setting,
                                     onCheck = { item, checked ->
                                         todoListViewModel.check(
