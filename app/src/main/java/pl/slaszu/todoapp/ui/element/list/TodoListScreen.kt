@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.TodoModel
-import pl.slaszu.todoapp.domain.TodoModelFake
+import pl.slaszu.todoapp.domain.FakeTodoModel
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import java.time.LocalDateTime
 
@@ -45,7 +45,7 @@ fun TodoListScreen(
                 text = {
                     Row {
                         Icon(
-                            Icons.Filled.Check,
+                            Icons.AutoMirrored.Filled.List,
                             contentDescription = "General icon",
                             modifier = Modifier.padding(5.dp, 0.dp)
                         )
@@ -59,7 +59,7 @@ fun TodoListScreen(
                 text = {
                     Row {
                         Icon(
-                            Icons.Filled.Check,
+                            Icons.AutoMirrored.Filled.List,
                             contentDescription = "General icon",
                             modifier = Modifier.padding(5.dp, 0.dp)
                         )
@@ -96,10 +96,10 @@ fun TodoListScreenPreview() {
         Scaffold() { it ->
             TodoListScreen(
                 generalItemList = List(5) { i ->
-                    TodoModelFake(text = "General item nr $i", startDate = LocalDateTime.now())
+                    FakeTodoModel(text = "General item nr $i", startDate = LocalDateTime.now())
                 },
                 timelineItemList = List(2) { i ->
-                    TodoModelFake(text = "Timeline item nr $i", startDate = LocalDateTime.now())
+                    FakeTodoModel(text = "Timeline item nr $i", startDate = LocalDateTime.now())
                 },
                 setting = Setting(),
                 onCheck = { _, _ -> },

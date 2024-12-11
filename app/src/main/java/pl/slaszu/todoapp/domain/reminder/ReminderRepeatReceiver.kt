@@ -9,10 +9,12 @@ import kotlinx.coroutines.runBlocking
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.TodoRepository
 import pl.slaszu.todoapp.domain.notification.NotificationService
+import pl.slaszu.todoapp.domain.utils.clearTime
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ReminderReceiver : BroadcastReceiver() {
+class ReminderRepeatReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var repository: TodoRepository<TodoModel>
@@ -27,15 +29,13 @@ class ReminderReceiver : BroadcastReceiver() {
         }
 
         val notificationService = NotificationService(context)
-        val itemId = intent.getLongExtra("ITEM_ID", 0)
 
         runBlocking {
-            val item = repository.getById(itemId) ?: return@runBlocking
-            Log.d("myapp", "Receiver: notification send")
-            notificationService.sendNotification(item)
+            val itemArray = repository.getByDate(LocalDateTime.now().clearTime())
+            Log.d("myapp", "Receiver: notification send: $itemArray")
+            notificationService.sendNotification(itemArray)
 
             Log.d("myapp", "Receiver: coroutine done")
         }
     }
-
 }

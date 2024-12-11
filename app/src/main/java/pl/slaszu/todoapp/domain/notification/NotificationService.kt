@@ -19,48 +19,66 @@ class NotificationService(
     companion object {
         const val CHANNEL_ID = "todoapp_channel_unique_identifier"
         const val CHANNEL_NAME = "TodoApp"
+        const val INTENT_KEY = "ITEM_ID_ARRAY"
     }
 
     fun sendNotification(item: TodoModel) {
 
-        requireNotNull(item.id)
-        requireNotNull(item.startDate)
+        this.sendNotification(arrayOf(item))
+    }
 
+    fun sendNotification(items: Array<TodoModel>) {
 
         val notificationManagerCompat = NotificationManagerCompat.from(context)
         if (notificationManagerCompat.areNotificationsEnabled()) {
-
-            notificationManagerCompat.notify(1, this.buildNotification(item))
+            notificationManagerCompat.notify(1, this.buildNotification(items))
         }
     }
 
-    private fun buildNotification(item: TodoModel): Notification {
+    private fun buildNotification(items: Array<TodoModel>): Notification {
 
         Log.d("myapp", "buildNotification")
-
-        requireNotNull(item.id)
-        requireNotNull(item.startDate)
 
         // Create an explicit intent for an Activity in your app.
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra("ITEM_ID", item.id)
+            putExtra(
+                INTENT_KEY,
+                longArrayOf(*items.map { it.id }.toLongArray())
+            )
         }
-
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
             context, 0, intent, PendingIntent.FLAG_IMMUTABLE
         )
 
+        val (text, title) = this.prepareTextForNotification(items)
+
         return NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.baseline_access_time_filled_24)
-            .setContentTitle("TodoApp")
-            .setContentText(item.text)
+            .setContentTitle(title)
+            .setContentText(text)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             // Set the intent that fires when the user taps the notification.
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .build()
+    }
+
+    private fun prepareTextForNotification(items: Array<TodoModel>): Pair<String, String> {
+        if (items.size == 1) {
+            return Pair(items.first().text, "TodoApp")
+        }
+
+        return Pair(
+            items.mapIndexed { index, todoModel ->
+                "${index + 1}. ${
+                    todoModel.text
+                }"
+            }.joinToString(
+                separator = "\n"
+            ), "TodoApp (${items.size})"
+        )
     }
 
     fun createNotificationChannel() {

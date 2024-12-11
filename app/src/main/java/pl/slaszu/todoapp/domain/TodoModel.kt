@@ -12,11 +12,11 @@ interface TodoModel {
     fun copy(vararg fields: Pair<String, Any?>): TodoModel
 }
 
-interface TodoModelFactory<T:TodoModel> {
+interface TodoModelFactory<T : TodoModel> {
     fun createDefault(): T
 }
 
-data class TodoModelFake(
+data class FakeTodoModel(
     override val id: Long = 0,
     override val text: String = "fake",
     override val done: Boolean = false,

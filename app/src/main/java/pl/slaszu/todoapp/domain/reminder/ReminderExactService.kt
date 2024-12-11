@@ -7,11 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.domain.utils.isTimeSet
 import pl.slaszu.todoapp.domain.utils.toEpochMillis
 
-class ReminderService(
+class ReminderExactService(
     private val context: Context
 ) {
+
 
     @SuppressLint("ScheduleExactAlarm")
     fun schedule(item: TodoModel) {
@@ -21,7 +23,7 @@ class ReminderService(
             return
         }
 
-        if (item.startDate == null) {
+        if (item.startDate == null || !item.startDate!!.isTimeSet()) {
             return this.cancel(item)
         }
 
@@ -47,7 +49,7 @@ class ReminderService(
         return PendingIntent.getBroadcast(
             context,
             item.id.toInt(),
-            Intent(context, ReminderReceiver::class.java).apply {
+            Intent(context, ReminderExactReceiver::class.java).apply {
                 putExtra("ITEM_ID", item.id)
             },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE

@@ -3,9 +3,10 @@ package pl.slaszu.todoapp.infrastructure
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import pl.slaszu.todoapp.domain.TodoRepository
 import pl.slaszu.todoapp.infrastructure.room.TodoModelDao
 import pl.slaszu.todoapp.infrastructure.room.TodoModelEntity
-import pl.slaszu.todoapp.domain.TodoRepository
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,6 +18,12 @@ class TodoRoomRepository @Inject constructor(
     override fun getTodoList(): Flow<List<TodoModelEntity>> {
         return this.dao.loadTodoList()
     }
+
+    override suspend fun getByDate(date: LocalDateTime): Array<TodoModelEntity> =
+        withContext(Dispatchers.IO) {
+            return@withContext dao.loadTodoByDate(date)
+        }
+
 
     override suspend fun getById(id: Long): TodoModelEntity? =
         withContext(Dispatchers.IO) {

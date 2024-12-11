@@ -23,14 +23,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.TodoModel
-import pl.slaszu.todoapp.domain.TodoModelFake
+import pl.slaszu.todoapp.domain.FakeTodoModel
 import pl.slaszu.todoapp.domain.utils.printStartDate
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import pl.slaszu.todoapp.ui.theme.Typography
@@ -131,6 +129,7 @@ fun TodoListItem(
 
     if (alertDialog) {
         TodoDeleteConfirmAlertDialog(
+            item = item,
             onConfirm = {
                 onDeleteItem()
                 alertDialog = false
@@ -151,7 +150,7 @@ fun TodoListPreview() {
         Scaffold() { it ->
             TodoList(
                 items = List(5) { i ->
-                    TodoModelFake(text = "Todo item nr $i", startDate = LocalDateTime.now())
+                    FakeTodoModel(text = "Todo item nr $i", startDate = LocalDateTime.now())
                 },
                 setting = Setting(),
                 onCheck = { _, _ -> },

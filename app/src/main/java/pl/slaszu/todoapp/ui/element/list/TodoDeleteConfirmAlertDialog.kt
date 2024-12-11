@@ -1,5 +1,7 @@
 package pl.slaszu.todoapp.ui.element.list
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
@@ -11,25 +13,45 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.R
+import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.domain.FakeTodoModel
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 
 @Composable
 fun TodoDeleteConfirmAlertDialog(
+    item: TodoModel,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     AlertDialog(
         icon = {
-            Icon(Icons.Outlined.Delete, contentDescription = "Delete Icon")
-        },
-        title = {
-            Text(text = stringResource(R.string.todo_delete_confirm_title))
+            Row {
+                Icon(Icons.Outlined.Delete, contentDescription = "Delete Icon")
+                Text(
+                    text = stringResource(R.string.todo_delete_confirm_title),
+                    fontWeight = FontWeight.Bold
+                )
+            }
         },
         text = {
-            Text(text = stringResource(R.string.todo_delete_confirm_text))
+            Column {
+                Text(
+                    text = item.text,
+                    fontStyle = FontStyle.Italic,
+                    modifier = Modifier.padding(0.dp, 5.dp)
+                )
+
+                Text(
+                    text = stringResource(R.string.todo_delete_confirm_text),
+                    fontWeight = FontWeight.Bold
+                )
+            }
         },
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -57,6 +79,9 @@ fun TodoDeleteConfirmAlertDialogPreview() {
             TodoDeleteConfirmAlertDialog(
                 onConfirm = {},
                 onDismiss = {},
+                item = FakeTodoModel(
+                    text = "Jakieś tam przypomnienie z testowym wpisem"
+                ),
                 modifier = Modifier.padding(it)
             )
         }

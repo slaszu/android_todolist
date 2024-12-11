@@ -26,11 +26,10 @@ import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.SettingRepository
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionService
+import pl.slaszu.todoapp.domain.reminder.ReminderExactService
 import pl.slaszu.todoapp.domain.reminder.ReminderPermission
-import pl.slaszu.todoapp.infrastructure.reminder.ReminderPermissionService
-import pl.slaszu.todoapp.domain.reminder.ReminderService
+import pl.slaszu.todoapp.domain.reminder.ReminderRepeatService
 import pl.slaszu.todoapp.ui.element.form.TodoForm
-import pl.slaszu.todoapp.ui.element.list.TodoList
 import pl.slaszu.todoapp.ui.element.list.TodoListScreen
 import pl.slaszu.todoapp.ui.element.list.TodoListSettings
 import pl.slaszu.todoapp.ui.element.list.TopBar
@@ -52,7 +51,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var reminderPermissionService: ReminderPermission
 
-    private val reminderService = ReminderService(this)
+    private val reminderExactService = ReminderExactService(this)
+
+    private val reminderRepeatService = ReminderRepeatService(this)
 
 
 //    // TODO: change it to "ActivityResultContract" solution
@@ -123,8 +124,12 @@ class MainActivity : ComponentActivity() {
                         ) {
                             composable<TodoAppRouteList> {
                                 TodoListScreen(
-                                    generalItemList = todoList,
-                                    timelineItemList = todoList,
+                                    generalItemList = todoList.filter {
+                                        it.startDate == null
+                                    },
+                                    timelineItemList = todoList.filter {
+                                        it.startDate != null
+                                    },
                                     setting = setting,
                                     onCheck = { item, checked ->
                                         todoListViewModel.check(
@@ -146,7 +151,7 @@ class MainActivity : ComponentActivity() {
                                     onSave = { item ->
                                         navController.navigate(TodoAppRouteList)
                                         todoFormViewModel.save(item) { savedItem ->
-                                            reminderService.schedule(savedItem)
+                                            reminderExactService.schedule(savedItem)
                                         }
                                     }
                                 )
@@ -175,12 +180,14 @@ class MainActivity : ComponentActivity() {
     private fun updateSystemSettings(notificationAllowed: Boolean, reminderAllowed: Boolean) {
         lifecycleScope.launch {
             settingRepository.getData().cancellable().collect { setting ->
-                settingRepository.saveData(
-                    setting.copy(
-                        notificationAllowed = notificationAllowed,
-                        reminderAllowed = reminderAllowed
-                    )
+                val refreshSetting = setting.copy(
+                    notificationAllowed = notificationAllowed,
+                    reminderAllowed = reminderAllowed
                 )
+
+                reminderRepeatService.scheduleRepeatOnePerDay(refreshSetting.reminderRepeatHour)
+
+                settingRepository.saveData(refreshSetting)
                 this.cancel()
             }
         }
