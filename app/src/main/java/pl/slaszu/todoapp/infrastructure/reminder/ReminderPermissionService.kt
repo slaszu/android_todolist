@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
@@ -26,6 +27,7 @@ class ReminderPermissionService(
         val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
             data = Uri.parse("package:${context.packageName}")
             //putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID)
+            flags = FLAG_ACTIVITY_NEW_TASK
         }
         context.startActivity(intent)
     }

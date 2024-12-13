@@ -62,6 +62,7 @@ class NotificationService(
             // Set the intent that fires when the user taps the notification.
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
+            .setGroup("todo_app_notification_group")
             .build()
     }
 
