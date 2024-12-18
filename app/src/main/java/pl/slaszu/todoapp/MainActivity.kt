@@ -1,6 +1,7 @@
 package pl.slaszu.todoapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -25,19 +26,25 @@ import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.SettingRepository
+import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.domain.TodoRepository
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionService
+import pl.slaszu.todoapp.domain.notification.NotificationService
 import pl.slaszu.todoapp.domain.reminder.ReminderExactService
 import pl.slaszu.todoapp.domain.reminder.ReminderPermission
 import pl.slaszu.todoapp.domain.reminder.ReminderRepeatService
+import pl.slaszu.todoapp.domain.utils.clearTime
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoListScreen
 import pl.slaszu.todoapp.ui.element.list.TodoListSettings
 import pl.slaszu.todoapp.ui.element.list.TopBar
+import pl.slaszu.todoapp.ui.element.remiander.ReminderDialog
 import pl.slaszu.todoapp.ui.navigation.TodoAppRouteEditOrNewForm
 import pl.slaszu.todoapp.ui.navigation.TodoAppRouteList
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import pl.slaszu.todoapp.ui.view_model.TodoFormViewModel
 import pl.slaszu.todoapp.ui.view_model.TodoListViewModel
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -50,6 +57,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var reminderPermissionService: ReminderPermission
+
+    @Inject
+    lateinit var repository: TodoRepository<TodoModel>
 
     private val reminderExactService = ReminderExactService(this)
 
@@ -82,8 +92,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-
 
         setContent {
             val navController = rememberNavController()
@@ -158,11 +166,29 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+
+                    val reminderItemsId = getReminderItemIds()
+                    ReminderDialog(
+                        items = todoList.filter {
+                            reminderItemsId.contains(it.id)
+                        },
+                        onCloseItem = { item ->
+                            todoListViewModel.check(
+                                item,
+                                true
+                            )
+                        }
+                    )
                 }
             }
         }
 
         this.checkSystemSettings()
+    }
+
+    private fun getReminderItemIds(): LongArray {
+        return this.intent.getLongArrayExtra(NotificationService.INTENT_KEY) ?: longArrayOf(1, 2, 3)
+
     }
 
     override fun onRestart() {
@@ -186,6 +212,9 @@ class MainActivity : ComponentActivity() {
                 )
 
                 reminderRepeatService.scheduleRepeatOnePerDay(refreshSetting.reminderRepeatHour)
+
+                val itemArray = repository.getByDate(LocalDateTime.now().clearTime())
+                Log.d("myapp", "Items : ${itemArray.size}")
 
                 settingRepository.saveData(refreshSetting)
                 this.cancel()

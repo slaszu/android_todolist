@@ -48,7 +48,7 @@ class ReminderExactService(
     private fun createPendingIntent(item: TodoModel): PendingIntent {
         return PendingIntent.getBroadcast(
             context,
-            item.id.toInt(),
+            0,
             Intent(context, ReminderExactReceiver::class.java).apply {
                 putExtra("ITEM_ID", item.id)
             },

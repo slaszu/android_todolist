@@ -27,7 +27,7 @@ class ReminderRepeatService(
     private fun createPendingIntent(): PendingIntent {
         return PendingIntent.getBroadcast(
             context,
-            999,
+            0,
             Intent(context, ReminderRepeatReceiver::class.java),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
