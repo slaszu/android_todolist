@@ -9,10 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -36,11 +32,12 @@ import pl.slaszu.todoapp.domain.reminder.ReminderRepeatService
 import pl.slaszu.todoapp.domain.utils.clearTime
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoListScreen
-import pl.slaszu.todoapp.ui.element.list.TodoListSettings
 import pl.slaszu.todoapp.ui.element.list.TopBar
 import pl.slaszu.todoapp.ui.element.remiander.ReminderDialog
+import pl.slaszu.todoapp.ui.element.setting.SettingScreen
 import pl.slaszu.todoapp.ui.navigation.TodoAppRouteEditOrNewForm
 import pl.slaszu.todoapp.ui.navigation.TodoAppRouteList
+import pl.slaszu.todoapp.ui.navigation.TodoAppSetting
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import pl.slaszu.todoapp.ui.view_model.TodoFormViewModel
 import pl.slaszu.todoapp.ui.view_model.TodoListViewModel
@@ -98,8 +95,6 @@ class MainActivity : ComponentActivity() {
             val todoListViewModel: TodoListViewModel = viewModel()
             val todoFormViewModel: TodoFormViewModel = viewModel()
 
-            var toggleOptions by remember { mutableStateOf(false) }
-
             val setting = todoListViewModel.settingFlow.collectAsStateWithLifecycle(Setting()).value
             val todoList =
                 todoListViewModel.todoListFlow.collectAsStateWithLifecycle(emptyList()).value
@@ -110,7 +105,7 @@ class MainActivity : ComponentActivity() {
                         TopBar(
                             navController = navController,
                             onAddClick = { todoFormViewModel.loadTodoItemToEditForm(0) },
-                            onOptionClick = { toggleOptions = !toggleOptions }
+                            onOptionClick = { navController.navigate(TodoAppSetting) }
                         )
                     }
                 ) { innerPadding ->
@@ -118,14 +113,6 @@ class MainActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.Top,
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        if (toggleOptions) {
-                            TodoListSettings(
-                                setting = setting,
-                                onChange = { setting -> todoListViewModel.saveSetting(setting) },
-                                onNotificationClick = { notificationPermissionService.openSettingActivity() },
-                                onReminderClick = { reminderPermissionService.openSettingActivity() }
-                            )
-                        }
                         NavHost(
                             navController = navController,
                             startDestination = TodoAppRouteList
@@ -146,14 +133,13 @@ class MainActivity : ComponentActivity() {
                                         )
                                     },
                                     onEdit = { item ->
-                                        toggleOptions = false
                                         todoFormViewModel.loadTodoItemToEditForm(item.id)
-                                        navController.navigate(TodoAppRouteEditOrNewForm(todoId = item.id))
+                                        navController.navigate(TodoAppRouteEditOrNewForm)
                                     },
                                     onDelete = { item -> todoListViewModel.delete(item) },
                                 )
                             }
-                            composable<TodoAppRouteEditOrNewForm> { navStackEntry ->
+                            composable<TodoAppRouteEditOrNewForm> {
                                 TodoForm(
                                     item = todoFormViewModel.todoEditModel.value,
                                     onSave = { item ->
@@ -162,6 +148,14 @@ class MainActivity : ComponentActivity() {
                                             reminderExactService.schedule(savedItem)
                                         }
                                     }
+                                )
+                            }
+                            composable<TodoAppSetting> {
+                                SettingScreen(
+                                    setting = setting,
+                                    onChange = {},
+                                    onReminderClick = {},
+                                    onNotificationClick = {}
                                 )
                             }
                         }

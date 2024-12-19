@@ -44,7 +44,7 @@ fun TopBar(
             IconButton(
                 onClick = {
                     onAddClick()
-                    navController.navigate(TodoAppRouteEditOrNewForm())
+                    navController.navigate(TodoAppRouteEditOrNewForm)
                 }
             ) {
                 Icon(

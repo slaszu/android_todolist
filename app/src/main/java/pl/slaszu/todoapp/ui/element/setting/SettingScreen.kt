@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.ui.element.list
+package pl.slaszu.todoapp.ui.element.setting
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +23,7 @@ import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 
 @Composable
-fun TodoListSettings(
+fun SettingScreen(
     setting: Setting,
     onChange: (Setting) -> Unit,
     onNotificationClick: () -> Unit,
@@ -112,7 +112,7 @@ fun TodoListSettings(
 fun TodoListSettingPreview() {
     TodoAppTheme {
         Scaffold() { it ->
-            TodoListSettings(
+            SettingScreen(
                 setting = Setting(true, true, reminderAllowed = false),
                 onChange = {},
                 onNotificationClick = {},
