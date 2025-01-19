@@ -8,26 +8,31 @@ import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.PresentationService
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.SettingRepository
+import pl.slaszu.todoapp.domain.TimelineHeader
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.TodoRepository
 import javax.inject.Inject
 
 
 @HiltViewModel
-class TodoListViewModel @Inject constructor(
+class ListViewModel @Inject constructor(
     private val todoRepository: TodoRepository<TodoModel>,
     private val settingRepository: SettingRepository,
-    private val sortService: PresentationService
+    private val presentationService: PresentationService
 ) : ViewModel() {
 
     val todoListFlow = combine(
         todoRepository.getTodoList(),
         settingRepository.getData()
     ) { todoList: List<TodoModel>, setting: Setting ->
-        sortService.process(todoList, setting)
+        presentationService.process(todoList, setting)
     }
 
     val settingFlow = settingRepository.getData()
+
+    fun convertToTimeline(todoList: List<TodoModel>): Map<TimelineHeader, List<TodoModel>> {
+        return presentationService.convertToTimelineMap(todoList)
+    }
 
     fun saveSetting(setting: Setting) {
         this.viewModelScope.launch {

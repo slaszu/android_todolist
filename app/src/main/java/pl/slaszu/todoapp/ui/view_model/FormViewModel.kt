@@ -11,7 +11,7 @@ import pl.slaszu.todoapp.domain.TodoRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class TodoFormViewModel @Inject constructor(
+class FormViewModel @Inject constructor(
     private val todoRepository: TodoRepository<TodoModel>,
     private val todoModelFactory: TodoModelFactory<TodoModel>
 ) : ViewModel() {
