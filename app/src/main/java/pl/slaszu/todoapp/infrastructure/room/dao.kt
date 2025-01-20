@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 @Dao
 interface TodoModelDao {
-    @Query("SELECT * from todo ORDER BY done ASC, start_date DESC")
+    @Query("SELECT * from todo ORDER BY start_date ASC")
     fun loadTodoList(): Flow<List<TodoModelEntity>>
 
     @Query("SELECT * from todo where id = :id")

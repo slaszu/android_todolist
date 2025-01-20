@@ -9,4 +9,10 @@
     <string name="btn_back">Wróć</string>
     <string name="setting_show_done">Pokazać zakończone zadania ?</string>
     <string name="todo_form_is_finished">Zakończone</string>
+    <string name="timeline_this_week">ten tydzień</string>
+    <string name="timeline_next_week">następny tydzień</string>
+    <string name="timeline_this_month">w ciągu miesiąca</string>
+    <string name="timeline_out_of_date">nieaktualne</string>
+    <string name="timeline_no_date">brak daty</string>
+    <string name="timeline_next_month_plus">później</string>
 </resources>

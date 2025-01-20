@@ -16,17 +16,20 @@ class PresentationService @Inject constructor(
     fun convertToTimelineMap(todoList: List<TodoModel>): Map<TimelineHeader, List<TodoModel>> {
         return todoList.groupBy {
             getTimelineForTodoModel(it)
-        }
+        }.toSortedMap(compareBy {
+            it.priority
+        })
     }
 
     private fun getTimelineForTodoModel(item: TodoModel): TimelineHeader {
         val now = LocalDateTime.now()
         return when {
-            item.startDate == null -> TimelineHeader.OTHER
-            item.startDate!! > now.minusDays(7) -> TimelineHeader.THIS_WEEK
-            item.startDate!! > now.minusDays(14) -> TimelineHeader.NEXT_WEEK
-            item.startDate!! > now.minusMonths(1) -> TimelineHeader.THIS_MONTH
-            else -> TimelineHeader.OTHER
+            item.startDate == null -> TimelineHeader.NO_DATE
+            item.startDate!! < now -> TimelineHeader.OUT_OF_DATE
+            item.startDate!! < now.plusDays(7) -> TimelineHeader.THIS_WEEK
+            item.startDate!! < now.plusDays(14) -> TimelineHeader.NEXT_WEEK
+            item.startDate!! < now.plusMonths(1) -> TimelineHeader.THIS_MONTH
+            else -> TimelineHeader.NEXT_MONTH_PLUS
         }
     }
 }

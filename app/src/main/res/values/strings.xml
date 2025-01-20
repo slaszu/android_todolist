@@ -9,4 +9,10 @@
     <string name="btn_back">Back</string>
     <string name="setting_show_done">Show finished items ?</string>
     <string name="todo_form_is_finished">Finished</string>
+    <string name="timeline_this_week">this week</string>
+    <string name="timeline_next_week">next week</string>
+    <string name="timeline_this_month">within a month</string>
+    <string name="timeline_out_of_date">out of date</string>
+    <string name="timeline_no_date">no date</string>
+    <string name="timeline_next_month_plus">later</string>
 </resources>
