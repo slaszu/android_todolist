@@ -16,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
@@ -33,8 +34,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.R
-import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.FakeTodoModel
+import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.utils.clearTime
 import pl.slaszu.todoapp.domain.utils.isTimeSet
 import pl.slaszu.todoapp.domain.utils.printDate
@@ -43,7 +44,7 @@ import pl.slaszu.todoapp.domain.utils.setTime
 import pl.slaszu.todoapp.domain.utils.toEpochMillis
 import pl.slaszu.todoapp.domain.utils.toLocalDateTime
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
-import java.util.Calendar
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,6 +57,7 @@ fun TodoForm(
         Text("Loading...")
         return
     }
+    val currentTime = LocalDateTime.now()
 
     var text by remember { mutableStateOf(item.text) }
     var done by remember { mutableStateOf(item.done) }
@@ -65,12 +67,21 @@ fun TodoForm(
     var todoLocalDateTime by rememberSaveable { mutableStateOf(item.startDate) }
 
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = todoLocalDateTime?.toEpochMillis()
+        initialSelectedDateMillis = todoLocalDateTime?.toEpochMillis(),
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis >= currentTime.clearTime().toEpochMillis()
+            }
+
+            override fun isSelectableYear(year: Int): Boolean {
+                return year >= currentTime.year
+            }
+        }
     )
-    val currentTime = Calendar.getInstance()
+    val currentTimePicker = currentTime.plusMinutes(15)
     val timePickerState = rememberTimePickerState(
-        initialHour = todoLocalDateTime?.hour ?: currentTime.get(Calendar.HOUR_OF_DAY),
-        initialMinute = todoLocalDateTime?.minute ?: currentTime.get(Calendar.MINUTE),
+        initialHour = todoLocalDateTime?.hour ?: currentTimePicker.hour,
+        initialMinute = todoLocalDateTime?.minute ?: currentTimePicker.minute,
         is24Hour = true,
     )
 
