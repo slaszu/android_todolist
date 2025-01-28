@@ -59,7 +59,7 @@ fun TodoListHeader(
 ) {
     var color = MaterialTheme.colorScheme.primary
     if (header == TimelineHeader.OUT_OF_DATE) {
-        color = MaterialTheme.colorScheme.tertiary
+        color = Color.Red
     }
     Row(
         modifier = Modifier

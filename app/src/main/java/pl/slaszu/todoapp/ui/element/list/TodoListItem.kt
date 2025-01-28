@@ -1,12 +1,12 @@
 package pl.slaszu.todoapp.ui.element.list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -42,7 +42,9 @@ fun TodoListItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp),
+            .clickable {
+                onEditItem()
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
@@ -57,7 +59,7 @@ fun TodoListItem(
         Column(
             modifier = modifier
                 .weight(0.9f)
-                .padding(start = 16.dp)
+                .padding(start = 16.dp, top = 5.dp, bottom = 5.dp, end = 5.dp)
         ) {
             Text(
                 text = item.text,
@@ -71,18 +73,9 @@ fun TodoListItem(
                 Text(
                     text = "Notifications not allowed by user !",
                     style = Typography.labelSmall,
-                    color = Color.Gray
+                    color = Color.Red
                 )
             }
-        }
-
-        IconButton(
-            onClick = { onEditItem() }
-        ) {
-            Icon(
-                Icons.Filled.Edit,
-                contentDescription = "Edit item"
-            )
         }
 
         IconButton(
