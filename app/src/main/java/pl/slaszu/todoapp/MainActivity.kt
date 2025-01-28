@@ -31,6 +31,7 @@ import pl.slaszu.todoapp.domain.reminder.ReminderPermission
 import pl.slaszu.todoapp.domain.reminder.ReminderRepeatService
 import pl.slaszu.todoapp.domain.utils.clearTime
 import pl.slaszu.todoapp.ui.element.form.TodoForm
+import pl.slaszu.todoapp.ui.element.list.TodoFloatingActionButton
 import pl.slaszu.todoapp.ui.element.list.TodoListScreen
 import pl.slaszu.todoapp.ui.element.list.TopBar
 import pl.slaszu.todoapp.ui.element.remiander.ReminderDialog
@@ -105,8 +106,16 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         TopBar(
                             navController = navController,
-                            onAddClick = { formViewModel.loadTodoItemToEditForm(0) },
                             onOptionClick = { navController.navigate(TodoAppSetting) }
+                        )
+                    },
+                    floatingActionButton = {
+                        TodoFloatingActionButton(
+                            navController = navController,
+                            onClick = {
+                                formViewModel.loadTodoItemToEditForm(0)
+                                navController.navigate(TodoAppRouteEditOrNewForm)
+                            }
                         )
                     }
                 ) { innerPadding ->
@@ -119,28 +128,30 @@ class MainActivity : ComponentActivity() {
                             startDestination = TodoAppRouteList
                         ) {
                             composable<TodoAppRouteList> {
-                                TodoListScreen(
-                                    generalItemList = todoList.filter {
-                                        it.startDate == null
-                                    },
-                                    timelineItemList = todoList.filter {
-                                        it.startDate != null
-                                    }.let {
-                                        listViewModel.convertToTimeline(it)
-                                    },
-                                    setting = setting,
-                                    onCheck = { item, checked ->
-                                        listViewModel.check(
-                                            item,
-                                            checked
-                                        )
-                                    },
-                                    onEdit = { item ->
-                                        formViewModel.loadTodoItemToEditForm(item.id)
-                                        navController.navigate(TodoAppRouteEditOrNewForm)
-                                    },
-                                    onDelete = { item -> listViewModel.delete(item) },
-                                )
+                                Column {
+                                    TodoListScreen(
+                                        generalItemList = todoList.filter {
+                                            it.startDate == null
+                                        },
+                                        timelineItemList = todoList.filter {
+                                            it.startDate != null
+                                        }.let {
+                                            listViewModel.convertToTimeline(it)
+                                        },
+                                        setting = setting,
+                                        onCheck = { item, checked ->
+                                            listViewModel.check(
+                                                item,
+                                                checked
+                                            )
+                                        },
+                                        onEdit = { item ->
+                                            formViewModel.loadTodoItemToEditForm(item.id)
+                                            navController.navigate(TodoAppRouteEditOrNewForm)
+                                        },
+                                        onDelete = { item -> listViewModel.delete(item) },
+                                    )
+                                }
                             }
                             composable<TodoAppRouteEditOrNewForm> {
                                 TodoForm(
@@ -178,6 +189,8 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     )
+
+
                 }
             }
         }

@@ -3,7 +3,6 @@ package pl.slaszu.todoapp.ui.element.list
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,14 +19,12 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import pl.slaszu.todoapp.R
-import pl.slaszu.todoapp.ui.navigation.TodoAppRouteEditOrNewForm
 import pl.slaszu.todoapp.ui.navigation.TodoAppRouteList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     navController: NavController,
-    onAddClick: () -> Unit,
     onOptionClick: () -> Unit
 
 ) {
@@ -40,18 +37,6 @@ fun TopBar(
         },
         actions = {
             if (!isListRoute) return@TopAppBar
-
-            IconButton(
-                onClick = {
-                    onAddClick()
-                    navController.navigate(TodoAppRouteEditOrNewForm)
-                }
-            ) {
-                Icon(
-                    Icons.Filled.Add,
-                    contentDescription = "Add new"
-                )
-            }
 
             IconButton(
                 onClick = { onOptionClick() }
@@ -88,7 +73,6 @@ fun TopBarPreview() {
         topBar = {
             TopBar(
                 navController = rememberNavController(),
-                onAddClick = {},
                 onOptionClick = {}
             )
         }
