@@ -11,6 +11,7 @@ import pl.slaszu.todoapp.domain.SettingRepository
 import pl.slaszu.todoapp.domain.TimelineHeader
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.TodoRepository
+import pl.slaszu.todoapp.domain.reminder.ReminderRepeatService
 import javax.inject.Inject
 
 
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class ListViewModel @Inject constructor(
     private val todoRepository: TodoRepository<TodoModel>,
     private val settingRepository: SettingRepository,
-    private val presentationService: PresentationService
+    private val presentationService: PresentationService,
+    private val reminderRepeatService: ReminderRepeatService
 ) : ViewModel() {
 
     val todoListFlow = combine(
@@ -34,9 +36,18 @@ class ListViewModel @Inject constructor(
         return presentationService.convertToTimelineMap(todoList)
     }
 
-    fun saveSetting(setting: Setting) {
+    fun saveSetting(setting: Setting, oldSetting: Setting) {
         this.viewModelScope.launch {
             settingRepository.saveData(setting)
+
+            if (oldSetting.reminderRepeatHour != setting.reminderRepeatHour ||
+                oldSetting.reminderRepeatMinute != setting.reminderRepeatMinute
+            ) {
+                reminderRepeatService.scheduleRepeatOnePerDay(
+                    hour = setting.reminderRepeatHour,
+                    minute = setting.reminderRepeatMinute
+                )
+            }
         }
     }
 

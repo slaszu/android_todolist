@@ -1,7 +1,6 @@
 package pl.slaszu.todoapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -29,7 +28,6 @@ import pl.slaszu.todoapp.domain.notification.NotificationService
 import pl.slaszu.todoapp.domain.reminder.ReminderExactService
 import pl.slaszu.todoapp.domain.reminder.ReminderPermission
 import pl.slaszu.todoapp.domain.reminder.ReminderRepeatService
-import pl.slaszu.todoapp.domain.utils.clearTime
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoFloatingActionButton
 import pl.slaszu.todoapp.ui.element.list.TodoListScreen
@@ -42,7 +40,6 @@ import pl.slaszu.todoapp.ui.navigation.TodoAppSetting
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import pl.slaszu.todoapp.ui.view_model.FormViewModel
 import pl.slaszu.todoapp.ui.view_model.ListViewModel
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -168,7 +165,7 @@ class MainActivity : ComponentActivity() {
                                 SettingScreen(
                                     setting = setting,
                                     onChange = {
-                                        listViewModel.saveSetting(it)
+                                        listViewModel.saveSetting(it, setting)
                                     },
                                     onReminderClick = { reminderPermissionService.openSettingActivity() },
                                     onNotificationClick = { notificationPermissionService.openSettingActivity() }
@@ -223,10 +220,10 @@ class MainActivity : ComponentActivity() {
                     reminderAllowed = reminderAllowed
                 )
 
-                reminderRepeatService.scheduleRepeatOnePerDay(refreshSetting.reminderRepeatHour)
-
-                val itemArray = repository.getByDate(LocalDateTime.now().clearTime())
-                Log.d("myapp", "Items : ${itemArray.size}")
+                reminderRepeatService.scheduleRepeatOnePerDay(
+                    hour = refreshSetting.reminderRepeatHour,
+                    minute = refreshSetting.reminderRepeatMinute
+                )
 
                 settingRepository.saveData(refreshSetting)
                 this.cancel()
