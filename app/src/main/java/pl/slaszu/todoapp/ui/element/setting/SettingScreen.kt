@@ -1,18 +1,14 @@
 package pl.slaszu.todoapp.ui.element.setting
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,11 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.ui.element.form.TimeDialogModel
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
@@ -62,16 +57,11 @@ fun SettingScreen(
     }
 
     Column(modifier = Modifier.padding(10.dp)) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier.fillMaxWidth()
-        ) {
 
-            Text(
-                text = stringResource(R.string.setting_show_done),
-                modifier = Modifier.padding(10.dp, 0.dp)
-            )
+        SettingOption(
+            text = "Pokazać elementy zakończone ?",
+            description = "Będą one pokazywane na liscie zadań"
+        ) {
             Switch(
                 checked = setting.showDone,
                 onCheckedChange = { change ->
@@ -80,18 +70,10 @@ fun SettingScreen(
             )
         }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier.fillMaxWidth()
+        SettingOption(
+            text = "Ogólne dzienne powiadomienie",
+            description = "O ktrórej godzienie ma się pojawiać"
         ) {
-
-            Text(
-                text = "Godzina zbiorczego dziennego powiadomienia",
-                modifier = Modifier
-                    .padding(10.dp, 0.dp)
-                    .weight(0.8f)
-            )
             Button(
                 onClick = { chooseTimeDialog = true }
             ) {
@@ -103,63 +85,59 @@ fun SettingScreen(
             }
         }
 
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier.fillMaxWidth()
+        SettingOption(
+            text = "Powiadomienia",
+            description = "Wyświetlanie powiadomień o zadaniach"
         ) {
 
-            if (setting.notificationAllowed) {
-                Text(
-                    text = "Notifications allowed",
-                    color = Color.Gray
-                )
-            } else {
-                Text(
-                    text = "Notification not allowed",
-                    modifier = Modifier.padding(10.dp, 0.dp)
-                )
-                TextButton(
-                    onClick = onNotificationClick,
-                    colors = ButtonDefaults.buttonColors()
-                ) {
-                    Text(
-                        text = "Open settings"
-                    )
-                }
-            }
+            Switch(
+                checked = setting.notificationAllowed,
+                onCheckedChange = { onNotificationClick() }
+            )
         }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier.fillMaxWidth()
+
+        SettingOption(
+            text = "Powiadomienia",
+            description = "Ustawianie powiadomień w systemie"
         ) {
 
-            if (setting.reminderAllowed) {
-                Text(
-                    text = "Reminders allowed",
-                    color = Color.Gray
-                )
-            } else {
-                Text(
-                    text = "Reminders not allowed",
-                    modifier = Modifier.padding(10.dp, 0.dp)
-                )
-                TextButton(
-                    onClick = onReminderClick,
-                    colors = ButtonDefaults.buttonColors()
-                ) {
-                    Text(
-                        text = "Open settings"
-                    )
-                }
-            }
+            Switch(
+                checked = setting.reminderAllowed,
+                onCheckedChange = { onReminderClick() }
+            )
         }
     }
+}
 
-    HorizontalDivider()
+@Composable
+private fun SettingOption(
+    text: String,
+    description: String,
+    content: @Composable () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(0.dp, 10.dp)
+    ) {
+
+        Column(
+            modifier = Modifier.weight(0.9f)
+        ) {
+            Text(
+                text = text,
+                fontSize = TextUnit(4f, TextUnitType.Em),
+
+                )
+            Text(
+                text = description,
+                fontSize = TextUnit(3f, TextUnitType.Em),
+            )
+        }
+        content()
+    }
 }
 
 @Preview
@@ -168,7 +146,7 @@ fun TodoListSettingPreview() {
     TodoAppTheme {
         Scaffold() { it ->
             SettingScreen(
-                setting = Setting(true, true, reminderAllowed = false),
+                setting = Setting(true, false, reminderAllowed = false),
                 onChange = {},
                 onNotificationClick = {},
                 onReminderClick = {},

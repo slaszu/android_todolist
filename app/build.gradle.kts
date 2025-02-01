@@ -61,6 +61,10 @@ android {
 
 dependencies {
 
+//    implementation("androidx.activity:activity-ktx:1.10.0")
+//    implementation("androidx.fragment:fragment-ktx:1.8.5")
+
+
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
     kapt(libs.androidx.room.compiler)
