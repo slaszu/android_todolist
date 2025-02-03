@@ -11,6 +11,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,11 +22,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import pl.slaszu.todoapp.domain.FakeTodoModel
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.utils.printStartDate
+import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import pl.slaszu.todoapp.ui.theme.Typography
+import java.time.LocalDateTime
 
 @Composable
 fun TodoListItem(
@@ -64,10 +71,11 @@ fun TodoListItem(
             Text(
                 text = item.text,
                 textDecoration = TextDecoration.LineThrough.takeIf { item.done },
+                fontSize = TextUnit(4f, TextUnitType.Em)
             )
             Text(
                 text = item.printStartDate("No date", "Time not set"),
-                style = Typography.labelSmall,
+                fontSize = TextUnit(3f, TextUnitType.Em)
             )
             if (item.startDate != null && !setting.notificationAllowed) {
                 Text(
@@ -102,4 +110,24 @@ fun TodoListItem(
     }
 
     HorizontalDivider()
+}
+@Preview
+@Composable
+fun TodoListItemPreview() {
+    TodoAppTheme {
+        Scaffold() { it ->
+            TodoListItem(
+                item = FakeTodoModel(
+                    text = "Jakieś tam przypomnienie, które jest testowe",
+                    startDate = LocalDateTime.now()
+                ),
+                setting = Setting(
+
+                ),
+                onCheckItem = {},
+                onEditItem = {},
+                onDeleteItem = {}
+            )
+        }
+    }
 }

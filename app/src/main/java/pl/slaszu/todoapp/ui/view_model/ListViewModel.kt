@@ -1,5 +1,8 @@
 package pl.slaszu.todoapp.ui.view_model
 
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,19 +54,62 @@ class ListViewModel @Inject constructor(
         }
     }
 
-    fun check(item: TodoModel, checked: Boolean) {
+    fun check(item: TodoModel, checked: Boolean, snackbarHostState: SnackbarHostState? = null) {
         this.viewModelScope.launch {
             todoRepository.save(
                 item.copy(
                     "done" to checked
                 )
             )
+
+            // snackbar only on close item
+            if (snackbarHostState == null || !checked) return@launch
+
+            val result = snackbarHostState
+                .showSnackbar(
+                    message = "Done: ${item.text}",
+                    actionLabel = "Undone",
+                    duration = SnackbarDuration.Short,
+                    withDismissAction = true
+                )
+            when (result) {
+                SnackbarResult.ActionPerformed -> {
+                    todoRepository.save(
+                        item.copy(
+                            "done" to false
+                        )
+                    )
+                }
+
+                SnackbarResult.Dismissed -> {
+                    /* Handle snackbar dismissed */
+                }
+            }
         }
     }
 
-    fun delete(item: TodoModel) {
+    fun delete(item: TodoModel, snackbarHostState: SnackbarHostState? = null) {
         this.viewModelScope.launch {
             todoRepository.delete(item)
+
+            if (snackbarHostState == null) return@launch
+
+            val result = snackbarHostState
+                .showSnackbar(
+                    message = "Deleted: ${item.text}",
+                    actionLabel = "Undone",
+                    duration = SnackbarDuration.Long,
+                    withDismissAction = true
+                )
+            when (result) {
+                SnackbarResult.ActionPerformed -> {
+                    todoRepository.save(item)
+                }
+
+                SnackbarResult.Dismissed -> {
+                    /* Handle snackbar dismissed */
+                }
+            }
         }
     }
 

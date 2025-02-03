@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -98,8 +101,13 @@ class MainActivity : ComponentActivity() {
             val todoList =
                 listViewModel.todoListFlow.collectAsStateWithLifecycle(emptyList()).value
 
+            val snackbarHostState = remember { SnackbarHostState() }
+
             TodoAppTheme {
                 Scaffold(
+                    snackbarHost = {
+                        SnackbarHost(hostState = snackbarHostState)
+                    },
                     topBar = {
                         TopBar(
                             navController = navController,
@@ -139,14 +147,20 @@ class MainActivity : ComponentActivity() {
                                         onCheck = { item, checked ->
                                             listViewModel.check(
                                                 item,
-                                                checked
+                                                checked,
+                                                snackbarHostState
                                             )
                                         },
                                         onEdit = { item ->
                                             formViewModel.loadTodoItemToEditForm(item.id)
                                             navController.navigate(TodoAppRouteEditOrNewForm)
                                         },
-                                        onDelete = { item -> listViewModel.delete(item) },
+                                        onDelete = { item ->
+                                            listViewModel.delete(
+                                                item,
+                                                snackbarHostState
+                                            )
+                                        },
                                     )
                                 }
                             }
@@ -182,7 +196,8 @@ class MainActivity : ComponentActivity() {
                         onCloseItem = { item ->
                             listViewModel.check(
                                 item,
-                                true
+                                true,
+                                snackbarHostState
                             )
                         }
                     )
@@ -196,7 +211,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun getReminderItemIds(): LongArray {
-        return this.intent.getLongArrayExtra(NotificationService.INTENT_KEY) ?: longArrayOf(1, 2, 3)
+        return this.intent.getLongArrayExtra(NotificationService.INTENT_KEY) ?: longArrayOf()
 
     }
 
