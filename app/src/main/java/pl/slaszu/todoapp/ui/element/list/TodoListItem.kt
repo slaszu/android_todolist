@@ -31,7 +31,7 @@ import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.utils.printStartDate
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
-import pl.slaszu.todoapp.ui.theme.Typography
+import pl.slaszu.todoapp.ui.theme.TodoAppTypography
 import java.time.LocalDateTime
 
 @Composable
@@ -80,7 +80,7 @@ fun TodoListItem(
             if (item.startDate != null && !setting.notificationAllowed) {
                 Text(
                     text = "Notifications not allowed by user !",
-                    style = Typography.labelSmall,
+                    style = TodoAppTypography.labelSmall,
                     color = Color.Red
                 )
             }

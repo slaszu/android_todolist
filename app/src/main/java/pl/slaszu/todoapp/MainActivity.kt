@@ -10,7 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -103,6 +106,8 @@ class MainActivity : ComponentActivity() {
 
             val snackbarHostState = remember { SnackbarHostState() }
 
+            var tabIndex by remember { mutableIntStateOf(0) }
+
             TodoAppTheme {
                 Scaffold(
                     snackbarHost = {
@@ -161,6 +166,10 @@ class MainActivity : ComponentActivity() {
                                                 snackbarHostState
                                             )
                                         },
+                                        tabIndex = tabIndex,
+                                        onTabChange = { selectedTabIndex ->
+                                            tabIndex = selectedTabIndex
+                                        }
                                     )
                                 }
                             }

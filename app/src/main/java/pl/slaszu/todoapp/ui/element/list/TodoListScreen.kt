@@ -5,22 +5,25 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material3.Badge
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import pl.slaszu.todoapp.domain.FakeTodoModel
+import pl.slaszu.todoapp.domain.PresentationService
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.TimelineHeader
 import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.ui.theme.TodoAppTheme
+import java.time.LocalDateTime
 
 @Composable
 fun TodoListScreen(
@@ -30,11 +33,10 @@ fun TodoListScreen(
     onCheck: (TodoModel, Boolean) -> Unit,
     onEdit: (TodoModel) -> Unit,
     onDelete: (TodoModel) -> Unit,
+    tabIndex: Int = 0,
+    onTabChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    var tabIndex by remember { mutableIntStateOf(0) }
-
     Column {
         TabRow(
             selectedTabIndex = tabIndex,
@@ -48,10 +50,15 @@ fun TodoListScreen(
                             modifier = Modifier.padding(5.dp, 0.dp)
                         )
                         Text("Timeline")
+                        Badge(
+                            modifier = Modifier.padding(5.dp, 2.dp)
+                        ) {
+                            Text("8")
+                        }
                     }
                 },
                 selected = tabIndex == 0,
-                onClick = { tabIndex = 0 }
+                onClick = { onTabChange(0) }
             )
             Tab(
                 text = {
@@ -65,7 +72,7 @@ fun TodoListScreen(
                     }
                 },
                 selected = tabIndex == 1,
-                onClick = { tabIndex = 1 }
+                onClick = { onTabChange(1) }
             )
         }
         HorizontalDivider(
@@ -91,30 +98,40 @@ fun TodoListScreen(
                 modifier = modifier
             )
         }
-
-
-
     }
 }
 
-//@Preview
-//@Composable
-//fun TodoListScreenPreview() {
-//    TodoAppTheme {
-//        Scaffold() { it ->
-//            TodoListScreen(
-//                generalItemList = List(5) { i ->
-//                    FakeTodoModel(text = "General item nr $i", startDate = LocalDateTime.now())
-//                },
-//                timelineItemList = List(2) { i ->
-//                    FakeTodoModel(text = "Timeline item nr $i", startDate = LocalDateTime.now())
-//                },
-//                setting = Setting(),
-//                onCheck = { _, _ -> },
-//                onEdit = {},
-//                onDelete = {},
-//                modifier = Modifier.padding(it)
-//            )
-//        }
-//    }
-//}
+private fun MyTab() {
+
+}
+
+@Preview
+@Composable
+fun TodoListScreenPreview() {
+    val presentationService = PresentationService()
+
+    TodoAppTheme {
+        Scaffold() { it ->
+            TodoListScreen(
+                generalItemList = List(5) { i ->
+                    FakeTodoModel(text = "General item nr $i")
+                },
+                timelineItemList = List(10) { i ->
+                    FakeTodoModel(
+                        text = "Timeline item nr $i",
+                        startDate = LocalDateTime.now().plusDays(i.toLong() * 2)
+                    )
+                }.let {
+                    presentationService.convertToTimelineMap(it)
+                },
+                setting = Setting(),
+                onCheck = { _, _ -> },
+                onEdit = {},
+                onDelete = {},
+                tabIndex = 0,
+                onTabChange = {},
+                modifier = Modifier.padding(it)
+            )
+        }
+    }
+}
