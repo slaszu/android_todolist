@@ -15,12 +15,14 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.domain.FakeTodoModel
 import pl.slaszu.todoapp.domain.PresentationService
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.TimelineHeader
+import pl.slaszu.todoapp.domain.TodoItemType
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import java.time.LocalDateTime
@@ -33,53 +35,35 @@ fun TodoListScreen(
     onCheck: (TodoModel, Boolean) -> Unit,
     onEdit: (TodoModel) -> Unit,
     onDelete: (TodoModel) -> Unit,
-    tabIndex: Int = 0,
-    onTabChange: (Int) -> Unit,
+    tabIndex: TodoItemType,
+    onTabChange: (TodoItemType) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column {
         TabRow(
-            selectedTabIndex = tabIndex,
+            selectedTabIndex = tabIndex.index,
         ) {
-            Tab(
-                text = {
-                    Row {
-                        Icon(
-                            Icons.AutoMirrored.Filled.List,
-                            contentDescription = "General icon",
-                            modifier = Modifier.padding(5.dp, 0.dp)
-                        )
-                        Text("Timeline")
-                        Badge(
-                            modifier = Modifier.padding(5.dp, 2.dp)
-                        ) {
-                            Text("8")
-                        }
-                    }
-                },
-                selected = tabIndex == 0,
-                onClick = { onTabChange(0) }
+            MyTab(
+                type = TodoItemType.TIMELINE,
+                quantity = timelineItemList.map {
+                    it.value.size
+                }.sum(),
+                selectedType = tabIndex,
+                onTabChange = onTabChange
             )
-            Tab(
-                text = {
-                    Row {
-                        Icon(
-                            Icons.AutoMirrored.Filled.List,
-                            contentDescription = "General icon",
-                            modifier = Modifier.padding(5.dp, 0.dp)
-                        )
-                        Text("Other")
-                    }
-                },
-                selected = tabIndex == 1,
-                onClick = { onTabChange(1) }
+
+            MyTab(
+                type = TodoItemType.GENERAL,
+                quantity = generalItemList.size,
+                selectedType = tabIndex,
+                onTabChange = onTabChange
             )
         }
         HorizontalDivider(
             color = MaterialTheme.colorScheme.background
         )
 
-        if (tabIndex == 0) {
+        if (tabIndex == TodoItemType.TIMELINE) {
             TodoListTimeline(
                 itemsGrouped = timelineItemList,
                 setting = setting,
@@ -101,9 +85,38 @@ fun TodoListScreen(
     }
 }
 
-private fun MyTab() {
-
+@Composable
+private fun MyTab(
+    type: TodoItemType,
+    selectedType: TodoItemType,
+    quantity: Int,
+    onTabChange: (TodoItemType) -> Unit
+) {
+    Tab(
+        text = {
+            Row {
+                Icon(
+                    Icons.AutoMirrored.Filled.List,
+                    contentDescription = "General icon",
+                    modifier = Modifier.padding(5.dp, 0.dp)
+                )
+                Text(
+                    text = stringResource(type.translationResourceKey)
+                )
+                Badge(
+                    modifier = Modifier.padding(5.dp, 2.dp)
+                ) {
+                    Text(
+                        text = quantity.toString()
+                    )
+                }
+            }
+        },
+        selected = type == selectedType,
+        onClick = { onTabChange(type) }
+    )
 }
+
 
 @Preview
 @Composable
@@ -128,7 +141,7 @@ fun TodoListScreenPreview() {
                 onCheck = { _, _ -> },
                 onEdit = {},
                 onDelete = {},
-                tabIndex = 0,
+                tabIndex = TodoItemType.TIMELINE,
                 onTabChange = {},
                 modifier = Modifier.padding(it)
             )

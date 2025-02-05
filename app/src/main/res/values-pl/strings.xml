@@ -15,4 +15,7 @@
     <string name="timeline_out_of_date">nieaktualne</string>
     <string name="timeline_no_date">brak daty</string>
     <string name="timeline_next_month_plus">później</string>
+    <string name="item_type_timeline">Oś czasu</string>
+    <string name="item_type_general">Ogólne</string>
+    <string name="item_type_done">Zakończone</string>
 </resources>

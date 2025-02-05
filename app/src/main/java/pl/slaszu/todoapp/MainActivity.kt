@@ -11,7 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.SettingRepository
+import pl.slaszu.todoapp.domain.TodoItemType
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.TodoRepository
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionService
@@ -106,7 +107,7 @@ class MainActivity : ComponentActivity() {
 
             val snackbarHostState = remember { SnackbarHostState() }
 
-            var tabIndex by remember { mutableIntStateOf(0) }
+            var tabIndex by remember { mutableStateOf(TodoItemType.TIMELINE) }
 
             TodoAppTheme {
                 Scaffold(

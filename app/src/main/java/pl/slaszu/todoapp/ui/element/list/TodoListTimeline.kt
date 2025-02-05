@@ -1,6 +1,7 @@
 package pl.slaszu.todoapp.ui.element.list
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -63,8 +64,7 @@ fun TodoListHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            //.padding(5.dp)
-            //.background(color = color)
+            .background(color = MaterialTheme.colorScheme.background)
     ) {
         Text(
             modifier = Modifier.padding(5.dp),
