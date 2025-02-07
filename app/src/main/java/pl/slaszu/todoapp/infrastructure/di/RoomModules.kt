@@ -1,7 +1,6 @@
 package pl.slaszu.todoapp.infrastructure.di
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
@@ -31,7 +30,7 @@ object RoomProviders {
         )
             .setQueryCallback(
                 { sqlQuery, bindArgs ->
-                    Log.d("myapp", "SQL Query: $sqlQuery SQL Args: $bindArgs")
+                    //Log.d("myapp", "SQL Query: $sqlQuery SQL Args: $bindArgs")
                 },
                 Executors.newSingleThreadExecutor()
             )

@@ -147,7 +147,7 @@ fun TodoForm(
                     datePickerState = datePickerState,
                     onDismiss = { chooseDateDialog = false },
                     onDateSelected = { millis ->
-                        todoLocalDateTime = millis?.toLocalDateTime()
+                        todoLocalDateTime = millis?.toLocalDateTime()?.clearTime()
                     }
                 )
             }

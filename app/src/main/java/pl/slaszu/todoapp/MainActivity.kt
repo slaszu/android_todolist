@@ -1,6 +1,7 @@
 package pl.slaszu.todoapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.cancellable
@@ -41,6 +43,7 @@ import pl.slaszu.todoapp.ui.element.list.TodoListScreen
 import pl.slaszu.todoapp.ui.element.list.TopBar
 import pl.slaszu.todoapp.ui.element.remiander.ReminderDialog
 import pl.slaszu.todoapp.ui.element.setting.SettingScreen
+import pl.slaszu.todoapp.ui.navigation.TodoAppReminderItems
 import pl.slaszu.todoapp.ui.navigation.TodoAppRouteEditOrNewForm
 import pl.slaszu.todoapp.ui.navigation.TodoAppRouteList
 import pl.slaszu.todoapp.ui.navigation.TodoAppSetting
@@ -95,6 +98,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val reminderIds = this.getReminderItemIds()
+
         setContent {
             val navController = rememberNavController()
             val listViewModel: ListViewModel = viewModel()
@@ -108,6 +113,7 @@ class MainActivity : ComponentActivity() {
             val snackbarHostState = remember { SnackbarHostState() }
 
             var tabIndex by remember { mutableStateOf(TodoItemType.TIMELINE) }
+
 
             TodoAppTheme {
                 Scaffold(
@@ -136,7 +142,11 @@ class MainActivity : ComponentActivity() {
                     ) {
                         NavHost(
                             navController = navController,
-                            startDestination = TodoAppRouteList
+                            startDestination = if (reminderIds.isEmpty()) {
+                                TodoAppRouteList
+                            } else {
+                                TodoAppReminderItems(reminderIds)
+                            }
                         ) {
                             composable<TodoAppRouteList> {
                                 Column {
@@ -195,39 +205,60 @@ class MainActivity : ComponentActivity() {
                                     onNotificationClick = { notificationPermissionService.openSettingActivity() }
                                 )
                             }
+                            composable<TodoAppReminderItems> { backStackEntry ->
+                                val param = backStackEntry.toRoute<TodoAppReminderItems>()
+                                ReminderDialog(
+                                    reminderItemsId = param.ids,
+                                    items = todoList,
+                                    onDismiss = { navController.navigate(TodoAppRouteList) },
+                                    onCloseItem = { item ->
+                                        listViewModel.check(item, true, snackbarHostState)
+                                    }
+                                )
+                            }
                         }
                     }
-
-                    val reminderItemsId = getReminderItemIds()
-                    ReminderDialog(
-                        items = todoList.filter {
-                            reminderItemsId.contains(it.id)
-                        },
-                        onCloseItem = { item ->
-                            listViewModel.check(
-                                item,
-                                true,
-                                snackbarHostState
-                            )
-                        }
-                    )
-
-
                 }
             }
+
+//            val reminderItemsId by remember { mutableStateOf(getReminderItemIds()) }
+//            ReminderDialog(
+//                reminderItemsId = reminderItemsId,
+//                items = todoList,
+//                onCloseItem = { item ->
+//                    listViewModel.check(
+//                        item,
+//                        true,
+//                        snackbarHostState
+//                    )
+//                }
+//            )
+
         }
 
         this.checkSystemSettings()
+        this.getReminderItemIds()
+        val notificationService = NotificationService(this)
+        lifecycleScope.launch {
+            val item = repository.getById(8)
+
+            notificationService.sendNotification(item!!)
+        }
     }
 
     private fun getReminderItemIds(): LongArray {
-        return this.intent.getLongArrayExtra(NotificationService.INTENT_KEY) ?: longArrayOf()
-
+        val itemIds = this.intent.getLongArrayExtra(NotificationService.INTENT_KEY) ?: longArrayOf()
+        Log.d(
+            "myapp",
+            "Reminder item ids (from intent)[${itemIds.size}]: ${itemIds.joinToString()}"
+        )
+        return itemIds;
     }
 
     override fun onRestart() {
         super.onRestart()
         this.checkSystemSettings()
+        this.getReminderItemIds()
     }
 
     private fun checkSystemSettings() {

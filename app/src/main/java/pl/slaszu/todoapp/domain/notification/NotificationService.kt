@@ -49,7 +49,7 @@ class NotificationService(
         }
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
-            context, 0, intent, PendingIntent.FLAG_IMMUTABLE
+            context, 0, intent, PendingIntent.FLAG_MUTABLE
         )
 
         val (text, title) = this.prepareTextForNotification(items)

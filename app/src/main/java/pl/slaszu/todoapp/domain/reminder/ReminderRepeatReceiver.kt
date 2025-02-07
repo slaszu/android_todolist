@@ -33,6 +33,9 @@ class ReminderRepeatReceiver : BroadcastReceiver() {
         runBlocking {
             val itemArray = repository.getByDate(LocalDateTime.now().clearTime())
             Log.d("myapp", "Receiver: notification send: $itemArray")
+
+            if (itemArray.isEmpty()) return@runBlocking
+
             notificationService.sendNotification(itemArray)
 
             Log.d("myapp", "Receiver: coroutine done")

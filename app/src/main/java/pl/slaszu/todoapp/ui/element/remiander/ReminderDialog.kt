@@ -29,64 +29,68 @@ import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 
 @Composable
 fun ReminderDialog(
+    reminderItemsId: LongArray,
     items: List<TodoModel>,
+    onDismiss: () -> Unit,
     onCloseItem: (TodoModel) -> Unit
 ) {
+    val items = items.filter {
+        reminderItemsId.contains(it.id)
+    }
+
     if (items.isEmpty()) return
 
-    var show by rememberSaveable { mutableStateOf(true) }
-    if (show) {
 
-        val checkedIds = items.map { it.id }.toMutableSet()
-        var checkedIdsCount by rememberSaveable { mutableStateOf(checkedIds.size) }
+    val checkedIds = items.map { it.id }.toMutableSet()
+    var checkedIdsCount by rememberSaveable { mutableStateOf(checkedIds.size) }
 
-        Dialog(
-            onDismissRequest = { show = false }
+    Dialog(
+        onDismissRequest = { onDismiss() }
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                LazyColumn {
-                    items(
-                        items = items
-                    ) { todoItem ->
-                        ReminderDialogItem(
-                            item = todoItem,
-                            onCheck = {
-                                if (it) {
-                                    checkedIds.add(todoItem.id)
-                                } else {
-                                    checkedIds.remove(todoItem.id)
-                                }
-                                checkedIdsCount = checkedIds.size
-                                Log.d("myapp", checkedIds.joinToString())
+            LazyColumn {
+                items(
+                    items = items
+                ) { todoItem ->
+                    ReminderDialogItem(
+                        item = todoItem,
+                        onCheck = {
+                            if (it) {
+                                checkedIds.add(todoItem.id)
+                            } else {
+                                checkedIds.remove(todoItem.id)
                             }
-                        )
-                    }
+                            checkedIdsCount = checkedIds.size
+                            Log.d("myapp", checkedIds.joinToString())
+                        }
+                    )
                 }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Button(
-                        onClick = {
-                            items.forEach {
-                                if (checkedIds.contains(it.id)) {
-                                    onCloseItem(it)
-                                }
-                            }
-                            show = false
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Text("Zakończ zadania (${checkedIdsCount})")
-                    }
-                }
-
             }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Button(
+                    onClick = {
+                        items.forEach {
+                            if (checkedIds.contains(it.id)) {
+                                onCloseItem(it)
+                            }
+                        }
+                        onDismiss()
+                    },
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    Text("Zakończ zadania (${checkedIdsCount})")
+                }
+            }
+
         }
     }
+
 }
 
 @Composable
@@ -120,11 +124,13 @@ fun ReminderDialogPreview() {
     TodoAppTheme {
         Scaffold() { it ->
             ReminderDialog(
+                reminderItemsId = longArrayOf(1, 2),
                 items = listOf(
                     FakeTodoModel(1, "fakowy item 1"),
                     FakeTodoModel(2, "fakowy item drugi !")
                 ),
-                onCloseItem = {}
+                onCloseItem = {},
+                onDismiss = {}
             )
         }
     }
