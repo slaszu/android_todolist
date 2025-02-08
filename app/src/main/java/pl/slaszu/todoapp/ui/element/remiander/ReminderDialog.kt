@@ -67,27 +67,29 @@ fun ReminderDialog(
                         }
                     )
                 }
-            }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Button(
-                    onClick = {
-                        items.forEach {
-                            if (checkedIds.contains(it.id)) {
-                                onCloseItem(it)
-                            }
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Button(
+                            onClick = {
+                                items.forEach {
+                                    if (checkedIds.contains(it.id)) {
+                                        onCloseItem(it)
+                                    }
+                                }
+                                onDismiss()
+                            },
+                            modifier = Modifier.padding(5.dp)
+                        ) {
+                            Text("Zakończ zadania (${checkedIdsCount})")
                         }
-                        onDismiss()
-                    },
-                    modifier = Modifier.padding(5.dp)
-                ) {
-                    Text("Zakończ zadania (${checkedIdsCount})")
+                    }
+
                 }
             }
-
         }
     }
 

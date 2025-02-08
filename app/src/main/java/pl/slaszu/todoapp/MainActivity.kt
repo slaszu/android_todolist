@@ -220,30 +220,18 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-
-//            val reminderItemsId by remember { mutableStateOf(getReminderItemIds()) }
-//            ReminderDialog(
-//                reminderItemsId = reminderItemsId,
-//                items = todoList,
-//                onCloseItem = { item ->
-//                    listViewModel.check(
-//                        item,
-//                        true,
-//                        snackbarHostState
-//                    )
-//                }
-//            )
-
         }
 
         this.checkSystemSettings()
         this.getReminderItemIds()
-        val notificationService = NotificationService(this)
-        lifecycleScope.launch {
-            val item = repository.getById(8)
-
-            notificationService.sendNotification(item!!)
-        }
+//        val notificationService = NotificationService(this)
+//        lifecycleScope.launch {
+//            repository.getTodoList().collect { items ->
+//                val items = items.subList(0,4)
+//                notificationService.sendNotification(items!!.toTypedArray())
+//            }
+//
+//        }
     }
 
     private fun getReminderItemIds(): LongArray {
