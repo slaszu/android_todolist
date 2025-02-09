@@ -112,7 +112,7 @@ class MainActivity : ComponentActivity() {
 
             val snackbarHostState = remember { SnackbarHostState() }
 
-            var tabIndex by remember { mutableStateOf(TodoItemType.TIMELINE) }
+            var tabSelectedRemember by remember { mutableStateOf(TodoItemType.TIMELINE) }
 
 
             TodoAppTheme {
@@ -152,10 +152,15 @@ class MainActivity : ComponentActivity() {
                                 Column {
                                     TodoListScreen(
                                         generalItemList = todoList.filter {
-                                            it.startDate == null
+                                            it.startDate == null && !it.done
                                         },
                                         timelineItemList = todoList.filter {
-                                            it.startDate != null
+                                            it.startDate != null && !it.done
+                                        }.let {
+                                            listViewModel.convertToTimeline(it)
+                                        },
+                                        doneTimelineList = todoList.filter {
+                                            it.done
                                         }.let {
                                             listViewModel.convertToTimeline(it)
                                         },
@@ -177,9 +182,9 @@ class MainActivity : ComponentActivity() {
                                                 snackbarHostState
                                             )
                                         },
-                                        tabIndex = tabIndex,
+                                        tabSelectedRemember = tabSelectedRemember,
                                         onTabChange = { selectedTabIndex ->
-                                            tabIndex = selectedTabIndex
+                                            tabSelectedRemember = selectedTabIndex
                                         }
                                     )
                                 }

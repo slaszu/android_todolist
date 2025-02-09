@@ -2,22 +2,27 @@ package pl.slaszu.todoapp.ui.element.list
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Badge
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.FakeTodoModel
 import pl.slaszu.todoapp.domain.PresentationService
 import pl.slaszu.todoapp.domain.Setting
@@ -31,56 +36,101 @@ import java.time.LocalDateTime
 fun TodoListScreen(
     generalItemList: List<TodoModel> = emptyList(),
     timelineItemList: Map<TimelineHeader, List<TodoModel>> = emptyMap(),
+    doneTimelineList: Map<TimelineHeader, List<TodoModel>> = emptyMap(),
     setting: Setting,
     onCheck: (TodoModel, Boolean) -> Unit,
     onEdit: (TodoModel) -> Unit,
     onDelete: (TodoModel) -> Unit,
-    tabIndex: TodoItemType,
+    tabSelectedRemember: TodoItemType,
     onTabChange: (TodoItemType) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    val scope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(pageCount = { TodoItemType.entries.size })
+    //val selectedTabIndex by remember { derivedStateOf { pagerState.currentPage } }
+
+    val onTabChangeWithScroll: (TodoItemType) -> Unit = {
+        onTabChange(it)
+        scope.launch {
+            pagerState.animateScrollToPage(it.ordinal)
+        }
+    }
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            onTabChange(TodoItemType.entries[page])
+        }
+    }
+
     Column {
         TabRow(
-            selectedTabIndex = tabIndex.index,
+            selectedTabIndex = tabSelectedRemember.index,
         ) {
             MyTab(
                 type = TodoItemType.TIMELINE,
                 quantity = timelineItemList.map {
                     it.value.size
                 }.sum(),
-                selectedType = tabIndex,
-                onTabChange = onTabChange
+                selectedType = tabSelectedRemember,
+                onTabChange = onTabChangeWithScroll
             )
 
             MyTab(
                 type = TodoItemType.GENERAL,
                 quantity = generalItemList.size,
-                selectedType = tabIndex,
-                onTabChange = onTabChange
+                selectedType = tabSelectedRemember,
+                onTabChange = onTabChangeWithScroll
+            )
+
+            MyTab(
+                type = TodoItemType.DONE,
+                quantity = doneTimelineList.map {
+                    it.value.size
+                }.sum(),
+                selectedType = tabSelectedRemember,
+                onTabChange = onTabChangeWithScroll
             )
         }
         HorizontalDivider(
             color = MaterialTheme.colorScheme.background
         )
 
-        if (tabIndex == TodoItemType.TIMELINE) {
-            TodoListTimeline(
-                itemsGrouped = timelineItemList,
-                setting = setting,
-                onCheck = onCheck,
-                onEdit = onEdit,
-                onDelete = onDelete,
-                modifier = modifier
-            )
-        } else {
-            TodoList(
-                items = generalItemList,
-                setting = setting,
-                onCheck = onCheck,
-                onEdit = onEdit,
-                onDelete = onDelete,
-                modifier = modifier
-            )
+        HorizontalPager(
+            state = pagerState,
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier.fillMaxHeight()
+        ) { page ->
+
+            when {
+                TodoItemType.entries[page] == TodoItemType.TIMELINE -> TodoListTimeline(
+                    itemsGrouped = timelineItemList,
+                    setting = setting,
+                    onCheck = onCheck,
+                    onEdit = onEdit,
+                    onDelete = onDelete,
+                    modifier = modifier
+                )
+
+                TodoItemType.entries[page] == TodoItemType.DONE -> TodoListTimeline(
+                    itemsGrouped = doneTimelineList,
+                    setting = setting,
+                    onCheck = onCheck,
+                    onEdit = onEdit,
+                    onDelete = onDelete,
+                    modifier = modifier
+                )
+
+                TodoItemType.entries[page] == TodoItemType.GENERAL -> TodoList(
+                    items = generalItemList,
+                    setting = setting,
+                    onCheck = onCheck,
+                    onEdit = onEdit,
+                    onDelete = onDelete,
+                    modifier = modifier
+                )
+            }
+
         }
     }
 }
@@ -95,14 +145,7 @@ private fun MyTab(
     Tab(
         text = {
             Row {
-                Icon(
-                    Icons.AutoMirrored.Filled.List,
-                    contentDescription = "General icon",
-                    modifier = Modifier.padding(5.dp, 0.dp)
-                )
-                Text(
-                    text = stringResource(type.translationResourceKey)
-                )
+
                 Badge(
                     modifier = Modifier.padding(5.dp, 2.dp)
                 ) {
@@ -110,6 +153,9 @@ private fun MyTab(
                         text = quantity.toString()
                     )
                 }
+                Text(
+                    text = stringResource(type.translationResourceKey)
+                )
             }
         },
         selected = type == selectedType,
@@ -137,11 +183,19 @@ fun TodoListScreenPreview() {
                 }.let {
                     presentationService.convertToTimelineMap(it)
                 },
+                doneTimelineList = List(5) { i ->
+                    FakeTodoModel(
+                        text = "Timeline item nr $i",
+                        startDate = LocalDateTime.now().plusDays(i.toLong() * 2)
+                    )
+                }.let {
+                    presentationService.convertToTimelineMap(it)
+                },
                 setting = Setting(),
                 onCheck = { _, _ -> },
                 onEdit = {},
                 onDelete = {},
-                tabIndex = TodoItemType.TIMELINE,
+                tabSelectedRemember = TodoItemType.TIMELINE,
                 onTabChange = {},
                 modifier = Modifier.padding(it)
             )
