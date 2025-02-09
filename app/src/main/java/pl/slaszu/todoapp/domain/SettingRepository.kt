@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Setting(
-    val showDone: Boolean = true,
     val notificationAllowed: Boolean = false,
     val reminderAllowed: Boolean = false,
     val tabSelectedIndex: Int = 0,

@@ -59,18 +59,6 @@ fun SettingScreen(
     Column(modifier = Modifier.padding(10.dp)) {
 
         SettingOption(
-            text = "Pokazać elementy zakończone ?",
-            description = "Będą one pokazywane na liscie zadań"
-        ) {
-            Switch(
-                checked = setting.showDone,
-                onCheckedChange = { change ->
-                    onChange(setting.copy(showDone = change))
-                }
-            )
-        }
-
-        SettingOption(
             text = "Ogólne dzienne powiadomienie",
             description = "O ktrórej godzienie ma się pojawiać"
         ) {
@@ -146,7 +134,7 @@ fun TodoListSettingPreview() {
     TodoAppTheme {
         Scaffold() { it ->
             SettingScreen(
-                setting = Setting(true, false, reminderAllowed = false),
+                setting = Setting(true, false),
                 onChange = {},
                 onNotificationClick = {},
                 onReminderClick = {},

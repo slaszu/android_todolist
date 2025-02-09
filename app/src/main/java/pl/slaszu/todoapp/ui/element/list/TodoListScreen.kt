@@ -47,8 +47,10 @@ fun TodoListScreen(
 ) {
 
     val scope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(pageCount = { TodoItemType.entries.size })
-    //val selectedTabIndex by remember { derivedStateOf { pagerState.currentPage } }
+    val pagerState = rememberPagerState(
+        initialPage = tabSelectedRemember.ordinal,
+        pageCount = { TodoItemType.entries.size }
+    )
 
     val onTabChangeWithScroll: (TodoItemType) -> Unit = {
         onTabChange(it)
