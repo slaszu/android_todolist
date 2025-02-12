@@ -8,7 +8,7 @@
     <string name="btn_delete">Delete</string>
     <string name="btn_back">Back</string>
     <string name="setting_show_done">Show finished items ?</string>
-    <string name="todo_form_is_finished">Finished</string>
+    <string name="todo_form_is_finished">Done</string>
     <string name="timeline_this_week">this week</string>
     <string name="timeline_next_week">next week</string>
     <string name="timeline_this_month">within a month</string>
@@ -18,4 +18,17 @@
     <string name="item_type_timeline">Timeline</string>
     <string name="item_type_general">General</string>
     <string name="item_type_done">Done</string>
+    <string name="undo">undo</string>
+    <string name="deleted">Deleted</string>
+    <string name="todo_form_no_date">Select a date to receive a notification</string>
+    <string name="todo_form_no_time">You can choose the exact time</string>
+    <string name="todo_item_no_date">No date</string>
+    <string name="todo_item_no_time">No time</string>
+    <string name="notification_disabled">Notifications require your permission, go to settings</string>
+    <string name="setting_daily">Daily notification</string>
+    <string name="setting_notification">Notifications</string>
+    <string name="setting_reminder">Reminders</string>
+    <string name="setting_daily_info">What time of day is it supposed to appear</string>
+    <string name="setting_notification_info">Displaying task notifications</string>
+    <string name="setting_reminder_info">Set a reminder for tasks</string>
 </resources>

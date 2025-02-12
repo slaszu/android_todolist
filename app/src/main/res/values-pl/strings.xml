@@ -18,4 +18,17 @@
     <string name="item_type_timeline">Oś czasu</string>
     <string name="item_type_general">Ogólne</string>
     <string name="item_type_done">Zakończone</string>
+    <string name="undo">cofnij</string>
+    <string name="deleted">Usunięte</string>
+    <string name="todo_form_no_date">Wybierz date aby otrzymać powiadomienie</string>
+    <string name="todo_form_no_time">Możesz wybrać dokładną godzinę</string>
+    <string name="todo_item_no_date">Bez daty</string>
+    <string name="todo_item_no_time">Bez godziny</string>
+    <string name="notification_disabled">Powiadomienia wymagają Twojego pozwolenia, przejdź do ustawień</string>
+    <string name="setting_daily">Dzienne powiadomienie</string>
+    <string name="setting_notification">Powiadomienia</string>
+    <string name="setting_reminder">Przypomnienia</string>
+    <string name="setting_daily_info">O której godzinie dnia ma się pojawić</string>
+    <string name="setting_notification_info">Wyświetlanie powiadomień o zadaniach</string>
+    <string name="setting_reminder_info">Ustawianie przypomnienia o zadaniach</string>
 </resources>

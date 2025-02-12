@@ -11,6 +11,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,12 +21,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.FakeTodoModel
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.TodoModel
@@ -73,16 +75,21 @@ fun TodoListItem(
                 textDecoration = TextDecoration.LineThrough.takeIf { item.done },
                 fontSize = TextUnit(4f, TextUnitType.Em)
             )
-            Text(
-                text = item.printStartDate("No date", "Time not set"),
-                fontSize = TextUnit(3f, TextUnitType.Em)
-            )
-            if (item.startDate != null && !setting.notificationAllowed) {
+            if (item.startDate != null) {
                 Text(
-                    text = "Notifications not allowed by user !",
-                    style = TodoAppTypography.labelSmall,
-                    color = Color.Red
+                    text = item.printStartDate(
+                        stringResource(R.string.todo_item_no_date),
+                        stringResource(R.string.todo_item_no_time)
+                    ),
+                    fontSize = TextUnit(3f, TextUnitType.Em)
                 )
+                if (!setting.notificationAllowed) {
+                    Text(
+                        text = stringResource(R.string.notification_disabled),
+                        style = TodoAppTypography.labelSmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         }
 
@@ -111,6 +118,7 @@ fun TodoListItem(
 
     HorizontalDivider()
 }
+
 @Preview
 @Composable
 fun TodoListItemPreview() {

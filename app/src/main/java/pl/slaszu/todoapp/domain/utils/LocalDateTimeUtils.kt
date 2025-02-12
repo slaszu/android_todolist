@@ -12,7 +12,7 @@ fun Long.toLocalDateTime(): LocalDateTime =
     LocalDateTime.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault())
 
 fun LocalDateTime.printDate(): String =
-    this.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+    this.format(DateTimeFormatter.ofPattern("d MMM uuuu"))
 
 fun LocalDateTime.printTime(): String? {
     if (this.isTimeSet()) {

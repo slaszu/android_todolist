@@ -17,7 +17,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
@@ -121,7 +120,7 @@ fun TodoForm(
 
             Text(
                 text = todoLocalDateTime?.printDate()
-                    ?: "Zadanie bez daty (brak przypomnienia)"
+                    ?: stringResource(R.string.todo_form_no_date)
             )
             IconButton(
                 onClick = { chooseDateDialog = true }
@@ -166,7 +165,7 @@ fun TodoForm(
 
                 Text(
                     text = todoLocalDateTime?.printTime()
-                        ?: "Przypomnienie zbiorcze (dzienne)"
+                        ?: stringResource(R.string.todo_form_no_time)
                 )
                 IconButton(
                     onClick = { chooseTimeDialog = true }
@@ -202,26 +201,26 @@ fun TodoForm(
 
 
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth()
-        ) {
-
-            Text(
-                text = stringResource(R.string.todo_form_is_finished),
-                modifier = Modifier.padding(10.dp)
-            )
-            Switch(
-                checked = done,
-                onCheckedChange = {
-                    done = it
-                }
-            )
-
-        }
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.End,
+//            modifier = Modifier
+//                .padding(10.dp)
+//                .fillMaxWidth()
+//        ) {
+//
+//            Text(
+//                text = stringResource(R.string.todo_form_is_finished),
+//                modifier = Modifier.padding(10.dp)
+//            )
+//            Switch(
+//                checked = done,
+//                onCheckedChange = {
+//                    done = it
+//                }
+//            )
+//
+//        }
 
 
         Row(
@@ -254,7 +253,8 @@ fun TodoFormPreview() {
         Scaffold() { it ->
             TodoForm(
                 item = FakeTodoModel(
-                    text = ""
+                    text = "",
+                    startDate = LocalDateTime.now().clearTime()
                 ),
                 onSave = { item -> println(item) },
                 modifier = Modifier.padding(it)

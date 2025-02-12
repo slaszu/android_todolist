@@ -27,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
+import pl.slaszu.todoapp.domain.PresentationService
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.SettingRepository
 import pl.slaszu.todoapp.domain.TodoItemType
@@ -157,12 +158,12 @@ class MainActivity : ComponentActivity() {
                                         timelineItemList = todoList.filter {
                                             it.startDate != null && !it.done
                                         }.let {
-                                            listViewModel.convertToTimeline(it)
+                                            PresentationService.convertToTimelineMap(it)
                                         },
                                         doneTimelineList = todoList.filter {
                                             it.done
                                         }.let {
-                                            listViewModel.convertToTimeline(it)
+                                            PresentationService.convertToTimelineMap(it)
                                         },
                                         setting = setting,
                                         onCheck = { item, checked ->
@@ -193,6 +194,11 @@ class MainActivity : ComponentActivity() {
                                 TodoForm(
                                     item = formViewModel.todoEditModel.value,
                                     onSave = { item ->
+                                        if (item.startDate == null) {
+                                            tabSelectedRemember = TodoItemType.GENERAL
+                                        } else {
+                                            tabSelectedRemember = TodoItemType.TIMELINE
+                                        }
                                         navController.navigate(TodoAppRouteList)
                                         formViewModel.save(item) { savedItem ->
                                             reminderExactService.schedule(savedItem)

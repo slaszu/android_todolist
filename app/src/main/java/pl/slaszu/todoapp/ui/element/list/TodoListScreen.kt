@@ -1,7 +1,6 @@
 package pl.slaszu.todoapp.ui.element.list
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -146,7 +145,9 @@ private fun MyTab(
 ) {
     Tab(
         text = {
-            Row {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
                 Badge(
                     modifier = Modifier.padding(5.dp, 2.dp)
@@ -169,7 +170,6 @@ private fun MyTab(
 @Preview
 @Composable
 fun TodoListScreenPreview() {
-    val presentationService = PresentationService()
 
     TodoAppTheme {
         Scaffold() { it ->
@@ -183,7 +183,7 @@ fun TodoListScreenPreview() {
                         startDate = LocalDateTime.now().plusDays(i.toLong() * 2)
                     )
                 }.let {
-                    presentationService.convertToTimelineMap(it)
+                    PresentationService.convertToTimelineMap(it)
                 },
                 doneTimelineList = List(5) { i ->
                     FakeTodoModel(
@@ -191,7 +191,7 @@ fun TodoListScreenPreview() {
                         startDate = LocalDateTime.now().plusDays(i.toLong() * 2)
                     )
                 }.let {
-                    presentationService.convertToTimelineMap(it)
+                    PresentationService.convertToTimelineMap(it)
                 },
                 setting = Setting(),
                 onCheck = { _, _ -> },

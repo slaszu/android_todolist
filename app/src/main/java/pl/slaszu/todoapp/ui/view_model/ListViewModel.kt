@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.PresentationService
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.SettingRepository
-import pl.slaszu.todoapp.domain.TimelineHeader
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.TodoRepository
 import pl.slaszu.todoapp.domain.reminder.ReminderRepeatService
@@ -28,10 +28,6 @@ class ListViewModel @Inject constructor(
     val todoListFlow = todoRepository.getTodoList()
 
     val settingFlow = settingRepository.getData()
-
-    fun convertToTimeline(todoList: List<TodoModel>): Map<TimelineHeader, List<TodoModel>> {
-        return presentationService.convertToTimelineMap(todoList)
-    }
 
     fun saveSetting(setting: Setting, oldSetting: Setting) {
         this.viewModelScope.launch {
@@ -61,8 +57,8 @@ class ListViewModel @Inject constructor(
 
             val result = snackbarHostState
                 .showSnackbar(
-                    message = "Done: ${item.text}",
-                    actionLabel = "Undone",
+                    message = "${presentationService.getStringResource(R.string.item_type_done)}: ${item.text}",
+                    actionLabel = presentationService.getStringResource(R.string.undo),
                     duration = SnackbarDuration.Short,
                     withDismissAction = true
                 )
@@ -90,8 +86,8 @@ class ListViewModel @Inject constructor(
 
             val result = snackbarHostState
                 .showSnackbar(
-                    message = "Deleted: ${item.text}",
-                    actionLabel = "Undone",
+                    message = "${presentationService.getStringResource(R.string.deleted)}: ${item.text}",
+                    actionLabel = presentationService.getStringResource(R.string.undo),
                     duration = SnackbarDuration.Long,
                     withDismissAction = true
                 )

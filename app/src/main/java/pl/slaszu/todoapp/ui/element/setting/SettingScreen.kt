@@ -17,10 +17,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.ui.element.form.TimeDialogModel
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
@@ -59,8 +61,8 @@ fun SettingScreen(
     Column(modifier = Modifier.padding(10.dp)) {
 
         SettingOption(
-            text = "Ogólne dzienne powiadomienie",
-            description = "O ktrórej godzienie ma się pojawiać"
+            text = stringResource(R.string.setting_daily),
+            description = stringResource(R.string.setting_daily_info)
         ) {
             Button(
                 onClick = { chooseTimeDialog = true }
@@ -74,8 +76,8 @@ fun SettingScreen(
         }
 
         SettingOption(
-            text = "Powiadomienia",
-            description = "Wyświetlanie powiadomień o zadaniach"
+            text = stringResource(R.string.setting_notification),
+            description = stringResource(R.string.setting_notification_info)
         ) {
 
             Switch(
@@ -86,8 +88,8 @@ fun SettingScreen(
 
 
         SettingOption(
-            text = "Powiadomienia",
-            description = "Ustawianie powiadomień w systemie"
+            text = stringResource(R.string.setting_reminder),
+            description = stringResource(R.string.setting_reminder_info)
         ) {
 
             Switch(
