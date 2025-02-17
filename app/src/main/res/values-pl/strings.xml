@@ -31,4 +31,9 @@
     <string name="setting_daily_info">O której godzinie dnia ma się pojawić</string>
     <string name="setting_notification_info">Wyświetlanie powiadomień o zadaniach</string>
     <string name="setting_reminder_info">Ustawianie przypomnienia o zadaniach</string>
+    <string name="todo_form_no_change">Brak zmian w zadaniu</string>
+    <string name="todo_form_saved">Zadanie zapisane</string>
+    <string name="repeat_period_day">codziennie</string>
+    <string name="repeat_period_week">co tydzień</string>
+    <string name="repeat_period_month">co miesiąć</string>
 </resources>

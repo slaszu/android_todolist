@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -84,7 +85,8 @@ fun TodoForm(
         is24Hour = true,
     )
 
-
+    var showRepeatOptions by remember { mutableStateOf(false) }
+    var repeatType by remember { mutableStateOf(item.repeatType) }
 
 
     Column {
@@ -198,29 +200,56 @@ fun TodoForm(
             }
         }
 
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth()
+                .clickable { showRepeatOptions = true }
+        ) {
+
+            if (repeatType == null) {
+                Text(
+                    text = "Możesz ustawić powtórzenia"
+                )
+            } else {
+                Text(
+                    text = stringResource(repeatType?.translationKey ?: 0)
+                )
+            }
+
+            IconButton(
+                onClick = { showRepeatOptions = true }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Refresh,
+                    contentDescription = "Choose repeat"
+                )
+            }
+            if (showRepeatOptions) {
+                RepeatDialogModel(
+                    selectedType = repeatType,
+                    onDismiss = { showRepeatOptions = false },
+                    onClick = { selectedType -> repeatType = selectedType }
+                )
+            }
+
+            if (repeatType != null) {
+                IconButton(
+                    onClick = { repeatType = null }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Clear,
+                        contentDescription = "Clear repeat type"
+                    )
+                }
+            }
+        }
 
 
 
-//        Row(
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.End,
-//            modifier = Modifier
-//                .padding(10.dp)
-//                .fillMaxWidth()
-//        ) {
-//
-//            Text(
-//                text = stringResource(R.string.todo_form_is_finished),
-//                modifier = Modifier.padding(10.dp)
-//            )
-//            Switch(
-//                checked = done,
-//                onCheckedChange = {
-//                    done = it
-//                }
-//            )
-//
-//        }
+
 
 
         Row(
@@ -235,7 +264,8 @@ fun TodoForm(
                         item.copy(
                             "text" to text,
                             "done" to done,
-                            "startDate" to todoLocalDateTime
+                            "startDate" to todoLocalDateTime,
+                            "repeatType" to repeatType
                         )
                     )
                 },

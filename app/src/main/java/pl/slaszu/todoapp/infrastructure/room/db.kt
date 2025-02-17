@@ -11,7 +11,7 @@ import androidx.room.TypeConverters
 //        AutoMigration(from = 1, to = 2)
 //    ]
 )
-@TypeConverters(LocalDateTimeConverter::class)
+@TypeConverters(LocalDateTimeConverter::class, RepeatTypeConverter::class)
 
 abstract class AppDatabase : RoomDatabase() {
     abstract fun todoModelDao(): TodoModelDao

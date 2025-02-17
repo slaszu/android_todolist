@@ -31,4 +31,9 @@
     <string name="setting_daily_info">What time of day is it supposed to appear</string>
     <string name="setting_notification_info">Displaying task notifications</string>
     <string name="setting_reminder_info">Set a reminder for tasks</string>
+    <string name="todo_form_no_change">No changes to the task</string>
+    <string name="todo_form_saved">Task saved</string>
+    <string name="repeat_period_day">every day</string>
+    <string name="repeat_period_week">every week</string>
+    <string name="repeat_period_month">every month</string>
 </resources>

@@ -200,7 +200,7 @@ class MainActivity : ComponentActivity() {
                                             tabSelectedRemember = TodoItemType.TIMELINE
                                         }
                                         navController.navigate(TodoAppRouteList)
-                                        formViewModel.save(item) { savedItem ->
+                                        formViewModel.save(item, snackbarHostState) { savedItem ->
                                             reminderExactService.schedule(savedItem)
                                         }
                                     }
