@@ -200,49 +200,51 @@ fun TodoForm(
             }
         }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth()
-                .clickable { showRepeatOptions = true }
-        ) {
-
-            if (repeatType == null) {
-                Text(
-                    text = "Możesz ustawić powtórzenia"
-                )
-            } else {
-                Text(
-                    text = stringResource(repeatType?.translationKey ?: 0)
-                )
-            }
-
-            IconButton(
-                onClick = { showRepeatOptions = true }
+        if (todoLocalDateTime != null) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth()
+                    .clickable { showRepeatOptions = true }
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Refresh,
-                    contentDescription = "Choose repeat"
-                )
-            }
-            if (showRepeatOptions) {
-                RepeatDialogModel(
-                    selectedType = repeatType,
-                    onDismiss = { showRepeatOptions = false },
-                    onClick = { selectedType -> repeatType = selectedType }
-                )
-            }
 
-            if (repeatType != null) {
+                if (repeatType == null) {
+                    Text(
+                        text = "Możesz ustawić powtórzenia"
+                    )
+                } else {
+                    Text(
+                        text = stringResource(repeatType?.translationKey ?: 0)
+                    )
+                }
+
                 IconButton(
-                    onClick = { repeatType = null }
+                    onClick = { showRepeatOptions = true }
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Clear,
-                        contentDescription = "Clear repeat type"
+                        imageVector = Icons.Filled.Refresh,
+                        contentDescription = "Choose repeat"
                     )
+                }
+                if (showRepeatOptions) {
+                    RepeatDialogModel(
+                        selectedType = repeatType,
+                        onDismiss = { showRepeatOptions = false },
+                        onClick = { selectedType -> repeatType = selectedType }
+                    )
+                }
+
+                if (repeatType != null) {
+                    IconButton(
+                        onClick = { repeatType = null }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Clear,
+                            contentDescription = "Clear repeat type"
+                        )
+                    }
                 }
             }
         }

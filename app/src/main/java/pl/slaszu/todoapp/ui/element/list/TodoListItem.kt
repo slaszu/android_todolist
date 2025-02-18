@@ -1,12 +1,15 @@
 package pl.slaszu.todoapp.ui.element.list
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -21,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +35,7 @@ import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.FakeTodoModel
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.domain.repeat.RepeatType
 import pl.slaszu.todoapp.domain.utils.printStartDate
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import pl.slaszu.todoapp.ui.theme.TodoAppTypography
@@ -75,22 +80,11 @@ fun TodoListItem(
                 textDecoration = TextDecoration.LineThrough.takeIf { item.done },
                 fontSize = TextUnit(4f, TextUnitType.Em)
             )
-            if (item.startDate != null) {
-                Text(
-                    text = item.printStartDate(
-                        stringResource(R.string.todo_item_no_date),
-                        stringResource(R.string.todo_item_no_time)
-                    ),
-                    fontSize = TextUnit(3f, TextUnitType.Em)
-                )
-                if (!setting.notificationAllowed) {
-                    Text(
-                        text = stringResource(R.string.notification_disabled),
-                        style = TodoAppTypography.labelSmall,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
+
+            TodoItemInfo(
+                item = item,
+                setting = setting
+            )
         }
 
         IconButton(
@@ -119,6 +113,63 @@ fun TodoListItem(
     HorizontalDivider()
 }
 
+@Composable
+private fun TodoItemInfo(
+    item: TodoModel,
+    setting: Setting
+) {
+    if (item.startDate != null) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(0.8f)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_access_time_filled_24),
+                    contentDescription = "Choose date",
+                    modifier = Modifier.size(16.dp)
+                )
+                Text(
+                    text = item.printStartDate(
+                        stringResource(R.string.todo_item_no_date),
+                        "${setting.reminderRepeatHour}:${setting.reminderRepeatMinute}"
+                    ),
+                    fontSize = TextUnit(3f, TextUnitType.Em)
+                )
+            }
+
+            if (item.repeatType != null) {
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(item.repeatType?.translationKey ?: 0),
+                        fontSize = TextUnit(3f, TextUnitType.Em)
+                    )
+                    Icon(
+                        Icons.Filled.Refresh,
+                        contentDescription = "Repeat type",
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+        }
+        if (!setting.notificationAllowed) {
+            Text(
+                text = stringResource(R.string.notification_disabled),
+                style = TodoAppTypography.labelSmall,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+    }
+}
+
 @Preview
 @Composable
 fun TodoListItemPreview() {
@@ -127,7 +178,8 @@ fun TodoListItemPreview() {
             TodoListItem(
                 item = FakeTodoModel(
                     text = "Jakieś tam przypomnienie, które jest testowe",
-                    startDate = LocalDateTime.now()
+                    startDate = LocalDateTime.now(),
+                    repeatType = RepeatType.RepeatTypeWeek()
                 ),
                 setting = Setting(
 
