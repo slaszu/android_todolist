@@ -2,6 +2,7 @@ package pl.slaszu.todoapp.domain
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import pl.slaszu.todoapp.domain.utils.clearTime
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -22,7 +23,7 @@ class PresentationService @Inject constructor(
         }
 
         private fun getTimelineForTodoModel(item: TodoModel): TimelineHeader {
-            val now = LocalDateTime.now()
+            val now = LocalDateTime.now().clearTime()
             return when {
                 item.startDate == null -> TimelineHeader.NO_DATE
                 item.startDate!! < now -> TimelineHeader.OUT_OF_DATE
