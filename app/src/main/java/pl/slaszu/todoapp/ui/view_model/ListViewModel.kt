@@ -46,29 +46,45 @@ class ListViewModel @Inject constructor(
 
     fun check(item: TodoModel, checked: Boolean, snackbarHostState: SnackbarHostState? = null) {
         this.viewModelScope.launch {
-            todoRepository.save(
-                item.copy(
+
+            /**
+             * if :
+             * - checked == true
+             * - startDate != empty
+             * - repeatType != null
+             * then :
+             * - add repeatType period to startDate
+             * else :
+             * - set done to cheked
+             */
+
+            var showSnackbar = true
+            var itemToSave = item.copy()
+            if (checked && item.startDate != null && item.repeatType != null) {
+                itemToSave = itemToSave.copy(
+                    "startDate" to item.repeatType!!.calculateNewDate(item.startDate!!)
+                )
+                showSnackbar = false
+            } else {
+                itemToSave = itemToSave.copy(
                     "done" to checked
                 )
-            )
+            }
+
+            todoRepository.save(itemToSave)
 
             // snackbar only on close item
-            if (snackbarHostState == null || !checked) return@launch
+            if (!showSnackbar || snackbarHostState == null || !checked) return@launch
 
-            val result = snackbarHostState
-                .showSnackbar(
-                    message = "${presentationService.getStringResource(R.string.item_type_done)}: ${item.text}",
-                    actionLabel = presentationService.getStringResource(R.string.undo),
-                    duration = SnackbarDuration.Short,
-                    withDismissAction = true
-                )
+            val result = snackbarHostState.showSnackbar(
+                message = "${presentationService.getStringResource(R.string.item_type_done)}: ${item.text}",
+                actionLabel = presentationService.getStringResource(R.string.undo),
+                duration = SnackbarDuration.Short,
+                withDismissAction = true
+            )
             when (result) {
                 SnackbarResult.ActionPerformed -> {
-                    todoRepository.save(
-                        item.copy(
-                            "done" to false
-                        )
-                    )
+                    todoRepository.save(item)
                 }
 
                 SnackbarResult.Dismissed -> {
@@ -84,13 +100,12 @@ class ListViewModel @Inject constructor(
 
             if (snackbarHostState == null) return@launch
 
-            val result = snackbarHostState
-                .showSnackbar(
-                    message = "${presentationService.getStringResource(R.string.deleted)}: ${item.text}",
-                    actionLabel = presentationService.getStringResource(R.string.undo),
-                    duration = SnackbarDuration.Long,
-                    withDismissAction = true
-                )
+            val result = snackbarHostState.showSnackbar(
+                message = "${presentationService.getStringResource(R.string.deleted)}: ${item.text}",
+                actionLabel = presentationService.getStringResource(R.string.undo),
+                duration = SnackbarDuration.Long,
+                withDismissAction = true
+            )
             when (result) {
                 SnackbarResult.ActionPerformed -> {
                     todoRepository.save(item)

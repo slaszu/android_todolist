@@ -1,6 +1,7 @@
 package pl.slaszu.todoapp.domain.repeat
 
 import pl.slaszu.todoapp.R
+import java.time.LocalDateTime
 import java.time.Period
 
 sealed class RepeatType(val period: Period, val translationKey: Int? = null) {
@@ -12,6 +13,10 @@ sealed class RepeatType(val period: Period, val translationKey: Int? = null) {
 
     fun toStringRepresentation(): String {
         return this.period.toString()
+    }
+
+    fun calculateNewDate(localDateTime: LocalDateTime): LocalDateTime {
+        return localDateTime.plus(this.period)
     }
 
     companion object {
