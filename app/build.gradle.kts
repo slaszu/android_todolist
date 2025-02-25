@@ -6,6 +6,8 @@ plugins {
     kotlin("plugin.serialization") version "2.0.21"
     alias(libs.plugins.kotlin.compose)
     id("androidx.room")
+
+    id("io.sentry.android.gradle") version "5.2.0"
 }
 
 android {
@@ -98,4 +100,13 @@ dependencies {
 
 kapt {
     correctErrorTypes = true
+}
+
+sentry {
+    org.set("piotr-flasza")
+    projectName.set("android_todo")
+
+    // this will upload your source code to Sentry to show it as part of the stack traces
+    // disable if you don't want to expose your sources
+    includeSourceContext.set(true)
 }
