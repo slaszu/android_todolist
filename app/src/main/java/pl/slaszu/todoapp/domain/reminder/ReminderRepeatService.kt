@@ -36,17 +36,14 @@ class ReminderRepeatService @Inject constructor(
     }
 
     private fun getLocaleDateTimeForNextDayWithHour(hour: Int, minute: Int): LocalDateTime {
-        return LocalDateTime.now(ZoneId.systemDefault())
-            .withMinute(0)
-            .withSecond(0)
-            .withNano(0)
-            .apply {
-                val actualHour = this.hour
-                var new = this.withHour(hour).withMinute(minute)
-                if (actualHour >= hour) {
-                    new = new.plusDays(1)
-                }
-                return new
+
+        val now = LocalDateTime.now(ZoneId.systemDefault())
+        return now.withHour(hour).withMinute(minute).let {
+            if (now > it) {
+                it.plusDays(1)
+            } else {
+                it
             }
+        }
     }
 }

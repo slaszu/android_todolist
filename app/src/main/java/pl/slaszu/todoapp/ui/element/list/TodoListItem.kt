@@ -137,7 +137,7 @@ private fun TodoItemInfo(
                 Text(
                     text = item.printStartDate(
                         stringResource(R.string.todo_item_no_date),
-                        "${setting.reminderRepeatHour}:${setting.reminderRepeatMinute}"
+                        "${setting.reminderRepeatHour}:${setting.reminderRepeatMinute.toString().padStart(2,'0')}"
                     ),
                     fontSize = TextUnit(3f, TextUnitType.Em)
                 )
