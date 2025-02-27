@@ -96,6 +96,17 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Required -- JUnit 4 framework
+    testImplementation(libs.junit)
+    // Optional -- Robolectric environment
+    //testImplementation("androidx.test:core:$androidXTestVersion")
+    // Optional -- Mockito framework
+    //testImplementation("org.mockito:mockito-core:")
+    // Optional -- mockito-kotlin
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+    // Optional -- Mockk framework
+    //testImplementation("io.mockk:mockk:")
 }
 
 kapt {
