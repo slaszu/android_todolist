@@ -36,4 +36,5 @@
     <string name="repeat_period_day">codziennie</string>
     <string name="repeat_period_week">co tydzień</string>
     <string name="repeat_period_month">co miesiąć</string>
+    <string name="timeline_today">dzisiaj</string>
 </resources>

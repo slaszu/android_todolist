@@ -36,4 +36,5 @@
     <string name="repeat_period_day">every day</string>
     <string name="repeat_period_week">every week</string>
     <string name="repeat_period_month">every month</string>
+    <string name="timeline_today">today</string>
 </resources>
