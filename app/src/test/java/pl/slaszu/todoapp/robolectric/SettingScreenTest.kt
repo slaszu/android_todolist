@@ -8,14 +8,14 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.ui.element.setting.SettingScreen
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class SettingScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()

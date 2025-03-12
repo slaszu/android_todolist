@@ -32,7 +32,8 @@ fun ReminderDialog(
     reminderItemsId: LongArray,
     items: List<TodoModel>,
     onDismiss: () -> Unit,
-    onCloseItem: (TodoModel) -> Unit
+    onCloseItem: (TodoModel) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val items = items.filter {
         reminderItemsId.contains(it.id)
@@ -132,7 +133,8 @@ fun ReminderDialogPreview() {
                     FakeTodoModel(2, "fakowy item drugi !")
                 ),
                 onCloseItem = {},
-                onDismiss = {}
+                onDismiss = {},
+                modifier = Modifier.padding(it)
             )
         }
     }

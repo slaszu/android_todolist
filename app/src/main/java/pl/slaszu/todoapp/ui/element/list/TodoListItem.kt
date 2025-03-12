@@ -186,7 +186,8 @@ fun TodoListItemPreview() {
                 ),
                 onCheckItem = {},
                 onEditItem = {},
-                onDeleteItem = {}
+                onDeleteItem = {},
+                modifier = Modifier.padding(it)
             )
         }
     }
