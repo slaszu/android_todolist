@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.domine
+package pl.slaszu.todoapp.unit.domine
 
 import org.junit.Assert
 import org.junit.Test

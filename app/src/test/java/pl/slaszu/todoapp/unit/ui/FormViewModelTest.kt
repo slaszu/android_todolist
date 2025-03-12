@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.ui
+package pl.slaszu.todoapp.unit.ui
 
 import androidx.compose.material3.SnackbarHostState
 import kotlinx.coroutines.test.runTest

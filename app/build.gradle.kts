@@ -56,6 +56,12 @@ android {
         }
     }
 
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+
     room {
         schemaDirectory("$projectDir/schemas")
     }
@@ -69,6 +75,7 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.androidx.ui.test.junit4.android)
     annotationProcessor(libs.androidx.room.compiler)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
@@ -101,6 +108,7 @@ dependencies {
     testImplementation(libs.junit)
     // Optional -- Robolectric environment
     //testImplementation("androidx.test:core:$androidXTestVersion")
+    testImplementation("org.robolectric:robolectric:4.14")
     // Optional -- Mockito framework
     //testImplementation("org.mockito:mockito-core:")
     // Optional -- mockito-kotlin
