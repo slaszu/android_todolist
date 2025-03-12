@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
@@ -65,7 +66,8 @@ fun SettingScreen(
             description = stringResource(R.string.setting_daily_info)
         ) {
             Button(
-                onClick = { chooseTimeDialog = true }
+                onClick = { chooseTimeDialog = true },
+                modifier = Modifier.testTag("repeat_time")
             ) {
                 Text(
                     text = "${setting.reminderRepeatHour}:${
@@ -82,7 +84,8 @@ fun SettingScreen(
 
             Switch(
                 checked = setting.notificationAllowed,
-                onCheckedChange = { onNotificationClick() }
+                onCheckedChange = { onNotificationClick() },
+                modifier = Modifier.testTag("notification")
             )
         }
 
@@ -94,7 +97,8 @@ fun SettingScreen(
 
             Switch(
                 checked = setting.reminderAllowed,
-                onCheckedChange = { onReminderClick() }
+                onCheckedChange = { onReminderClick() },
+                modifier = Modifier.testTag("reminder")
             )
         }
     }

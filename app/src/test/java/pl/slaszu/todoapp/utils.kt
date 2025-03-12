@@ -1,5 +1,7 @@
 package pl.slaszu.todoapp
 
+import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.printToString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestDispatcher
@@ -20,4 +22,11 @@ class MainDispatcherRule(
     override fun finished(description: Description) {
         Dispatchers.resetMain()
     }
+}
+
+fun SemanticsNodeInteraction.printToLog(
+    maxDepth: Int = Int.MAX_VALUE,
+) {
+    val result = "*** printToLog:\n" + printToString(maxDepth)
+    println(result)
 }

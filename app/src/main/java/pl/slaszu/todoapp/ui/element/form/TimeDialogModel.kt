@@ -7,6 +7,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,6 +27,9 @@ fun TimeDialogModel(
     ) {
         TimePicker(
             state = timePickerState,
+            modifier = Modifier.semantics {
+                contentDescription = "time_picker"
+            }
         )
     }
 }
