@@ -25,7 +25,7 @@ fun TopBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val isListRoute = navBackStackEntry?.destination?.hasRoute(TodoAppRouteList::class) ?: true;
 
-    var searchToggle by remember { mutableStateOf(false) }
+    var searchToggle by remember { mutableStateOf(true) }
 
     if (searchToggle) {
         SearchTopBar(

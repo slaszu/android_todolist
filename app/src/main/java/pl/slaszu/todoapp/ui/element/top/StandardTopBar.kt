@@ -1,5 +1,6 @@
 package pl.slaszu.todoapp.ui.element.top
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -10,7 +11,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,6 +25,7 @@ fun StandardTopBar(
     onBackClick: () -> Unit
 ) {
     TopAppBar(
+        modifier = Modifier.padding(5.dp),
         title = {
             Text(stringResource(R.string.top_bar_title))
         },
