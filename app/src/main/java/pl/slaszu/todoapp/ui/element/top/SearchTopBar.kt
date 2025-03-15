@@ -17,8 +17,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -33,10 +31,12 @@ import pl.slaszu.todoapp.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchTopBar(
+    text: String?,
+    onChange: (String) -> Unit,
     onCancelClick: () -> Unit
 ) {
 
-    var text by rememberSaveable { mutableStateOf("") }
+    //var text by rememberSaveable { mutableStateOf("") }
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
 
     LaunchedEffect(Unit) {
@@ -57,10 +57,8 @@ fun SearchTopBar(
                         )
                     }
                 },
-                value = text,
-                onValueChange = {
-                    text = it
-                },
+                value = text ?: "",
+                onValueChange = onChange,
                 placeholder = {
                     Text(stringResource(R.string.todo_form_text_label))
                 },
@@ -84,6 +82,8 @@ fun SearchTopBar(
 @Composable
 fun SearchTopBarPreview() {
     SearchTopBar(
-        onCancelClick = {}
+        onCancelClick = {},
+        onChange = {},
+        text = null
     )
 }

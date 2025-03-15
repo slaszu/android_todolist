@@ -6,6 +6,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.PresentationService
@@ -25,7 +26,9 @@ class ListViewModel @Inject constructor(
     private val reminderRepeatService: ReminderRepeatService
 ) : ViewModel() {
 
-    val todoListFlow = todoRepository.getTodoList()
+    fun getTodoList(search: String?): Flow<List<TodoModel>> {
+        return todoRepository.getTodoList(search)
+    }
 
     val settingFlow = settingRepository.getData()
 

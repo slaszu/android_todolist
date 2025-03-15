@@ -106,10 +106,13 @@ class MainActivity : ComponentActivity() {
             val listViewModel: ListViewModel = viewModel()
             val formViewModel: FormViewModel = viewModel()
 
+            var searchString by remember { mutableStateOf<String?>(null) }
+
             val setting =
                 listViewModel.settingFlow.collectAsStateWithLifecycle(Setting()).value
             val todoList =
-                listViewModel.todoListFlow.collectAsStateWithLifecycle(emptyList()).value
+                listViewModel.getTodoList(searchString).collectAsStateWithLifecycle(emptyList()).value
+
 
             val snackbarHostState = remember { SnackbarHostState() }
 
@@ -123,6 +126,10 @@ class MainActivity : ComponentActivity() {
                     },
                     topBar = {
                         TopBar(
+                            searchText = searchString,
+                            onChangeSearch = {
+                                searchString = it
+                            },
                             navController = navController,
                             onOptionClick = { navController.navigate(TodoAppSetting) }
                         )

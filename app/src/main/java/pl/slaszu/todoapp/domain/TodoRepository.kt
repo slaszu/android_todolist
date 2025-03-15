@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
 interface TodoRepository<T:TodoModel> {
-    fun getTodoList(): Flow<List<T>>
+    fun getTodoList(search:String?): Flow<List<T>>
 
     suspend fun getByDate(date: LocalDateTime): Array<T>
 

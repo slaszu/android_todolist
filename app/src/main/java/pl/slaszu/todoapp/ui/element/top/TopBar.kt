@@ -1,7 +1,6 @@
 package pl.slaszu.todoapp.ui.element.top
 
 import android.annotation.SuppressLint
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,21 +14,26 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import pl.slaszu.todoapp.ui.navigation.TodoAppRouteList
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     navController: NavController,
-    onOptionClick: () -> Unit
-
+    onOptionClick: () -> Unit,
+    onChangeSearch: (String?) -> Unit,
+    searchText: String?
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val isListRoute = navBackStackEntry?.destination?.hasRoute(TodoAppRouteList::class) ?: true;
 
-    var searchToggle by remember { mutableStateOf(true) }
+    var searchToggle by remember { mutableStateOf(false) }
 
     if (searchToggle) {
         SearchTopBar(
-            onCancelClick = { searchToggle = false }
+            text = searchText,
+            onCancelClick = {
+                searchToggle = false
+                onChangeSearch(null)
+            },
+            onChange = onChangeSearch
         )
     } else {
         StandardTopBar(
@@ -51,7 +55,9 @@ fun TopBarPreview() {
         topBar = {
             TopBar(
                 navController = rememberNavController(),
-                onOptionClick = {}
+                onOptionClick = {},
+                onChangeSearch = {},
+                searchText = null
             )
         }
     ) {

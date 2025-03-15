@@ -12,6 +12,10 @@ interface TodoModelDao {
     @Query("SELECT * from todo ORDER BY start_date ASC")
     fun loadTodoList(): Flow<List<TodoModelEntity>>
 
+    @Query("SELECT * from todo where text LIKE '%' || :search || '%' ORDER BY start_date ASC")
+    fun loadTodoList(search:String): Flow<List<TodoModelEntity>>
+
+
     @Query("SELECT * from todo where id = :id")
     suspend fun loadTodoById(id: Long): TodoModelEntity?
 

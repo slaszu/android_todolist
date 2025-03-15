@@ -15,8 +15,12 @@ class TodoRoomRepository @Inject constructor(
     private val dao: TodoModelDao
 ) : TodoRepository<TodoModelEntity> {
 
-    override fun getTodoList(): Flow<List<TodoModelEntity>> {
-        return this.dao.loadTodoList()
+    override fun getTodoList(search: String?): Flow<List<TodoModelEntity>> {
+        if (search.isNullOrBlank()) {
+            return this.dao.loadTodoList()
+        } else {
+            return this.dao.loadTodoList(search)
+        }
     }
 
     override suspend fun getByDate(date: LocalDateTime): Array<TodoModelEntity> =
