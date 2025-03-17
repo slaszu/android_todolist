@@ -26,7 +26,7 @@ fun TopBar(
 
     var searchToggle by remember { mutableStateOf(false) }
 
-    if (searchToggle) {
+    if (isListRoute && searchToggle) {
         SearchTopBar(
             text = searchText,
             onCancelClick = {
