@@ -9,6 +9,7 @@ sealed class RepeatType(val period: Period, val translationKey: Int? = null) {
     class RepeatTypeDay : RepeatType(Period.ofDays(1), R.string.repeat_period_day)
     class RepeatTypeWeek : RepeatType(Period.ofWeeks(1), R.string.repeat_period_week)
     class RepeatTypeMonth : RepeatType(Period.ofMonths(1), R.string.repeat_period_month)
+    class RepeatTypeYear : RepeatType(Period.ofYears(1), R.string.repeat_period_year)
     class RepeatTypeOther(private val otherPeriod: Period) : RepeatType(otherPeriod)
 
     fun toStringRepresentation(): String {
@@ -22,7 +23,7 @@ sealed class RepeatType(val period: Period, val translationKey: Int? = null) {
     companion object {
 
         fun getAll(): Array<RepeatType> =
-            arrayOf(RepeatTypeDay(), RepeatTypeWeek(), RepeatTypeMonth())
+            arrayOf(RepeatTypeDay(), RepeatTypeWeek(), RepeatTypeMonth(), RepeatTypeYear())
 
 
         fun toObject(string: String): RepeatType {
@@ -30,6 +31,7 @@ sealed class RepeatType(val period: Period, val translationKey: Int? = null) {
                 RepeatTypeDay().period -> RepeatTypeDay()
                 RepeatTypeWeek().period -> RepeatTypeWeek()
                 RepeatTypeMonth().period -> RepeatTypeMonth()
+                RepeatTypeYear().period -> RepeatTypeYear()
                 else -> RepeatTypeOther(period)
             }
         }
