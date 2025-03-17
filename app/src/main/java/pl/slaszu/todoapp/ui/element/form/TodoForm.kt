@@ -212,7 +212,7 @@ fun TodoForm(
 
                 if (repeatType == null) {
                     Text(
-                        text = "Możesz ustawić powtórzenia"
+                        text = stringResource(R.string.todo_item_no_repeat)
                     )
                 } else {
                     Text(

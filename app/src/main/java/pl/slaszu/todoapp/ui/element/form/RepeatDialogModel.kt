@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.repeat.RepeatType
 
 @Composable
@@ -32,7 +33,7 @@ fun RepeatDialogModel(
         onDismissRequest = onDismiss,
         dismissButton = {
             TextButton(onClick = { onDismiss() }) {
-                Text("Dismiss")
+                Text(stringResource(R.string.btn_back))
             }
         },
         confirmButton = {

@@ -38,4 +38,5 @@
     <string name="repeat_period_month">every month</string>
     <string name="timeline_today">today</string>
     <string name="repeat_period_year">every year</string>
+    <string name="todo_item_no_repeat">You can set it to repeat</string>
 </resources>
