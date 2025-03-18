@@ -30,8 +30,8 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: 'keystore/keystore-abb'
-          encodedString: ${{ secrets.KEYSTORE_ABB }}
+          fileName: 'keystore/keystore-aab'
+          encodedString: ${{ secrets.KEYSTORE_AAB }}
 
       - uses: actions/checkout@v4
 
