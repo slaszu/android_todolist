@@ -11,6 +11,16 @@ plugins {
 }
 
 android {
+
+    signingConfigs {
+        create("config") {
+            storeFile = file("keystore/keystore-abb")
+            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+        }
+    }
+
     namespace = "pl.slaszu.todoapp"
     compileSdk = 35
 
