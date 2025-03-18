@@ -61,7 +61,7 @@ jobs:
       - name: Build app bundle release (AAB) - ${{ env.main_project_module }} module
         run: ./gradlew ${{ env.main_project_module }}:bundleRelease
         env:
-          SIGNING_KEYSTORE_FILE: ${{ env.RUNNER_TEMP }}/keystore-aab
+          SIGNING_KEYSTORE_FILE: ${{ steps.decode_keystore.outputs.filePath }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
