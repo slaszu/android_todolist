@@ -39,4 +39,5 @@
     <string name="timeline_today">dzisiaj</string>
     <string name="repeat_period_year">co rok</string>
     <string name="todo_item_no_repeat">Możesz ustawić powtórzenia</string>
+    <string name="todo_form_field_require">Pole wymagane</string>
 </resources>

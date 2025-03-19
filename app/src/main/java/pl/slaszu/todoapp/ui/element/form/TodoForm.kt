@@ -121,7 +121,7 @@ fun TodoForm(
                 )
                 if (text.isBlank()) {
                     Text(
-                        text = "* Pole wymagane",
+                        text = "* ${stringResource(R.string.todo_form_field_require)}",
                         color = MaterialTheme.colorScheme.error
                     )
                 }

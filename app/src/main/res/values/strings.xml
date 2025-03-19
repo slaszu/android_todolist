@@ -39,4 +39,5 @@
     <string name="timeline_today">today</string>
     <string name="repeat_period_year">every year</string>
     <string name="todo_item_no_repeat">You can set it to repeat</string>
+    <string name="todo_form_field_require">Required field</string>
 </resources>
