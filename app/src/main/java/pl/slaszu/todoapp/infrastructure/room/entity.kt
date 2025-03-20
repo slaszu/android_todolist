@@ -2,6 +2,7 @@ package pl.slaszu.todoapp.infrastructure.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.TodoModelFactory
@@ -9,7 +10,10 @@ import pl.slaszu.todoapp.domain.repeat.RepeatType
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-@Entity(tableName = "todo")
+@Entity(
+    tableName = "todo",
+    indices = [Index(value = ["text"])]
+)
 data class TodoModelEntity(
     @PrimaryKey(autoGenerate = true) override val id: Long = 0,
     @ColumnInfo(name = "text") override val text: String = "",

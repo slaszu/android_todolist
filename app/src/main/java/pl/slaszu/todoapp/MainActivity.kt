@@ -14,6 +14,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -106,7 +107,7 @@ class MainActivity : ComponentActivity() {
             val listViewModel: ListViewModel = viewModel()
             val formViewModel: FormViewModel = viewModel()
 
-            var searchString by remember { mutableStateOf<String?>(null) }
+            var searchString by rememberSaveable { mutableStateOf<String?>(null) }
 
             val setting =
                 listViewModel.settingFlow.collectAsStateWithLifecycle(Setting()).value
@@ -116,7 +117,7 @@ class MainActivity : ComponentActivity() {
 
             val snackbarHostState = remember { SnackbarHostState() }
 
-            var tabSelectedRemember by remember { mutableStateOf(TodoItemType.TIMELINE) }
+            var tabSelectedRemember by rememberSaveable { mutableStateOf(TodoItemType.TIMELINE) }
 
 
             TodoAppTheme {
