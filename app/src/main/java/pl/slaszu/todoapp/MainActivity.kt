@@ -226,8 +226,9 @@ class MainActivity : ComponentActivity() {
                             composable<TodoAppReminderItems> { backStackEntry ->
                                 val param = backStackEntry.toRoute<TodoAppReminderItems>()
                                 ReminderDialog(
-                                    reminderItemsId = param.ids,
-                                    items = todoList,
+                                    items = todoList.filter {
+                                        param.ids.contains(it.id)
+                                    },
                                     onDismiss = { navController.navigate(TodoAppRouteList) },
                                     onCloseItem = { item ->
                                         listViewModel.check(item, true, snackbarHostState)
@@ -241,7 +242,7 @@ class MainActivity : ComponentActivity() {
         }
 
         this.checkSystemSettings()
-        this.getReminderItemIds()
+//        this.getReminderItemIds()
 //        val notificationService = NotificationService(this)
 //        lifecycleScope.launch {
 //            repository.getTodoList().collect { items ->

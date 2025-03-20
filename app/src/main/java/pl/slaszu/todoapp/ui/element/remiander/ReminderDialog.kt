@@ -2,6 +2,7 @@ package pl.slaszu.todoapp.ui.element.remiander
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,25 +26,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import pl.slaszu.todoapp.domain.FakeTodoModel
 import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.domain.repeat.RepeatType
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 
 @Composable
 fun ReminderDialog(
-    reminderItemsId: LongArray,
     items: List<TodoModel>,
     onDismiss: () -> Unit,
     onCloseItem: (TodoModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val items = items.filter {
-        reminderItemsId.contains(it.id)
-    }
 
     if (items.isEmpty()) return
 
-
-    val checkedIds = items.map { it.id }.toMutableSet()
-    var checkedIdsCount by rememberSaveable { mutableStateOf(checkedIds.size) }
+    var selectedIds by rememberSaveable { mutableStateOf(items.map { it.id }.toSet()) }
 
     Dialog(
         onDismissRequest = { onDismiss() }
@@ -59,12 +55,11 @@ fun ReminderDialog(
                         item = todoItem,
                         onCheck = {
                             if (it) {
-                                checkedIds.add(todoItem.id)
+                                selectedIds = selectedIds.plus(todoItem.id)
                             } else {
-                                checkedIds.remove(todoItem.id)
+                                selectedIds = selectedIds.minus(todoItem.id)
                             }
-                            checkedIdsCount = checkedIds.size
-                            Log.d("myapp", checkedIds.joinToString())
+                            Log.d("myapp", selectedIds.joinToString())
                         }
                     )
                 }
@@ -77,7 +72,7 @@ fun ReminderDialog(
                         Button(
                             onClick = {
                                 items.forEach {
-                                    if (checkedIds.contains(it.id)) {
+                                    if (selectedIds.contains(it.id)) {
                                         onCloseItem(it)
                                     }
                                 }
@@ -85,7 +80,7 @@ fun ReminderDialog(
                             },
                             modifier = Modifier.padding(5.dp)
                         ) {
-                            Text("Zakończ zadania (${checkedIdsCount})")
+                            Text("Zakończ zadania (${selectedIds.size})")
                         }
                     }
 
@@ -109,14 +104,43 @@ fun ReminderDialogItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
-        Checkbox(
-            checked = checked,
-            onCheckedChange = {
-                checked = !checked
-                onCheck(it)
+
+        Column {
+            Row {
+                Checkbox(
+                    checked = checked,
+                    onCheckedChange = {
+                        checked = !checked
+                        onCheck(it)
+                    }
+                )
+                Text(
+                    text = item.text,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
             }
-        )
-        Text(text = item.text)
+
+//            if (item.repeatType != null) {
+//                Row(
+//                    horizontalArrangement = Arrangement.End,
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .align(Alignment.End)
+//                ) {
+//                    Text(
+//                        text = stringResource(item.repeatType?.translationKey ?: 0),
+//                        fontSize = TextUnit(3f, TextUnitType.Em)
+//                    )
+//                    Icon(
+//                        Icons.Filled.Refresh,
+//                        contentDescription = "Repeat type",
+//                        modifier = Modifier.size(16.dp)
+//                    )
+//                }
+//            }
+        }
+
     }
     HorizontalDivider()
 }
@@ -127,10 +151,17 @@ fun ReminderDialogPreview() {
     TodoAppTheme {
         Scaffold() { it ->
             ReminderDialog(
-                reminderItemsId = longArrayOf(1, 2),
                 items = listOf(
-                    FakeTodoModel(1, "fakowy item 1"),
-                    FakeTodoModel(2, "fakowy item drugi !")
+                    FakeTodoModel(
+                        1,
+                        "fakowy item o jakimś przypomnieniu",
+                        repeatType = RepeatType.RepeatTypeWeek()
+                    ),
+                    FakeTodoModel(
+                        2,
+                        "inne krótkie przypomnienie",
+                        repeatType = RepeatType.RepeatTypeYear()
+                    )
                 ),
                 onCloseItem = {},
                 onDismiss = {},
