@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.ui.navigation
+package pl.slaszu.todoapp.domain.navigation
 
 import kotlinx.serialization.Serializable
 

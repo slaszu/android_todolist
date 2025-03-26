@@ -10,41 +10,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.PresentationService
-import pl.slaszu.todoapp.domain.Setting
-import pl.slaszu.todoapp.domain.SettingRepository
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.TodoRepository
-import pl.slaszu.todoapp.domain.reminder.ReminderRepeatService
 import javax.inject.Inject
 
 
 @HiltViewModel
 class ListViewModel @Inject constructor(
     private val todoRepository: TodoRepository<TodoModel>,
-    private val settingRepository: SettingRepository,
     private val presentationService: PresentationService,
-    private val reminderRepeatService: ReminderRepeatService
 ) : ViewModel() {
 
     fun getTodoList(search: String?): Flow<List<TodoModel>> {
         return todoRepository.getTodoList(search)
-    }
-
-    val settingFlow = settingRepository.getData()
-
-    fun saveSetting(setting: Setting, oldSetting: Setting) {
-        this.viewModelScope.launch {
-            settingRepository.saveData(setting)
-
-            if (oldSetting.reminderRepeatHour != setting.reminderRepeatHour ||
-                oldSetting.reminderRepeatMinute != setting.reminderRepeatMinute
-            ) {
-                reminderRepeatService.scheduleRepeatOnePerDay(
-                    hour = setting.reminderRepeatHour,
-                    minute = setting.reminderRepeatMinute
-                )
-            }
-        }
     }
 
     fun check(item: TodoModel, checked: Boolean, snackbarHostState: SnackbarHostState? = null) {

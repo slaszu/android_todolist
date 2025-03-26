@@ -5,14 +5,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import pl.slaszu.todoapp.ui.navigation.TodoAppRouteList
+import pl.slaszu.todoapp.domain.navigation.TodoAppRouteList
 
 @Composable
 fun TopBar(
@@ -24,7 +24,7 @@ fun TopBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val isListRoute = navBackStackEntry?.destination?.hasRoute(TodoAppRouteList::class) ?: true;
 
-    var searchToggle by remember { mutableStateOf(false) }
+    var searchToggle by rememberSaveable { mutableStateOf(false) }
 
     if (isListRoute && searchToggle) {
         SearchTopBar(

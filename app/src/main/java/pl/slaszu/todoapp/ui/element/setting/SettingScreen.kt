@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.R
-import pl.slaszu.todoapp.domain.Setting
+import pl.slaszu.todoapp.domain.setting.Setting
 import pl.slaszu.todoapp.ui.element.form.TimeDialogModel
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 
@@ -33,8 +33,6 @@ import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 fun SettingScreen(
     setting: Setting,
     onChange: (Setting) -> Unit,
-    onNotificationClick: () -> Unit,
-    onReminderClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val timePickerState = rememberTimePickerState(
@@ -81,12 +79,13 @@ fun SettingScreen(
             text = stringResource(R.string.setting_notification),
             description = stringResource(R.string.setting_notification_info)
         ) {
-
-            Switch(
-                checked = setting.notificationAllowed,
-                onCheckedChange = { onNotificationClick() },
-                modifier = Modifier.testTag("notification")
-            )
+            if (setting.notificationAllowed) {
+                Text(stringResource(R.string.yes))
+            } else {
+                Text(
+                    stringResource(R.string.no), color = MaterialTheme.colorScheme.error
+                )
+            }
         }
 
 
@@ -94,12 +93,13 @@ fun SettingScreen(
             text = stringResource(R.string.setting_reminder),
             description = stringResource(R.string.setting_reminder_info)
         ) {
-
-            Switch(
-                checked = setting.reminderAllowed,
-                onCheckedChange = { onReminderClick() },
-                modifier = Modifier.testTag("reminder")
-            )
+            if (setting.reminderAllowed) {
+                Text(stringResource(R.string.yes))
+            } else {
+                Text(
+                    stringResource(R.string.no), color = MaterialTheme.colorScheme.error
+                )
+            }
         }
     }
 }
@@ -142,8 +142,6 @@ fun TodoListSettingPreview() {
             SettingScreen(
                 setting = Setting(true, false),
                 onChange = {},
-                onNotificationClick = {},
-                onReminderClick = {},
                 modifier = Modifier.padding(it)
             )
         }

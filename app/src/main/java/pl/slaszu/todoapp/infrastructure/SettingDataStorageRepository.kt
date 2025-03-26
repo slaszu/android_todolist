@@ -4,8 +4,8 @@ import androidx.datastore.core.DataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import pl.slaszu.todoapp.domain.Setting
-import pl.slaszu.todoapp.domain.SettingRepository
+import pl.slaszu.todoapp.domain.setting.Setting
+import pl.slaszu.todoapp.domain.setting.SettingRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

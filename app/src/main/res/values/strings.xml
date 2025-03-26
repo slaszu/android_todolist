@@ -40,4 +40,6 @@
     <string name="repeat_period_year">every year</string>
     <string name="todo_item_no_repeat">You can set it to repeat</string>
     <string name="todo_form_field_require">Required field</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

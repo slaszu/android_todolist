@@ -16,16 +16,16 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import pl.slaszu.todoapp.domain.Setting
-import pl.slaszu.todoapp.domain.SettingRepository
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.TodoModelFactory
 import pl.slaszu.todoapp.domain.TodoRepository
-import pl.slaszu.todoapp.domain.reminder.ReminderPermission
+import pl.slaszu.todoapp.domain.reminder.ReminderPermissionService
+import pl.slaszu.todoapp.domain.setting.Setting
+import pl.slaszu.todoapp.domain.setting.SettingRepository
 import pl.slaszu.todoapp.infrastructure.SettingDataStorageRepository
 import pl.slaszu.todoapp.infrastructure.TodoRoomRepository
-import pl.slaszu.todoapp.infrastructure.reminder.FakeReminderPermissionService
-import pl.slaszu.todoapp.infrastructure.reminder.ReminderPermissionService
+import pl.slaszu.todoapp.infrastructure.reminder.FakeReminderPermissionServiceService
+import pl.slaszu.todoapp.infrastructure.reminder.SystemReminderPermissionServiceService
 import pl.slaszu.todoapp.infrastructure.room.TodoModelDao
 import pl.slaszu.todoapp.infrastructure.room.TodoModelEntityFactory
 import java.io.InputStream
@@ -45,11 +45,11 @@ object AndroidVersionProviders {
 
     @Provides
     @Singleton
-    fun getReminderPermissionService(@ApplicationContext context: Context): ReminderPermission {
+    fun getReminderPermissionService(@ApplicationContext context: Context): ReminderPermissionService {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            return FakeReminderPermissionService()
+            return FakeReminderPermissionServiceService()
         }
-        return ReminderPermissionService(context)
+        return SystemReminderPermissionServiceService(context)
     }
 }
 

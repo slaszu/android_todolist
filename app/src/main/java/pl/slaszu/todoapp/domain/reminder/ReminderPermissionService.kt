@@ -1,7 +1,5 @@
 package pl.slaszu.todoapp.domain.reminder
 
-interface ReminderPermission {
+interface ReminderPermissionService {
     fun hasPermission(): Boolean
-
-    fun openSettingActivity()
 }

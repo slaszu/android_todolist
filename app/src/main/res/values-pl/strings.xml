@@ -40,4 +40,6 @@
     <string name="repeat_period_year">co rok</string>
     <string name="todo_item_no_repeat">Możesz ustawić powtórzenia</string>
     <string name="todo_form_field_require">Pole wymagane</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
 </resources>

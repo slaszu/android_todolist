@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import pl.slaszu.todoapp.domain.FakeTodoModel
-import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.domain.setting.Setting
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import java.time.LocalDateTime
 

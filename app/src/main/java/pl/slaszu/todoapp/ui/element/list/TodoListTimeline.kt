@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.TimelineHeader
 import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.domain.setting.Setting
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

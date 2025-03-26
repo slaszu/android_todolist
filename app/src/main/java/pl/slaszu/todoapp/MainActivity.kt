@@ -7,16 +7,24 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,32 +34,33 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.PresentationService
-import pl.slaszu.todoapp.domain.Setting
-import pl.slaszu.todoapp.domain.SettingRepository
 import pl.slaszu.todoapp.domain.TodoItemType
-import pl.slaszu.todoapp.domain.TodoModel
-import pl.slaszu.todoapp.domain.TodoRepository
+import pl.slaszu.todoapp.domain.navigation.TodoAppReminderItems
+import pl.slaszu.todoapp.domain.navigation.TodoAppRouteEditOrNewForm
+import pl.slaszu.todoapp.domain.navigation.TodoAppRouteList
+import pl.slaszu.todoapp.domain.navigation.TodoAppSetting
+import pl.slaszu.todoapp.domain.notification.NotificationPermissionLauncher
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionService
 import pl.slaszu.todoapp.domain.notification.NotificationService
 import pl.slaszu.todoapp.domain.reminder.ReminderExactService
-import pl.slaszu.todoapp.domain.reminder.ReminderPermission
-import pl.slaszu.todoapp.domain.reminder.ReminderRepeatService
+import pl.slaszu.todoapp.domain.reminder.ReminderPermissionLauncher
+import pl.slaszu.todoapp.domain.reminder.ReminderPermissionService
+import pl.slaszu.todoapp.domain.setting.SettingRepository
+import pl.slaszu.todoapp.ui.element.bottom.BottomBar
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoFloatingActionButton
 import pl.slaszu.todoapp.ui.element.list.TodoListScreen
 import pl.slaszu.todoapp.ui.element.remiander.ReminderDialog
 import pl.slaszu.todoapp.ui.element.setting.SettingScreen
 import pl.slaszu.todoapp.ui.element.top.TopBar
-import pl.slaszu.todoapp.ui.navigation.TodoAppReminderItems
-import pl.slaszu.todoapp.ui.navigation.TodoAppRouteEditOrNewForm
-import pl.slaszu.todoapp.ui.navigation.TodoAppRouteList
-import pl.slaszu.todoapp.ui.navigation.TodoAppSetting
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import pl.slaszu.todoapp.ui.view_model.FormViewModel
 import pl.slaszu.todoapp.ui.view_model.ListViewModel
+import pl.slaszu.todoapp.ui.view_model.SettingViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -60,41 +69,20 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var settingRepository: SettingRepository
 
-    private val notificationPermissionService = NotificationPermissionService(this)
+    @Inject
+    lateinit var notificationPermissionService: NotificationPermissionService
 
     @Inject
-    lateinit var reminderPermissionService: ReminderPermission
+    lateinit var notificationPermissionLauncher: NotificationPermissionLauncher
 
     @Inject
-    lateinit var repository: TodoRepository<TodoModel>
+    lateinit var reminderPermissionService: ReminderPermissionService
+
+    @Inject
+    lateinit var reminderPermissionLauncher: ReminderPermissionLauncher
 
     private val reminderExactService = ReminderExactService(this)
 
-    private val reminderRepeatService = ReminderRepeatService(this)
-
-
-//    // TODO: change it to "ActivityResultContract" solution
-//    @Deprecated("This method has been deprecated")
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<String>,
-//        grantResults: IntArray
-//    ) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        when (requestCode) {
-//            NotificationPermissionService.NOTIFICATION_REQUEST_CODE
-//            -> {
-//                this.updateNotificationAllowed(
-//                    allowed = this.notificationPermissionService.isPermissionGranted(
-//                        permissions,
-//                        grantResults
-//                    )
-//                )
-//            }
-//
-//            else -> return
-//        }
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,23 +90,62 @@ class MainActivity : ComponentActivity() {
 
         val reminderIds = this.getReminderItemIds()
 
+        val launcherStartActivityPermission =
+            this.notificationPermissionLauncher.registerStartActivityLauncher(this) {
+                Log.d("myapp", "launcherStartActivityPermission = $it")
+                this.updateSystemSettings(notificationAllowed = it)
+            }
+        val launcherRequestPermission =
+            this.notificationPermissionLauncher.registerRequestPermissionLauncher(this) {
+                Log.d("myapp", "launcherRequestPermission = $it")
+                this.updateSystemSettings(notificationAllowed = it)
+            }
+        val launchStartActivityReminder =
+            this.reminderPermissionLauncher.registerStartActivityLauncher(this) {
+                Log.d("myapp", "launchStartActivityReminder = $it")
+                this.updateSystemSettings(reminderAllowed = it)
+            }
+
         setContent {
             val navController = rememberNavController()
             val listViewModel: ListViewModel = viewModel()
             val formViewModel: FormViewModel = viewModel()
+            val settingViewModel: SettingViewModel = viewModel()
 
             var searchString by rememberSaveable { mutableStateOf<String?>(null) }
 
             val setting =
-                listViewModel.settingFlow.collectAsStateWithLifecycle(Setting()).value
+                settingViewModel.settingFlow.collectAsState(null).value
             val todoList =
-                listViewModel.getTodoList(searchString).collectAsStateWithLifecycle(emptyList()).value
+                listViewModel.getTodoList(searchString)
+                    .collectAsStateWithLifecycle(null).value
 
 
             val snackbarHostState = remember { SnackbarHostState() }
 
             var tabSelectedRemember by rememberSaveable { mutableStateOf(TodoItemType.TIMELINE) }
 
+            if (setting == null || todoList == null) {
+                TodoAppTheme {
+                    Scaffold { innerPadding ->
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                                .padding(innerPadding)
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.width(100.dp),
+                                color = MaterialTheme.colorScheme.error,
+                                trackColor = MaterialTheme.colorScheme.surfaceVariant
+                            )
+                        }
+                    }
+                }
+                return@setContent
+            }
 
             TodoAppTheme {
                 Scaffold(
@@ -133,6 +160,24 @@ class MainActivity : ComponentActivity() {
                             },
                             navController = navController,
                             onOptionClick = { navController.navigate(TodoAppSetting) }
+                        )
+                    },
+                    bottomBar = {
+                        if (setting.notificationAllowed && setting.reminderAllowed) {
+                            return@Scaffold
+                        }
+                        BottomBar(
+                            setting = setting,
+                            onClickNotification = {
+                                notificationPermissionLauncher.launch(
+                                    launcherStartActivityPermission
+                                )
+                            },
+                            onClickReminder = {
+                                reminderPermissionLauncher.launch(
+                                    launchStartActivityReminder
+                                )
+                            }
                         )
                     },
                     floatingActionButton = {
@@ -218,10 +263,8 @@ class MainActivity : ComponentActivity() {
                                 SettingScreen(
                                     setting = setting,
                                     onChange = {
-                                        listViewModel.saveSetting(it, setting)
-                                    },
-                                    onReminderClick = { reminderPermissionService.openSettingActivity() },
-                                    onNotificationClick = { notificationPermissionService.openSettingActivity() }
+                                        settingViewModel.saveSetting(it, setting)
+                                    }
                                 )
                             }
                             composable<TodoAppReminderItems> { backStackEntry ->
@@ -238,20 +281,23 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+
                 }
             }
         }
 
-        this.checkSystemSettings()
-//        this.getReminderItemIds()
-//        val notificationService = NotificationService(this)
-//        lifecycleScope.launch {
-//            repository.getTodoList().collect { items ->
-//                val items = items.subList(0,4)
-//                notificationService.sendNotification(items!!.toTypedArray())
-//            }
-//
-//        }
+        if (!this.notificationPermissionService.hasPermission() && launcherRequestPermission != null) {
+            lifecycleScope.launch {
+                delay(5000)
+                notificationPermissionLauncher.launch(launcherRequestPermission)
+            }
+        }
+
+        // refresh permission
+        this.updateSystemSettings(
+            notificationAllowed = this.notificationPermissionService.hasPermission(),
+            reminderAllowed = this.reminderPermissionService.hasPermission()
+        )
     }
 
     private fun getReminderItemIds(): LongArray {
@@ -263,31 +309,19 @@ class MainActivity : ComponentActivity() {
         return itemIds;
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        this.checkSystemSettings()
-        this.getReminderItemIds()
-    }
-
-    private fun checkSystemSettings() {
-        this.updateSystemSettings(
-            notificationAllowed = this.notificationPermissionService.hasPermission(),
-            reminderAllowed = this.reminderPermissionService.hasPermission()
-        )
-    }
-
-    private fun updateSystemSettings(notificationAllowed: Boolean, reminderAllowed: Boolean) {
+    private fun updateSystemSettings(
+        notificationAllowed: Boolean? = null,
+        reminderAllowed: Boolean? = null
+    ) {
         lifecycleScope.launch {
             settingRepository.getData().cancellable().collect { setting ->
+
                 val refreshSetting = setting.copy(
-                    notificationAllowed = notificationAllowed,
-                    reminderAllowed = reminderAllowed
+                    notificationAllowed = notificationAllowed ?: setting.notificationAllowed,
+                    reminderAllowed = reminderAllowed ?: setting.reminderAllowed
                 )
 
-                reminderRepeatService.scheduleRepeatOnePerDay(
-                    hour = refreshSetting.reminderRepeatHour,
-                    minute = refreshSetting.reminderRepeatMinute
-                )
+                Log.d("myapp", refreshSetting.toString())
 
                 settingRepository.saveData(refreshSetting)
                 this.cancel()

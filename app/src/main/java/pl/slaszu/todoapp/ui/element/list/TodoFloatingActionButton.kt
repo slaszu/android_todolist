@@ -10,7 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
-import pl.slaszu.todoapp.ui.navigation.TodoAppRouteList
+import pl.slaszu.todoapp.domain.navigation.TodoAppRouteList
 
 @Composable
 fun TodoFloatingActionButton(

@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.domain
+package pl.slaszu.todoapp.domain.setting
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable

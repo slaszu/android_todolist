@@ -12,7 +12,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import pl.slaszu.todoapp.domain.Setting
+import pl.slaszu.todoapp.domain.setting.Setting
 import pl.slaszu.todoapp.ui.element.setting.SettingScreen
 
 @RunWith(RobolectricTestRunner::class)

@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.FakeTodoModel
-import pl.slaszu.todoapp.domain.Setting
 import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.repeat.RepeatType
+import pl.slaszu.todoapp.domain.setting.Setting
 import pl.slaszu.todoapp.domain.utils.printStartDate
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import pl.slaszu.todoapp.ui.theme.TodoAppTypography
