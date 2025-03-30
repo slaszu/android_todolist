@@ -1,19 +1,24 @@
 package pl.slaszu.todoapp.ui.element.bottom
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Icon
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.setting.Setting
 
 @Composable
@@ -22,36 +27,57 @@ fun BottomBar(
     onClickNotification: () -> Unit,
     onClickReminder: () -> Unit
 ) {
-    BottomAppBar(
-        modifier = Modifier.height(100.dp)
-    ) {
-        Column {
-            if (!setting.notificationAllowed) {
-                AssistChip(
-                    onClick = onClickNotification,
-                    label = { Text("Brak uprawnień dla powiadomień") },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Filled.Settings,
-                            contentDescription = "Localized description",
-                            Modifier.size(AssistChipDefaults.IconSize)
-                        )
-                    }
-                )
+    val scope = rememberCoroutineScope()
+    var visible by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        scope.launch {
+            while (true) {
+                delay(500)
+                visible = !visible
             }
-            if (!setting.reminderAllowed) {
-                AssistChip(
-                    onClick = onClickReminder,
-                    label = { Text("Brak uprawnień dla powiadomień") },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Filled.Settings,
-                            contentDescription = "Localized description",
-                            Modifier.size(AssistChipDefaults.IconSize)
-                        )
-                    }
+        }
+    }
+
+    BottomAppBar {
+
+        if (!setting.notificationAllowed) {
+
+            TextButton(
+                modifier = Modifier.weight(0.5f),
+                onClick = onClickNotification,
+                colors = ButtonDefaults.textButtonColors().copy(
+                    contentColor = MaterialTheme.colorScheme.error
                 )
+            ) {
+
+                AnimatedVisibility(
+                    visible = visible,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Text("Włącz powiadomienia !")
+                }
             }
+
+        }
+        if (!setting.reminderAllowed) {
+            TextButton(
+                modifier = Modifier.weight(0.5f),
+                onClick = onClickReminder,
+                colors = ButtonDefaults.textButtonColors().copy(
+                    contentColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                AnimatedVisibility(
+                    visible = visible,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Text("Włącz przypomnienia !")
+                }
+            }
+
         }
     }
 }
