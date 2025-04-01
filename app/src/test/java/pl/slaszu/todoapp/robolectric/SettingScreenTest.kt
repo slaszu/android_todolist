@@ -1,8 +1,5 @@
 package pl.slaszu.todoapp.robolectric
 
-import androidx.compose.ui.test.assertIsOff
-import androidx.compose.ui.test.assertIsOn
-import androidx.compose.ui.test.assertIsToggleable
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -25,20 +22,14 @@ class SettingScreenTest {
         composeTestRule.setContent {
             SettingScreen(
                 setting = Setting(
-                    notificationAllowed = true,
-                    reminderAllowed = false,
                     reminderRepeatHour = 10,
                     reminderRepeatMinute = 23
                 ),
-                onChange = {},
-                onNotificationClick = {},
-                onReminderClick = {}
+                onChange = {}
             )
         }
 
 
-        composeTestRule.onNodeWithTag("notification").assertIsToggleable().assertIsOn()
-        composeTestRule.onNodeWithTag("reminder").assertIsToggleable().assertIsOff()
         composeTestRule.onNodeWithText("10:23").assertExists()
 
         composeTestRule.onNodeWithContentDescription("time_picker").assertDoesNotExist()

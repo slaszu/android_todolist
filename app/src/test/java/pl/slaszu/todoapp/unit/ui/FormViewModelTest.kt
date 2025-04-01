@@ -11,7 +11,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -19,6 +18,7 @@ import pl.slaszu.todoapp.MainDispatcherRule
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.PresentationService
 import pl.slaszu.todoapp.domain.todo.FakeTodoModel
+import pl.slaszu.todoapp.domain.todo.TodoManager
 import pl.slaszu.todoapp.domain.todo.TodoModel
 import pl.slaszu.todoapp.domain.todo.TodoModelFactory
 import pl.slaszu.todoapp.domain.todo.TodoRepository
@@ -32,6 +32,9 @@ class FormViewModelTest {
 
     @Mock
     private lateinit var todoRepo: TodoRepository<TodoModel>
+
+    @Mock
+    private lateinit var todoManager: TodoManager
 
     @Mock
     private lateinit var todoFactory: TodoModelFactory<TodoModel>
@@ -51,25 +54,23 @@ class FormViewModelTest {
             val itemSaved = item.copy(text = "item saved")
 
             whenever(presentationService.getStringResource(R.string.todo_form_saved)).thenReturn("saved")
-            whenever(todoRepo.save(item)).thenReturn(itemSaved)
-            val callback: (TodoModel) -> Unit = mock()
+            whenever(todoManager.save(item)).thenReturn(itemSaved)
 
             val viewModel = FormViewModel(
                 todoRepository = todoRepo,
                 todoModelFactory = todoFactory,
-                presentationService = presentationService
+                presentationService = presentationService,
+                todoManager = todoManager
             )
 
             // act
             viewModel.save(
                 item = item,
-                snackbarHostState = snackbarHostState,
-                callback = callback
+                snackbarHostState = snackbarHostState
             )
 
             // assert
-            verify(todoRepo).save(item)
-            verify(callback).invoke(itemSaved)
+            verify(todoManager).save(item)
             verify(snackbarHostState).showSnackbar(
                 message = eq("saved"),
                 actionLabel = anyOrNull(),
@@ -90,25 +91,23 @@ class FormViewModelTest {
                 "no changes"
             )
             whenever(todoRepo.getById(1)).thenReturn(item)
-            val callback: (TodoModel) -> Unit = mock()
 
             val viewModel = FormViewModel(
                 todoRepository = todoRepo,
                 todoModelFactory = todoFactory,
-                presentationService = presentationService
+                presentationService = presentationService,
+                todoManager = todoManager
             )
 
             // act
             viewModel.loadTodoItemToEditForm(1)
             viewModel.save(
                 item = item,
-                snackbarHostState = snackbarHostState,
-                callback = callback
+                snackbarHostState = snackbarHostState
             )
 
             // assert
-            verify(todoRepo, never()).save(any())
-            verify(callback, never()).invoke(any())
+            verify(todoManager, never()).save(any())
             verify(snackbarHostState).showSnackbar(
                 message = eq("no changes"),
                 actionLabel = anyOrNull(),
@@ -128,7 +127,8 @@ class FormViewModelTest {
         val viewModel = FormViewModel(
             todoRepository = todoRepo,
             todoModelFactory = todoFactory,
-            presentationService = presentationService
+            presentationService = presentationService,
+            todoManager = todoManager
         )
 
         // act
@@ -153,7 +153,8 @@ class FormViewModelTest {
             val viewModel = FormViewModel(
                 todoRepository = todoRepo,
                 todoModelFactory = todoFactory,
-                presentationService = presentationService
+                presentationService = presentationService,
+                todoManager = todoManager
             )
 
             // act
