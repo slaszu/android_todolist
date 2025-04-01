@@ -16,9 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import pl.slaszu.todoapp.R
 
 @Composable
 fun BottomBar(
@@ -56,7 +58,7 @@ fun BottomBar(
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
-                    Text("Włącz powiadomienia !")
+                    Text(stringResource(R.string.permission_notification))
                 }
             }
 
@@ -74,7 +76,7 @@ fun BottomBar(
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
-                    Text("Włącz przypomnienia !")
+                    Text(stringResource(R.string.permission_reminder))
                 }
             }
 

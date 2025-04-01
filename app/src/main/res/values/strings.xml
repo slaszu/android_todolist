@@ -42,4 +42,6 @@
     <string name="todo_form_field_require">Required field</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="permission_notification">Turn on notifications</string>
+    <string name="permission_reminder">Turn on alarms/reminders</string>
 </resources>
