@@ -18,8 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.R
-import pl.slaszu.todoapp.domain.TodoModel
-import pl.slaszu.todoapp.domain.FakeTodoModel
+import pl.slaszu.todoapp.domain.todo.FakeTodoModel
+import pl.slaszu.todoapp.domain.todo.TodoModel
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 
 @Composable

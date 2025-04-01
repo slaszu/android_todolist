@@ -1,8 +1,9 @@
 package pl.slaszu.todoapp.domain.setting
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import pl.slaszu.todoapp.domain.reminder.ReminderRepeatService
+import pl.slaszu.todoapp.domain.reminder.repeat.ReminderRepeatService
 import javax.inject.Inject
 
 class SettingManager @Inject constructor(
@@ -18,6 +19,13 @@ class SettingManager @Inject constructor(
             ) {
                 reminderRepeatService.scheduleRepeatOnePerDay(setting)
             }
+        }
+    }
+
+    suspend fun bootstrap() {
+        withContext(Dispatchers.IO) {
+            val setting = settingRepository.getData().first()
+            reminderRepeatService.scheduleRepeatOnePerDay(setting)
         }
     }
 }

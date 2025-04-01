@@ -17,11 +17,11 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import pl.slaszu.todoapp.MainDispatcherRule
 import pl.slaszu.todoapp.R
-import pl.slaszu.todoapp.domain.FakeTodoModel
 import pl.slaszu.todoapp.domain.PresentationService
-import pl.slaszu.todoapp.domain.TodoModel
-import pl.slaszu.todoapp.domain.TodoModelFactory
-import pl.slaszu.todoapp.domain.TodoRepository
+import pl.slaszu.todoapp.domain.todo.FakeTodoModel
+import pl.slaszu.todoapp.domain.todo.TodoModel
+import pl.slaszu.todoapp.domain.todo.TodoModelFactory
+import pl.slaszu.todoapp.domain.todo.TodoRepository
 import pl.slaszu.todoapp.ui.view_model.FormViewModel
 
 @RunWith(MockitoJUnitRunner::class)

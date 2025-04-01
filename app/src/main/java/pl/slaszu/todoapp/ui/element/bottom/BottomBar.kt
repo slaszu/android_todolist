@@ -19,11 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import pl.slaszu.todoapp.domain.setting.Setting
 
 @Composable
 fun BottomBar(
-    setting: Setting,
+    permissionNotification: Boolean,
+    permissionReminder: Boolean,
     onClickNotification: () -> Unit,
     onClickReminder: () -> Unit
 ) {
@@ -41,7 +41,7 @@ fun BottomBar(
 
     BottomAppBar {
 
-        if (!setting.notificationAllowed) {
+        if (!permissionNotification) {
 
             TextButton(
                 modifier = Modifier.weight(0.5f),
@@ -61,7 +61,7 @@ fun BottomBar(
             }
 
         }
-        if (!setting.reminderAllowed) {
+        if (!permissionReminder) {
             TextButton(
                 modifier = Modifier.weight(0.5f),
                 onClick = onClickReminder,
@@ -86,7 +86,8 @@ fun BottomBar(
 @Composable
 fun BottomBarPreview() {
     BottomBar(
-        setting = Setting(),
+        permissionNotification = false,
+        permissionReminder = false,
         onClickReminder = {},
         onClickNotification = {}
     )

@@ -1,10 +1,12 @@
 package pl.slaszu.todoapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -33,12 +35,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.PresentationService
-import pl.slaszu.todoapp.domain.TodoItemType
 import pl.slaszu.todoapp.domain.navigation.TodoAppReminderItems
 import pl.slaszu.todoapp.domain.navigation.TodoAppRouteEditOrNewForm
 import pl.slaszu.todoapp.domain.navigation.TodoAppRouteList
@@ -46,10 +45,11 @@ import pl.slaszu.todoapp.domain.navigation.TodoAppSetting
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionLauncher
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionService
 import pl.slaszu.todoapp.domain.notification.NotificationService
-import pl.slaszu.todoapp.domain.reminder.ReminderExactService
 import pl.slaszu.todoapp.domain.reminder.ReminderPermissionLauncher
 import pl.slaszu.todoapp.domain.reminder.ReminderPermissionService
-import pl.slaszu.todoapp.domain.setting.SettingRepository
+import pl.slaszu.todoapp.domain.reminder.exact.ReminderExactManager
+import pl.slaszu.todoapp.domain.setting.SettingManager
+import pl.slaszu.todoapp.domain.todo.TodoItemType
 import pl.slaszu.todoapp.ui.element.bottom.BottomBar
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoFloatingActionButton
@@ -67,7 +67,10 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var settingRepository: SettingRepository
+    lateinit var settingManager: SettingManager
+
+    @Inject
+    lateinit var reminderExactManager: ReminderExactManager
 
     @Inject
     lateinit var notificationPermissionService: NotificationPermissionService
@@ -81,8 +84,6 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var reminderPermissionLauncher: ReminderPermissionLauncher
 
-    private val reminderExactService = ReminderExactService(this)
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,21 +91,44 @@ class MainActivity : ComponentActivity() {
 
         val reminderIds = this.getReminderItemIds()
 
-        val launcherStartActivityPermission =
-            this.notificationPermissionLauncher.registerStartActivityLauncher(this) {
-                Log.d("myapp", "launcherStartActivityPermission = $it")
-                this.updateSystemSettings(notificationAllowed = it)
+        val permissionNotification = this.notificationPermissionService.hasPermission()
+        val permissionReminder = this.reminderPermissionService.hasPermission()
+
+        var launcherStartActivityNotification: ActivityResultLauncher<Intent>? = null
+        if (!permissionNotification) {
+            launcherStartActivityNotification =
+                this.notificationPermissionLauncher.registerStartActivityLauncher(this) {
+                    Log.d("myapp", "launcherStartActivityPermission = $it")
+                    recreate()
+                }
+            val launcherRequestPermission =
+                this.notificationPermissionLauncher.registerRequestPermissionLauncher(this) {
+                    Log.d("myapp", "launcherRequestPermission = $it")
+                    recreate()
+                }
+            if (launcherRequestPermission != null) {
+                lifecycleScope.launch {
+                    delay(5000)
+                    notificationPermissionLauncher.launch(launcherRequestPermission)
+                }
             }
-        val launcherRequestPermission =
-            this.notificationPermissionLauncher.registerRequestPermissionLauncher(this) {
-                Log.d("myapp", "launcherRequestPermission = $it")
-                this.updateSystemSettings(notificationAllowed = it)
+        }
+
+        var launchStartActivityReminder: ActivityResultLauncher<Intent>? = null
+        if (!permissionReminder) {
+            launchStartActivityReminder =
+                this.reminderPermissionLauncher.registerStartActivityLauncher(this) {
+                    Log.d("myapp", "launchStartActivityReminder = $it")
+                    recreate()
+                }
+        }
+
+        lifecycleScope.launch {
+            settingManager.bootstrap()
+            if (permissionReminder) {
+                reminderExactManager.bootstrap()
             }
-        val launchStartActivityReminder =
-            this.reminderPermissionLauncher.registerStartActivityLauncher(this) {
-                Log.d("myapp", "launchStartActivityReminder = $it")
-                this.updateSystemSettings(reminderAllowed = it)
-            }
+        }
 
         setContent {
             val navController = rememberNavController()
@@ -163,20 +187,25 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                     bottomBar = {
-                        if (setting.notificationAllowed && setting.reminderAllowed) {
+                        if (permissionNotification && permissionReminder) {
                             return@Scaffold
                         }
                         BottomBar(
-                            setting = setting,
+                            permissionNotification = permissionNotification,
+                            permissionReminder = permissionReminder,
                             onClickNotification = {
-                                notificationPermissionLauncher.launch(
-                                    launcherStartActivityPermission
-                                )
+                                if (launcherStartActivityNotification != null) {
+                                    notificationPermissionLauncher.launch(
+                                        launcherStartActivityNotification
+                                    )
+                                }
                             },
                             onClickReminder = {
-                                reminderPermissionLauncher.launch(
-                                    launchStartActivityReminder
-                                )
+                                if (launchStartActivityReminder != null) {
+                                    reminderPermissionLauncher.launch(
+                                        launchStartActivityReminder
+                                    )
+                                }
                             }
                         )
                     },
@@ -253,9 +282,7 @@ class MainActivity : ComponentActivity() {
                                             tabSelectedRemember = TodoItemType.TIMELINE
                                         }
                                         navController.navigate(TodoAppRouteList)
-                                        formViewModel.save(item, snackbarHostState) { savedItem ->
-                                            reminderExactService.schedule(savedItem)
-                                        }
+                                        formViewModel.save(item, snackbarHostState)
                                     }
                                 )
                             }
@@ -285,19 +312,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-        if (!this.notificationPermissionService.hasPermission() && launcherRequestPermission != null) {
-            lifecycleScope.launch {
-                delay(5000)
-                notificationPermissionLauncher.launch(launcherRequestPermission)
-            }
-        }
-
-        // refresh permission
-        this.updateSystemSettings(
-            notificationAllowed = this.notificationPermissionService.hasPermission(),
-            reminderAllowed = this.reminderPermissionService.hasPermission()
-        )
     }
 
     private fun getReminderItemIds(): LongArray {
@@ -308,28 +322,6 @@ class MainActivity : ComponentActivity() {
         )
         return itemIds;
     }
-
-    private fun updateSystemSettings(
-        notificationAllowed: Boolean? = null,
-        reminderAllowed: Boolean? = null
-    ) {
-        lifecycleScope.launch {
-            settingRepository.getData().cancellable().collect { setting ->
-
-                val refreshSetting = setting.copy(
-                    notificationAllowed = notificationAllowed ?: setting.notificationAllowed,
-                    reminderAllowed = reminderAllowed ?: setting.reminderAllowed
-                )
-
-                Log.d("myapp", refreshSetting.toString())
-
-                settingRepository.saveData(refreshSetting)
-                this.cancel()
-            }
-        }
-
-    }
-
 
 }
 

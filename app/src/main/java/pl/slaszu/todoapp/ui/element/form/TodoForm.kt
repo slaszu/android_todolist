@@ -38,8 +38,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.R
-import pl.slaszu.todoapp.domain.FakeTodoModel
-import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.domain.todo.FakeTodoModel
+import pl.slaszu.todoapp.domain.todo.TodoModel
 import pl.slaszu.todoapp.domain.utils.clearTime
 import pl.slaszu.todoapp.domain.utils.isTimeSet
 import pl.slaszu.todoapp.domain.utils.printDate

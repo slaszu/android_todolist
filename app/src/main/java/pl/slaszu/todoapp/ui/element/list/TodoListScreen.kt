@@ -22,12 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import pl.slaszu.todoapp.domain.FakeTodoModel
 import pl.slaszu.todoapp.domain.PresentationService
 import pl.slaszu.todoapp.domain.TimelineHeader
-import pl.slaszu.todoapp.domain.TodoItemType
-import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.setting.Setting
+import pl.slaszu.todoapp.domain.todo.FakeTodoModel
+import pl.slaszu.todoapp.domain.todo.TodoItemType
+import pl.slaszu.todoapp.domain.todo.TodoModel
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 import java.time.LocalDateTime
 

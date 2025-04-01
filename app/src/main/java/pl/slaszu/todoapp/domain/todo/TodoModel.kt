@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.domain
+package pl.slaszu.todoapp.domain.todo
 
 import pl.slaszu.todoapp.domain.repeat.RepeatType
 import java.time.LocalDateTime

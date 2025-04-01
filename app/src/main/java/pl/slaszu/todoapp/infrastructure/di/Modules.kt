@@ -16,12 +16,12 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import pl.slaszu.todoapp.domain.TodoModel
-import pl.slaszu.todoapp.domain.TodoModelFactory
-import pl.slaszu.todoapp.domain.TodoRepository
 import pl.slaszu.todoapp.domain.reminder.ReminderPermissionService
 import pl.slaszu.todoapp.domain.setting.Setting
 import pl.slaszu.todoapp.domain.setting.SettingRepository
+import pl.slaszu.todoapp.domain.todo.TodoModel
+import pl.slaszu.todoapp.domain.todo.TodoModelFactory
+import pl.slaszu.todoapp.domain.todo.TodoRepository
 import pl.slaszu.todoapp.infrastructure.SettingDataStorageRepository
 import pl.slaszu.todoapp.infrastructure.TodoRoomRepository
 import pl.slaszu.todoapp.infrastructure.reminder.FakeReminderPermissionServiceService

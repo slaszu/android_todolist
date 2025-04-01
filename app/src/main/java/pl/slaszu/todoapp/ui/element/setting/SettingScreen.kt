@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberTimePickerState
@@ -75,32 +74,32 @@ fun SettingScreen(
             }
         }
 
-        SettingOption(
-            text = stringResource(R.string.setting_notification),
-            description = stringResource(R.string.setting_notification_info)
-        ) {
-            if (setting.notificationAllowed) {
-                Text(stringResource(R.string.yes))
-            } else {
-                Text(
-                    stringResource(R.string.no), color = MaterialTheme.colorScheme.error
-                )
-            }
-        }
-
-
-        SettingOption(
-            text = stringResource(R.string.setting_reminder),
-            description = stringResource(R.string.setting_reminder_info)
-        ) {
-            if (setting.reminderAllowed) {
-                Text(stringResource(R.string.yes))
-            } else {
-                Text(
-                    stringResource(R.string.no), color = MaterialTheme.colorScheme.error
-                )
-            }
-        }
+//        SettingOption(
+//            text = stringResource(R.string.setting_notification),
+//            description = stringResource(R.string.setting_notification_info)
+//        ) {
+//            if (setting.notificationAllowed) {
+//                Text(stringResource(R.string.yes))
+//            } else {
+//                Text(
+//                    stringResource(R.string.no), color = MaterialTheme.colorScheme.error
+//                )
+//            }
+//        }
+//
+//
+//        SettingOption(
+//            text = stringResource(R.string.setting_reminder),
+//            description = stringResource(R.string.setting_reminder_info)
+//        ) {
+//            if (setting.reminderAllowed) {
+//                Text(stringResource(R.string.yes))
+//            } else {
+//                Text(
+//                    stringResource(R.string.no), color = MaterialTheme.colorScheme.error
+//                )
+//            }
+//        }
     }
 }
 
@@ -140,7 +139,7 @@ fun TodoListSettingPreview() {
     TodoAppTheme {
         Scaffold() { it ->
             SettingScreen(
-                setting = Setting(true, false),
+                setting = Setting(),
                 onChange = {},
                 modifier = Modifier.padding(it)
             )

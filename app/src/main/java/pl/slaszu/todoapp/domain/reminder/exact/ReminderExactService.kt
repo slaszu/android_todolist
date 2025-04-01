@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.domain.reminder
+package pl.slaszu.todoapp.domain.reminder.exact
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -6,17 +6,24 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import pl.slaszu.todoapp.domain.TodoModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import pl.slaszu.todoapp.domain.reminder.ReminderPermissionService
+import pl.slaszu.todoapp.domain.todo.TodoModel
 import pl.slaszu.todoapp.domain.utils.isTimeSet
 import pl.slaszu.todoapp.domain.utils.toEpochMillis
+import javax.inject.Inject
 
-class ReminderExactService(
-    private val context: Context
+class ReminderExactService @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val reminderPermissionService: ReminderPermissionService
 ) {
-
-
     @SuppressLint("ScheduleExactAlarm")
     fun schedule(item: TodoModel) {
+
+        if (!reminderPermissionService.hasPermission()) {
+            Log.d("myapp", "No permission for reminders!")
+            return
+        }
 
         if (item.id == 0L) {
             Log.d("myapp", "Item has no id: $item")
@@ -24,6 +31,10 @@ class ReminderExactService(
         }
 
         if (item.startDate == null || !item.startDate!!.isTimeSet()) {
+            return this.cancel(item)
+        }
+
+        if (item.done) {
             return this.cancel(item)
         }
 
@@ -36,7 +47,7 @@ class ReminderExactService(
         Log.d("myapp", "Schedule SET: $item")
     }
 
-    private fun cancel(item: TodoModel) {
+    fun cancel(item: TodoModel) {
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.cancel(
@@ -48,7 +59,7 @@ class ReminderExactService(
     private fun createPendingIntent(item: TodoModel): PendingIntent {
         return PendingIntent.getBroadcast(
             context,
-            0,
+            item.id.toInt(),
             Intent(context, ReminderExactReceiver::class.java).apply {
                 putExtra("ITEM_ID", item.id)
             },

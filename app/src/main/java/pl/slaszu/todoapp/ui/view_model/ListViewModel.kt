@@ -10,8 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.PresentationService
-import pl.slaszu.todoapp.domain.TodoModel
-import pl.slaszu.todoapp.domain.TodoRepository
+import pl.slaszu.todoapp.domain.reminder.exact.ReminderExactService
+import pl.slaszu.todoapp.domain.todo.TodoModel
+import pl.slaszu.todoapp.domain.todo.TodoRepository
 import javax.inject.Inject
 
 
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class ListViewModel @Inject constructor(
     private val todoRepository: TodoRepository<TodoModel>,
     private val presentationService: PresentationService,
+    private val reminderExactService: ReminderExactService
 ) : ViewModel() {
 
     fun getTodoList(search: String?): Flow<List<TodoModel>> {
@@ -52,7 +54,8 @@ class ListViewModel @Inject constructor(
                 )
             }
 
-            todoRepository.save(itemToSave)
+            val savedItem = todoRepository.save(itemToSave)
+            reminderExactService.schedule(savedItem)
 
             // snackbar only on close item
             if (!showSnackbar || snackbarHostState == null || !checked) return@launch
@@ -66,6 +69,7 @@ class ListViewModel @Inject constructor(
             when (result) {
                 SnackbarResult.ActionPerformed -> {
                     todoRepository.save(item)
+                    reminderExactService.schedule(item)
                 }
 
                 SnackbarResult.Dismissed -> {
@@ -78,6 +82,7 @@ class ListViewModel @Inject constructor(
     fun delete(item: TodoModel, snackbarHostState: SnackbarHostState? = null) {
         this.viewModelScope.launch {
             todoRepository.delete(item)
+            reminderExactService.schedule(item)
 
             if (snackbarHostState == null) return@launch
 
@@ -90,6 +95,7 @@ class ListViewModel @Inject constructor(
             when (result) {
                 SnackbarResult.ActionPerformed -> {
                     todoRepository.save(item)
+                    reminderExactService.schedule(item)
                 }
 
                 SnackbarResult.Dismissed -> {

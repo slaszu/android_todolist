@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.domain.reminder
+package pl.slaszu.todoapp.domain.reminder.repeat
 
 import android.app.AlarmManager
 import android.app.PendingIntent

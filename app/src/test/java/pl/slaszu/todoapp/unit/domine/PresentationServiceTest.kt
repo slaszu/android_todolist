@@ -2,9 +2,9 @@ package pl.slaszu.todoapp.unit.domine
 
 import org.junit.Assert
 import org.junit.Test
-import pl.slaszu.todoapp.domain.FakeTodoModel
 import pl.slaszu.todoapp.domain.PresentationService
 import pl.slaszu.todoapp.domain.TimelineHeader
+import pl.slaszu.todoapp.domain.todo.FakeTodoModel
 import java.time.LocalDateTime
 
 class PresentationServiceTest {

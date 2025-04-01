@@ -14,7 +14,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,13 +31,12 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.R
-import pl.slaszu.todoapp.domain.FakeTodoModel
-import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.repeat.RepeatType
 import pl.slaszu.todoapp.domain.setting.Setting
+import pl.slaszu.todoapp.domain.todo.FakeTodoModel
+import pl.slaszu.todoapp.domain.todo.TodoModel
 import pl.slaszu.todoapp.domain.utils.printStartDate
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
-import pl.slaszu.todoapp.ui.theme.TodoAppTypography
 import java.time.LocalDateTime
 
 @Composable
@@ -160,13 +158,13 @@ private fun TodoItemInfo(
                 }
             }
         }
-        if (!setting.notificationAllowed) {
-            Text(
-                text = stringResource(R.string.notification_disabled),
-                style = TodoAppTypography.labelSmall,
-                color = MaterialTheme.colorScheme.error
-            )
-        }
+//        if (!setting.notificationAllowed) {
+//            Text(
+//                text = stringResource(R.string.notification_disabled),
+//                style = TodoAppTypography.labelSmall,
+//                color = MaterialTheme.colorScheme.error
+//            )
+//        }
     }
 }
 

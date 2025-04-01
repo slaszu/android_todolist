@@ -11,7 +11,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import pl.slaszu.todoapp.MainActivity
 import pl.slaszu.todoapp.R
-import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.domain.todo.TodoModel
+import java.util.Random
 
 class NotificationService(
     private val context: Context
@@ -31,7 +32,7 @@ class NotificationService(
 
         val notificationManagerCompat = NotificationManagerCompat.from(context)
         if (notificationManagerCompat.areNotificationsEnabled()) {
-            notificationManagerCompat.notify(1, this.buildNotification(items))
+            notificationManagerCompat.notify(Random().nextInt(), this.buildNotification(items))
         }
     }
 

@@ -4,9 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import pl.slaszu.todoapp.domain.TodoModel
-import pl.slaszu.todoapp.domain.TodoModelFactory
 import pl.slaszu.todoapp.domain.repeat.RepeatType
+import pl.slaszu.todoapp.domain.todo.TodoModel
+import pl.slaszu.todoapp.domain.todo.TodoModelFactory
 import java.time.LocalDateTime
 import javax.inject.Inject
 

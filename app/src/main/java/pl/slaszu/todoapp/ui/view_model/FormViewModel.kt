@@ -9,9 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.PresentationService
-import pl.slaszu.todoapp.domain.TodoModel
-import pl.slaszu.todoapp.domain.TodoModelFactory
-import pl.slaszu.todoapp.domain.TodoRepository
+import pl.slaszu.todoapp.domain.reminder.exact.ReminderExactService
+import pl.slaszu.todoapp.domain.todo.TodoModel
+import pl.slaszu.todoapp.domain.todo.TodoModelFactory
+import pl.slaszu.todoapp.domain.todo.TodoRepository
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,6 +20,7 @@ class FormViewModel @Inject constructor(
     private val todoRepository: TodoRepository<TodoModel>,
     private val todoModelFactory: TodoModelFactory<TodoModel>,
     private val presentationService: PresentationService,
+    private val reminderExactService: ReminderExactService
 ) : ViewModel() {
 
     var todoEditModel = mutableStateOf<TodoModel?>(null)
@@ -36,7 +38,7 @@ class FormViewModel @Inject constructor(
         }
     }
 
-    fun save(item: TodoModel, snackbarHostState: SnackbarHostState, callback: (TodoModel) -> Unit) {
+    fun save(item: TodoModel, snackbarHostState: SnackbarHostState) {
 
         this.viewModelScope.launch {
 
@@ -50,7 +52,7 @@ class FormViewModel @Inject constructor(
             }
 
             val savedItem = todoRepository.save(item)
-            callback(savedItem)
+            reminderExactService.schedule(savedItem)
             snackbarHostState.showSnackbar(
                 message = presentationService.getStringResource(R.string.todo_form_saved),
                 duration = SnackbarDuration.Short,

@@ -24,9 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import pl.slaszu.todoapp.domain.FakeTodoModel
-import pl.slaszu.todoapp.domain.TodoModel
 import pl.slaszu.todoapp.domain.repeat.RepeatType
+import pl.slaszu.todoapp.domain.todo.FakeTodoModel
+import pl.slaszu.todoapp.domain.todo.TodoModel
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 
 @Composable

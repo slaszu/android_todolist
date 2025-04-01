@@ -15,12 +15,14 @@ interface TodoModelDao {
     @Query("SELECT * from todo where text LIKE '%' || :search || '%' ORDER BY start_date ASC")
     fun loadTodoList(search:String): Flow<List<TodoModelEntity>>
 
-
     @Query("SELECT * from todo where id = :id")
     suspend fun loadTodoById(id: Long): TodoModelEntity?
 
     @Query("SELECT * from todo where start_date = :date")
     suspend fun loadTodoByDate(date: LocalDateTime): Array<TodoModelEntity>
+
+    @Query("SELECT * from todo where start_date IS NOT null and done = 0")
+    suspend fun loadTodoNotCloseWithDate(): Array<TodoModelEntity>
 
     @Upsert
     suspend fun upsert(todoItem: TodoModelEntity): Long

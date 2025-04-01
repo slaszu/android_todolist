@@ -1,4 +1,4 @@
-package pl.slaszu.todoapp.domain
+package pl.slaszu.todoapp.domain.todo
 
 import pl.slaszu.todoapp.R
 

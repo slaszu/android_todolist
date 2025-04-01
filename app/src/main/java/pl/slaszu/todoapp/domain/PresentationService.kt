@@ -2,6 +2,7 @@ package pl.slaszu.todoapp.domain
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import pl.slaszu.todoapp.domain.todo.TodoModel
 import pl.slaszu.todoapp.domain.utils.clearTime
 import java.time.LocalDateTime
 import javax.inject.Inject

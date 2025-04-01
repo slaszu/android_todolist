@@ -1,10 +1,12 @@
-package pl.slaszu.todoapp.domain
+package pl.slaszu.todoapp.domain.todo
 
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
-interface TodoRepository<T:TodoModel> {
+interface TodoRepository<T: TodoModel> {
     fun getTodoList(search:String?): Flow<List<T>>
+
+    suspend fun getOnlyActiveTimeline(): Array<T>
 
     suspend fun getByDate(date: LocalDateTime): Array<T>
 

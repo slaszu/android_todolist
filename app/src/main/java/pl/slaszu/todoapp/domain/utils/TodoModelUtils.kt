@@ -1,6 +1,6 @@
 package pl.slaszu.todoapp.domain.utils
 
-import pl.slaszu.todoapp.domain.TodoModel
+import pl.slaszu.todoapp.domain.todo.TodoModel
 
 fun TodoModel.printStartDate(noDate: String, noTime: String): String {
     return when {

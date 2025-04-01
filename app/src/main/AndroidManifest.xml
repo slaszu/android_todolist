@@ -25,8 +25,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".domain.reminder.ReminderExactReceiver" />
-        <receiver android:name=".domain.reminder.ReminderRepeatReceiver" />
+        <receiver android:name=".domain.reminder.exact.ReminderExactReceiver" />
+        <receiver android:name=".domain.reminder.repeat.ReminderRepeatReceiver" />
 
         <!-- Required: set your sentry.io project identifier (DSN) -->
         <meta-data
