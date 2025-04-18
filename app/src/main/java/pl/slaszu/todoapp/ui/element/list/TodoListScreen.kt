@@ -98,6 +98,7 @@ fun TodoListScreen(
         )
 
         HorizontalPager(
+            beyondViewportPageCount = 3,
             state = pagerState,
             verticalAlignment = Alignment.Top,
             modifier = Modifier.fillMaxHeight()

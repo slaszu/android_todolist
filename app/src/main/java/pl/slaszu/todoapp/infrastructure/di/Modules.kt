@@ -92,7 +92,7 @@ object SettingProviders {
                     } catch (serialization: SerializationException) {
                         Log.d(
                             "myapp",
-                            serialization?.message ?: "SerializationException but no message :/"
+                            serialization.message ?: "SerializationException but no message :/"
                         )
                         //throw CorruptionException("Unable to read UserPrefs", serialization)
                         return defaultValue

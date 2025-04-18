@@ -1,13 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
-    kotlin("plugin.serialization") version "2.0.21"
+    kotlin("plugin.serialization") version "2.1.20"
     alias(libs.plugins.kotlin.compose)
     id("androidx.room")
-
     id("io.sentry.android.gradle") version "5.2.0"
+    id("com.google.gms.google-services")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -87,8 +87,9 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.ui.test.junit4.android)
+    implementation(libs.androidx.appcompat)
     annotationProcessor(libs.androidx.room.compiler)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
     implementation("androidx.navigation:navigation-compose:2.8.3")
@@ -96,7 +97,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
     implementation("androidx.datastore:datastore:1.1.1")
     implementation("com.google.dagger:hilt-android:2.51.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    ksp("com.google.dagger:hilt-android-compiler:2.51.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
 
     implementation(libs.androidx.core.ktx)
@@ -113,6 +114,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.test.manifest)
 
+    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
     // Required -- JUnit 4 framework
     testImplementation(libs.junit)
     // Optional -- Robolectric environment
@@ -126,10 +133,6 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
     // Optional -- Mockk framework
     //testImplementation("io.mockk:mockk:")
-}
-
-kapt {
-    correctErrorTypes = true
 }
 
 sentry {

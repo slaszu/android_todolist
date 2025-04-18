@@ -24,6 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".GoogleSignInActivity"
+            android:theme="@style/Theme.AppCompat" />
 
         <receiver android:name=".domain.reminder.exact.ReminderExactReceiver" />
         <receiver android:name=".domain.reminder.repeat.ReminderRepeatReceiver" />

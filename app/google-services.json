@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "272014256678",
+    "project_id": "simpletodoapp-c116f",
+    "storage_bucket": "simpletodoapp-c116f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272014256678:android:2a86b5add70406c93e94e7",
+        "android_client_info": {
+          "package_name": "pl.slaszu.todoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272014256678-dd0pqtkrd2io2qaprgjch8gb8mgo0mb5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.slaszu.todoapp",
+            "certificate_hash": "ae62ef9768424d58097eec0a8ffa34f627a9f794"
+          }
+        },
+        {
+          "client_id": "272014256678-j2rkvcvvk3bkro10f6jafld70r3i7rhi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVXpFavK74AuNy8a4CpuT1CD9cpM3CeRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272014256678-j2rkvcvvk3bkro10f6jafld70r3i7rhi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

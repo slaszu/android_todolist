@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -34,6 +35,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -84,10 +88,25 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var reminderPermissionLauncher: ReminderPermissionLauncher
 
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        auth = Firebase.auth
+
+        Log.d("myapp", auth.currentUser.toString())
+
+
+        val authLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                Log.d("myapp", it.toString())
+            }
+        authLauncher.launch(
+            Intent(this, GoogleSignInActivity::class.java)
+        )
+
 
         val reminderIds = this.getReminderItemIds()
 
@@ -131,6 +150,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
+
             val navController = rememberNavController()
             val listViewModel: ListViewModel = viewModel()
             val formViewModel: FormViewModel = viewModel()

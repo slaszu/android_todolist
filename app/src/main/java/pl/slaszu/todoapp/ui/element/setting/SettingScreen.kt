@@ -74,18 +74,12 @@ fun SettingScreen(
             }
         }
 
-//        SettingOption(
-//            text = stringResource(R.string.setting_notification),
-//            description = stringResource(R.string.setting_notification_info)
-//        ) {
-//            if (setting.notificationAllowed) {
-//                Text(stringResource(R.string.yes))
-//            } else {
-//                Text(
-//                    stringResource(R.string.no), color = MaterialTheme.colorScheme.error
-//                )
-//            }
-//        }
+        SettingOption(
+            text = "Synchronizacja",
+            description = "Firebase authentication"
+        ) {
+
+        }
 //
 //
 //        SettingOption(
