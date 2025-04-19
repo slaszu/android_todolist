@@ -11,7 +11,7 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.lifecycleScope
-import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 import com.google.firebase.Firebase
@@ -42,33 +42,39 @@ class GoogleSignInActivity : AppCompatActivity() {
         auth = Firebase.auth
         // [END initialize_auth]
 
-        // [START initialize_credential_manager]
-        // Initialize Credential Manager
-        credentialManager = CredentialManager.create(baseContext)
-        // [END initialize_credential_manager]
+        if (auth.currentUser != null) {
+            updateUI(auth.currentUser)
 
-        launchCredentialManager()
+            auth.signOut()
+        } else {
+
+            // [START initialize_credential_manager]
+            // Initialize Credential Manager
+            credentialManager = CredentialManager.create(baseContext)
+            // [END initialize_credential_manager]
+
+            launchCredentialManager()
+        }
     }
 
     // [START on_start_check_user]
-    override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        updateUI(currentUser)
-    }
+//    override fun onStart() {
+//        super.onStart()
+//        // Check if user is signed in (non-null) and update UI accordingly.
+//        val currentUser = auth.currentUser
+//        updateUI(currentUser)
+//    }
     // [END on_start_check_user]
 
 
     private fun launchCredentialManager() {
         // [START create_credential_manager_request]
         // Instantiate a Google sign-in request
-        val googleIdOption = GetSignInWithGoogleOption
-            .Builder("272014256678-j2rkvcvvk3bkro10f6jafld70r3i7rhi.apps.googleusercontent.com")
+        val googleIdOption = GetGoogleIdOption
+            //.Builder("272014256678-j2rkvcvvk3bkro10f6jafld70r3i7rhi.apps.googleusercontent.com")
             // Your server's client ID, not your Android client ID.
-            //.Builder()
-            //.setServerClientId("272014256678-j2rkvcvvk3bkro10f6jafld70r3i7rhi.apps.googleusercontent.com")
-            // Only show accounts previously used to sign in.
+            .Builder()
+            .setServerClientId("272014256678-j2rkvcvvk3bkro10f6jafld70r3i7rhi.apps.googleusercontent.com")
             //.setFilterByAuthorizedAccounts(true)
             .build()
 
@@ -148,7 +154,15 @@ class GoogleSignInActivity : AppCompatActivity() {
     // [END sign_out]
 
     private fun updateUI(user: FirebaseUser?) {
-        Log.d(TAG, user.toString())
+        Log.d(TAG, "user = ${user.toString()}")
+        if (user != null) {
+            Log.d(TAG, user.uid)
+            Log.d(TAG, user.displayName.toString())
+            Log.d(TAG, user.email.toString())
+            Log.d(TAG, user.phoneNumber.toString())
+            Log.d(TAG, user.metadata.toString())
+
+        }
     }
 
     companion object {
