@@ -26,7 +26,7 @@
         </activity>
         <activity
             android:name=".GoogleSignInActivity"
-            android:theme="@style/Theme.AppCompat" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <receiver android:name=".domain.reminder.exact.ReminderExactReceiver" />
         <receiver android:name=".domain.reminder.repeat.ReminderRepeatReceiver" />

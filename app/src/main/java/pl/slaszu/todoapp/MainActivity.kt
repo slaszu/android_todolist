@@ -103,9 +103,11 @@ class MainActivity : ComponentActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 Log.d("myapp", it.toString())
             }
-        authLauncher.launch(
-            Intent(this, GoogleSignInActivity::class.java)
-        )
+        if (auth.currentUser == null) {
+            authLauncher.launch(
+                Intent(this, GoogleSignInActivity::class.java)
+            )
+        }
 
 
         val reminderIds = this.getReminderItemIds()

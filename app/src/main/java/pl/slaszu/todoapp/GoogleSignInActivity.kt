@@ -2,7 +2,13 @@ package pl.slaszu.todoapp
 
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
@@ -19,7 +25,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 
 /**
  * Demonstrate Firebase Authentication using a Google ID Token.
@@ -37,20 +45,23 @@ class GoogleSignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        enableEdgeToEdge()
+
         // [START initialize_auth]
         // Initialize Firebase Auth
         auth = Firebase.auth
         // [END initialize_auth]
+        credentialManager = CredentialManager.create(baseContext)
+
 
         if (auth.currentUser != null) {
             updateUI(auth.currentUser)
 
-            auth.signOut()
+            signOut()
         } else {
 
             // [START initialize_credential_manager]
             // Initialize Credential Manager
-            credentialManager = CredentialManager.create(baseContext)
             // [END initialize_credential_manager]
 
             launchCredentialManager()
@@ -138,10 +149,13 @@ class GoogleSignInActivity : AppCompatActivity() {
     // [START sign_out]
     private fun signOut() {
         // Firebase sign out
-        auth.signOut()
+        //auth.signOut()
 
         // When a user signs out, clear the current user credential state from all credential providers.
         lifecycleScope.launch {
+            delay(5000)
+            auth.signOut()
+
             try {
                 val clearRequest = ClearCredentialStateRequest()
                 credentialManager.clearCredentialState(clearRequest)
@@ -154,6 +168,18 @@ class GoogleSignInActivity : AppCompatActivity() {
     // [END sign_out]
 
     private fun updateUI(user: FirebaseUser?) {
+
+        setContent {
+            TodoAppTheme {
+                Scaffold { innerPadding ->
+                    Text(
+                        "Hello ${user?.email}",
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
+            }
+        }
+
         Log.d(TAG, "user = ${user.toString()}")
         if (user != null) {
             Log.d(TAG, user.uid)
