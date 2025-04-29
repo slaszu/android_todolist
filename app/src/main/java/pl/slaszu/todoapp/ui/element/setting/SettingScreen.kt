@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseUser
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.setting.Setting
 import pl.slaszu.todoapp.ui.element.form.TimeDialogModel
@@ -32,6 +33,9 @@ import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 fun SettingScreen(
     setting: Setting,
     onChange: (Setting) -> Unit,
+    user: FirebaseUser?,
+    onLogIn: () -> Unit,
+    onLogOut: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val timePickerState = rememberTimePickerState(
@@ -78,7 +82,20 @@ fun SettingScreen(
             text = "Synchronizacja",
             description = "Firebase authentication"
         ) {
-
+            Text(user?.email ?: "Niezalogowany")
+            if (user === null) {
+                Button(
+                    onClick = onLogIn
+                ) {
+                    Text("Zaloguj")
+                }
+            } else {
+                Button(
+                    onClick = onLogOut
+                ) {
+                    Text("Wyloguj")
+                }
+            }
         }
 //
 //
@@ -135,7 +152,10 @@ fun TodoListSettingPreview() {
             SettingScreen(
                 setting = Setting(),
                 onChange = {},
-                modifier = Modifier.padding(it)
+                modifier = Modifier.padding(it),
+                user = null,
+                onLogOut = {},
+                onLogIn = {}
             )
         }
     }

@@ -16,6 +16,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import pl.slaszu.todoapp.domain.auth.UserService
 import pl.slaszu.todoapp.domain.reminder.ReminderPermissionService
 import pl.slaszu.todoapp.domain.setting.Setting
 import pl.slaszu.todoapp.domain.setting.SettingRepository
@@ -24,6 +25,7 @@ import pl.slaszu.todoapp.domain.todo.TodoModelFactory
 import pl.slaszu.todoapp.domain.todo.TodoRepository
 import pl.slaszu.todoapp.infrastructure.SettingDataStorageRepository
 import pl.slaszu.todoapp.infrastructure.TodoRoomRepository
+import pl.slaszu.todoapp.infrastructure.firebase.auth.FirebaseUserService
 import pl.slaszu.todoapp.infrastructure.reminder.FakeReminderPermissionServiceService
 import pl.slaszu.todoapp.infrastructure.reminder.SystemReminderPermissionServiceService
 import pl.slaszu.todoapp.infrastructure.room.TodoModelDao
@@ -37,6 +39,9 @@ import javax.inject.Singleton
 abstract class Binds {
     @Binds
     abstract fun getFavoriteRepository(repo: SettingDataStorageRepository): SettingRepository
+
+    @Binds
+    abstract fun getUserService(service: FirebaseUserService): UserService
 }
 
 @InstallIn(SingletonComponent::class)

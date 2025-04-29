@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -42,6 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.PresentationService
+import pl.slaszu.todoapp.domain.auth.UserService
 import pl.slaszu.todoapp.domain.navigation.TodoAppReminderItems
 import pl.slaszu.todoapp.domain.navigation.TodoAppRouteEditOrNewForm
 import pl.slaszu.todoapp.domain.navigation.TodoAppRouteList
@@ -88,6 +88,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var reminderPermissionLauncher: ReminderPermissionLauncher
 
+    @Inject
+    lateinit var userService: UserService
+
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,15 +102,15 @@ class MainActivity : ComponentActivity() {
         Log.d("myapp", auth.currentUser.toString())
 
 
-        val authLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                Log.d("myapp", it.toString())
-            }
-        if (auth.currentUser == null) {
-            authLauncher.launch(
-                Intent(this, GoogleSignInActivity::class.java)
-            )
-        }
+//        val authLauncher =
+//            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+//                Log.d("myapp", it.toString())
+//            }
+//        if (auth.currentUser == null) {
+//            authLauncher.launch(
+//                Intent(this, GoogleSignInActivity::class.java)
+//            )
+//        }
 
 
         val reminderIds = this.getReminderItemIds()
@@ -313,7 +316,10 @@ class MainActivity : ComponentActivity() {
                                     setting = setting,
                                     onChange = {
                                         settingViewModel.saveSetting(it, setting)
-                                    }
+                                    },
+                                    auth.currentUser,
+                                    onLogIn = { userService.startLogInProcess(lifecycleScope) },
+                                    onLogOut = { userService.startLogoutProcess(lifecycleScope) }
                                 )
                             }
                             composable<TodoAppReminderItems> { backStackEntry ->
