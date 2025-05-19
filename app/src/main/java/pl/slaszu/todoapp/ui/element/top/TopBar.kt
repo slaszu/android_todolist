@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import pl.slaszu.todoapp.domain.auth.User
 import pl.slaszu.todoapp.domain.navigation.TodoAppRouteList
 
 @Composable
@@ -19,7 +20,8 @@ fun TopBar(
     navController: NavController,
     onOptionClick: () -> Unit,
     onChangeSearch: (String?) -> Unit,
-    searchText: String?
+    searchText: String?,
+    user: User?
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val isListRoute = navBackStackEntry?.destination?.hasRoute(TodoAppRouteList::class) ?: true;
@@ -40,7 +42,8 @@ fun TopBar(
             isListRoute = isListRoute,
             onBackClick = { navController.navigate(TodoAppRouteList) },
             onOptionClick = onOptionClick,
-            onSearchClick = { searchToggle = true }
+            onSearchClick = { searchToggle = true },
+            user = user
         )
     }
 
@@ -57,7 +60,8 @@ fun TopBarPreview() {
                 navController = rememberNavController(),
                 onOptionClick = {},
                 onChangeSearch = {},
-                searchText = null
+                searchText = null,
+                user = null //User("asdad", "testowy@com.p")
             )
         }
     ) {

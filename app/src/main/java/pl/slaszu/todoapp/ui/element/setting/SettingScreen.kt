@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.google.firebase.auth.FirebaseUser
 import pl.slaszu.todoapp.R
+import pl.slaszu.todoapp.domain.auth.User
 import pl.slaszu.todoapp.domain.setting.Setting
 import pl.slaszu.todoapp.ui.element.form.TimeDialogModel
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
@@ -33,7 +33,7 @@ import pl.slaszu.todoapp.ui.theme.TodoAppTheme
 fun SettingScreen(
     setting: Setting,
     onChange: (Setting) -> Unit,
-    user: FirebaseUser?,
+    user: User?,
     onLogIn: () -> Unit,
     onLogOut: () -> Unit,
     modifier: Modifier = Modifier
@@ -80,9 +80,8 @@ fun SettingScreen(
 
         SettingOption(
             text = "Synchronizacja",
-            description = "Firebase authentication"
+            description = user?.email ?: "Niezalogowany"
         ) {
-            Text(user?.email ?: "Niezalogowany")
             if (user === null) {
                 Button(
                     onClick = onLogIn
@@ -153,7 +152,7 @@ fun TodoListSettingPreview() {
                 setting = Setting(),
                 onChange = {},
                 modifier = Modifier.padding(it),
-                user = null,
+                user = User("asdasdasdasd","testowy.email@com.pl"),
                 onLogOut = {},
                 onLogIn = {}
             )

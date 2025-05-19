@@ -5,6 +5,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.R
+import pl.slaszu.todoapp.domain.auth.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,7 +25,8 @@ fun StandardTopBar(
     isListRoute: Boolean,
     onOptionClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    user: User?
 ) {
     TopAppBar(
         modifier = Modifier.padding(5.dp),
@@ -43,13 +47,21 @@ fun StandardTopBar(
                 )
             }
 
-            IconButton(
-                onClick = { onOptionClick() }
+            BadgedBox(
+                badge = {
+                    if (user == null) {
+                        Badge()
+                    }
+                }
             ) {
-                Icon(
-                    Icons.Filled.MoreVert,
-                    contentDescription = "More options"
-                )
+                IconButton(
+                    onClick = { onOptionClick() }
+                ) {
+                    Icon(
+                        Icons.Filled.MoreVert,
+                        contentDescription = "More options"
+                    )
+                }
             }
 
         },

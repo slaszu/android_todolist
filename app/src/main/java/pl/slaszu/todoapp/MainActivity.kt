@@ -34,9 +34,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -91,27 +88,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var userService: UserService
 
-    private lateinit var auth: FirebaseAuth
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        auth = Firebase.auth
-
-        Log.d("myapp", auth.currentUser.toString())
-
-
-//        val authLauncher =
-//            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-//                Log.d("myapp", it.toString())
-//            }
-//        if (auth.currentUser == null) {
-//            authLauncher.launch(
-//                Intent(this, GoogleSignInActivity::class.java)
-//            )
-//        }
-
 
         val reminderIds = this.getReminderItemIds()
 
@@ -155,7 +134,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-
+            var user by rememberSaveable { mutableStateOf(userService.getUserOrNull()) }
             val navController = rememberNavController()
             val listViewModel: ListViewModel = viewModel()
             val formViewModel: FormViewModel = viewModel()
@@ -208,7 +187,8 @@ class MainActivity : ComponentActivity() {
                                 searchString = it
                             },
                             navController = navController,
-                            onOptionClick = { navController.navigate(TodoAppSetting) }
+                            onOptionClick = { navController.navigate(TodoAppSetting) },
+                            user = user
                         )
                     },
                     bottomBar = {
@@ -317,9 +297,17 @@ class MainActivity : ComponentActivity() {
                                     onChange = {
                                         settingViewModel.saveSetting(it, setting)
                                     },
-                                    auth.currentUser,
-                                    onLogIn = { userService.startLogInProcess(lifecycleScope) },
-                                    onLogOut = { userService.startLogoutProcess(lifecycleScope) }
+                                    user,
+                                    onLogIn = {
+                                        userService.startLogInProcess(lifecycleScope) {
+                                            user = it
+                                        }
+                                    },
+                                    onLogOut = {
+                                        userService.startLogoutProcess(lifecycleScope) {
+                                            user = null
+                                        }
+                                    }
                                 )
                             }
                             composable<TodoAppReminderItems> { backStackEntry ->
