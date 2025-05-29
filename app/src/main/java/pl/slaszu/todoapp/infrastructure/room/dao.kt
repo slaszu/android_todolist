@@ -29,4 +29,8 @@ interface TodoModelDao {
 
     @Delete
     suspend fun delete(todoItem: TodoModelEntity)
+
+    @Query("SELECT * from todo")
+    suspend fun loadTodoListAll(): Array<TodoModelEntity>
+
 }

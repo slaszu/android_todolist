@@ -24,12 +24,10 @@ class NotificationService(
     }
 
     fun sendNotification(item: TodoModel) {
-
         this.sendNotification(arrayOf(item))
     }
 
     fun sendNotification(items: Array<TodoModel>) {
-
         val notificationManagerCompat = NotificationManagerCompat.from(context)
         if (notificationManagerCompat.areNotificationsEnabled()) {
             notificationManagerCompat.notify(Random().nextInt(), this.buildNotification(items))
@@ -37,7 +35,6 @@ class NotificationService(
     }
 
     private fun buildNotification(items: Array<TodoModel>): Notification {
-
         Log.d("myapp", "buildNotification")
 
         // Create an explicit intent for an Activity in your app.

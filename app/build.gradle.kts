@@ -8,6 +8,7 @@ plugins {
     id("io.sentry.android.gradle") version "5.2.0"
     id("com.google.gms.google-services")
     id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
 }
 
 android {

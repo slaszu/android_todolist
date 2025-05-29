@@ -33,19 +33,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.PresentationService
 import pl.slaszu.todoapp.domain.auth.UserService
-import pl.slaszu.todoapp.domain.navigation.TodoAppReminderItems
 import pl.slaszu.todoapp.domain.navigation.TodoAppRouteEditOrNewForm
 import pl.slaszu.todoapp.domain.navigation.TodoAppRouteList
 import pl.slaszu.todoapp.domain.navigation.TodoAppSetting
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionLauncher
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionService
-import pl.slaszu.todoapp.domain.notification.NotificationService
 import pl.slaszu.todoapp.domain.reminder.ReminderPermissionLauncher
 import pl.slaszu.todoapp.domain.reminder.ReminderPermissionService
 import pl.slaszu.todoapp.domain.reminder.exact.ReminderExactManager
@@ -55,7 +52,6 @@ import pl.slaszu.todoapp.ui.element.bottom.BottomBar
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoFloatingActionButton
 import pl.slaszu.todoapp.ui.element.list.TodoListScreen
-import pl.slaszu.todoapp.ui.element.remiander.ReminderDialog
 import pl.slaszu.todoapp.ui.element.setting.SettingScreen
 import pl.slaszu.todoapp.ui.element.top.TopBar
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
@@ -91,8 +87,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        val reminderIds = this.getReminderItemIds()
 
         val permissionNotification = this.notificationPermissionService.hasPermission()
         val permissionReminder = this.reminderPermissionService.hasPermission()
@@ -147,7 +141,6 @@ class MainActivity : ComponentActivity() {
             val todoList =
                 listViewModel.getTodoList(searchString)
                     .collectAsStateWithLifecycle(null).value
-
 
             val snackbarHostState = remember { SnackbarHostState() }
 
@@ -230,11 +223,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         NavHost(
                             navController = navController,
-                            startDestination = if (reminderIds.isEmpty()) {
-                                TodoAppRouteList
-                            } else {
-                                TodoAppReminderItems(reminderIds)
-                            }
+                            startDestination = TodoAppRouteList
                         ) {
                             composable<TodoAppRouteList> {
                                 Column {
@@ -310,35 +299,12 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
-                            composable<TodoAppReminderItems> { backStackEntry ->
-                                val param = backStackEntry.toRoute<TodoAppReminderItems>()
-                                ReminderDialog(
-                                    items = todoList.filter {
-                                        param.ids.contains(it.id)
-                                    },
-                                    onDismiss = { navController.navigate(TodoAppRouteList) },
-                                    onCloseItem = { item ->
-                                        listViewModel.check(item, true, snackbarHostState)
-                                    }
-                                )
-                            }
                         }
                     }
-
                 }
             }
         }
     }
-
-    private fun getReminderItemIds(): LongArray {
-        val itemIds = this.intent.getLongArrayExtra(NotificationService.INTENT_KEY) ?: longArrayOf()
-        Log.d(
-            "myapp",
-            "Reminder item ids (from intent)[${itemIds.size}]: ${itemIds.joinToString()}"
-        )
-        return itemIds;
-    }
-
 }
 
 

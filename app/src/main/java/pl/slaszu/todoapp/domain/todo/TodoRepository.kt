@@ -15,4 +15,6 @@ interface TodoRepository<T: TodoModel> {
     suspend fun save(todoItem: T): T
 
     suspend fun delete(todoItem: T)
+
+    suspend fun getAll(): Array<T>
 }
