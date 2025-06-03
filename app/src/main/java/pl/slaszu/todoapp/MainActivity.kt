@@ -211,7 +211,7 @@ class MainActivity : ComponentActivity() {
                         TodoFloatingActionButton(
                             navController = navController,
                             onClick = {
-                                formViewModel.loadTodoItemToEditForm(0)
+                                formViewModel.loadTodoItemToEditForm(null)
                                 navController.navigate(TodoAppRouteEditOrNewForm)
                             }
                         )
@@ -290,6 +290,7 @@ class MainActivity : ComponentActivity() {
                                     onLogIn = {
                                         userService.startLogInProcess(lifecycleScope) {
                                             user = it
+                                            settingViewModel.setupBackup(snackbarHostState)
                                         }
                                     },
                                     onLogOut = {

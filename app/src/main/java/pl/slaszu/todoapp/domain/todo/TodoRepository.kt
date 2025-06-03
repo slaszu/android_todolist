@@ -10,7 +10,7 @@ interface TodoRepository<T: TodoModel> {
 
     suspend fun getByDate(date: LocalDateTime): Array<T>
 
-    suspend fun getById(id: Long): T?
+    suspend fun getById(id: String): T?
 
     suspend fun save(todoItem: T): T
 

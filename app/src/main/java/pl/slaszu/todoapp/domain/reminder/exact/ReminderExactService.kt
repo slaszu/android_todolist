@@ -9,6 +9,7 @@ import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import pl.slaszu.todoapp.domain.reminder.ReminderPermissionService
 import pl.slaszu.todoapp.domain.todo.TodoModel
+import pl.slaszu.todoapp.domain.utils.getUniqueInt
 import pl.slaszu.todoapp.domain.utils.isTimeSet
 import pl.slaszu.todoapp.domain.utils.toEpochMillis
 import javax.inject.Inject
@@ -22,11 +23,6 @@ class ReminderExactService @Inject constructor(
 
         if (!reminderPermissionService.hasPermission()) {
             Log.d("myapp", "No permission for reminders!")
-            return
-        }
-
-        if (item.id == 0L) {
-            Log.d("myapp", "Item has no id: $item")
             return
         }
 
@@ -59,7 +55,7 @@ class ReminderExactService @Inject constructor(
     private fun createPendingIntent(item: TodoModel): PendingIntent {
         return PendingIntent.getBroadcast(
             context,
-            item.id.toInt(),
+            item.getUniqueInt(),
             Intent(context, ReminderExactReceiver::class.java).apply {
                 putExtra("ITEM_ID", item.id)
             },

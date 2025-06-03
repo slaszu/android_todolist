@@ -16,7 +16,7 @@ interface TodoModelDao {
     fun loadTodoList(search:String): Flow<List<TodoModelEntity>>
 
     @Query("SELECT * from todo where id = :id")
-    suspend fun loadTodoById(id: Long): TodoModelEntity?
+    suspend fun loadTodoById(id: String): TodoModelEntity?
 
     @Query("SELECT * from todo where start_date = :date")
     suspend fun loadTodoByDate(date: LocalDateTime): Array<TodoModelEntity>

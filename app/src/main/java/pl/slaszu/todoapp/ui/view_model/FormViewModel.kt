@@ -26,8 +26,8 @@ class FormViewModel @Inject constructor(
     var todoEditModel = mutableStateOf<TodoModel?>(null)
         private set
 
-    fun loadTodoItemToEditForm(id: Long) {
-        if (id == 0.toLong()) {
+    fun loadTodoItemToEditForm(id: String?) {
+        if (id == null) {
             todoEditModel.value = todoModelFactory.createDefault()
             return
         }

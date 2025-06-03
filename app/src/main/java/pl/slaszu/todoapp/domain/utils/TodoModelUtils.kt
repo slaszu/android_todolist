@@ -9,3 +9,13 @@ fun TodoModel.printStartDate(noDate: String, noTime: String): String {
         else -> this.startDate!!.printDate() + " " + this.startDate!!.printTime()
     }
 }
+
+fun TodoModel.getUniqueInt(): Int {
+    var sum = 0
+    var cnt = 0
+    this.id.replace(Regex("[^0-9]"),"").forEach {
+        sum += it.code
+        cnt++
+    }
+    return sum+cnt
+}

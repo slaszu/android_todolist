@@ -27,7 +27,7 @@ class ReminderExactReceiver : BroadcastReceiver() {
         }
 
         val notificationService = NotificationService(context)
-        val itemId = intent.getLongExtra("ITEM_ID", 0)
+        val itemId = intent.getStringExtra("ITEM_ID") ?: return
 
         runBlocking {
             val item = repository.getById(itemId) ?: return@runBlocking

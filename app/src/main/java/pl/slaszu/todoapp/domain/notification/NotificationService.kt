@@ -20,7 +20,6 @@ class NotificationService(
     companion object {
         const val CHANNEL_ID = "todoapp_channel_unique_identifier"
         const val CHANNEL_NAME = "TodoApp"
-        const val INTENT_KEY = "ITEM_ID_ARRAY"
     }
 
     fun sendNotification(item: TodoModel) {
@@ -40,10 +39,6 @@ class NotificationService(
         // Create an explicit intent for an Activity in your app.
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra(
-                INTENT_KEY,
-                longArrayOf(*items.map { it.id }.toLongArray())
-            )
         }
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(

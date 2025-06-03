@@ -8,6 +8,7 @@ import pl.slaszu.todoapp.domain.repeat.RepeatType
 import pl.slaszu.todoapp.domain.todo.TodoModel
 import pl.slaszu.todoapp.domain.todo.TodoModelFactory
 import java.time.LocalDateTime
+import java.util.UUID
 import javax.inject.Inject
 
 @Entity(
@@ -15,7 +16,7 @@ import javax.inject.Inject
     indices = [Index(value = ["text"])]
 )
 data class TodoModelEntity(
-    @PrimaryKey(autoGenerate = true) override val id: Long = 0,
+    @PrimaryKey override val id: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "text") override val text: String = "",
     @ColumnInfo(name = "done") override val done: Boolean = false,
     @ColumnInfo(name = "start_date") override val startDate: LocalDateTime? = null,

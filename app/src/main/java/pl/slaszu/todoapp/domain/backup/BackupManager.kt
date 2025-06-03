@@ -13,7 +13,7 @@ class BackupManager @Inject constructor(
     fun addOrUpdateItem(item: TodoModel) {
         val user = userService.getUserOrNull()
         if (user == null) {
-            Log.d("myapp", "Backup unavailable: user is null")
+            Log.d("myapp", "Backup save unavailable: user is null")
             return
         }
         backupRepository.saveItem(item, user)
@@ -22,9 +22,19 @@ class BackupManager @Inject constructor(
     fun deleteItem(item: TodoModel) {
         val user = userService.getUserOrNull()
         if (user == null) {
-            Log.d("myapp", "Backup unavailable: user is null")
+            Log.d("myapp", "Backup delete unavailable: user is null")
             return
         }
         backupRepository.delItem(item, user)
+    }
+
+    fun importAll() {
+        val user = userService.getUserOrNull()
+        if (user == null) {
+            Log.d("myapp", "Backup import unavailable: user is null")
+            return
+        }
+
+        backupRepository.getAll(user)
     }
 }

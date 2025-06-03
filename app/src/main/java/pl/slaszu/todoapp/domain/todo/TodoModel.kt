@@ -2,9 +2,10 @@ package pl.slaszu.todoapp.domain.todo
 
 import pl.slaszu.todoapp.domain.repeat.RepeatType
 import java.time.LocalDateTime
+import java.util.UUID
 
 interface TodoModel {
-    val id: Long
+    val id: String
     val text: String
     val done: Boolean
     val startDate: LocalDateTime?
@@ -18,7 +19,7 @@ interface TodoModelFactory<T : TodoModel> {
 }
 
 data class FakeTodoModel(
-    override val id: Long = 0,
+    override val id: String = UUID.randomUUID().toString(),
     override val text: String = "fake",
     override val done: Boolean = false,
     override val startDate: LocalDateTime? = null,
