@@ -27,6 +27,8 @@ class SettingViewModel @Inject constructor(
     }
 
     fun setupBackup(snackbarHostState: SnackbarHostState) {
-        this.backupManager.importAll()
+        this.viewModelScope.launch {
+            backupManager.importAll()
+        }
     }
 }

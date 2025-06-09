@@ -3,10 +3,12 @@ package pl.slaszu.todoapp.domain.backup
 import android.util.Log
 import pl.slaszu.todoapp.domain.auth.UserService
 import pl.slaszu.todoapp.domain.todo.TodoModel
+import pl.slaszu.todoapp.domain.todo.TodoRepository
 import javax.inject.Inject
 
 class BackupManager @Inject constructor(
     private val backupRepository: BackupRepository,
+    private val todoRepository: TodoRepository<TodoModel>,
     private val userService: UserService
 ) {
 
@@ -28,13 +30,18 @@ class BackupManager @Inject constructor(
         backupRepository.delItem(item, user)
     }
 
-    fun importAll() {
+    suspend fun importAll() {
         val user = userService.getUserOrNull()
         if (user == null) {
             Log.d("myapp", "Backup import unavailable: user is null")
             return
         }
 
-        backupRepository.getAll(user)
+        val todoIdList = todoRepository.getAll().map { it.id }
+        backupRepository.getAll(user).filter {
+            !todoIdList.contains(it.id)
+        }.forEach {
+            todoRepository.save(it)
+        }
     }
 }

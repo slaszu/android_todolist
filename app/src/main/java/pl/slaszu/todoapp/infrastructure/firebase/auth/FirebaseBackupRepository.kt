@@ -2,9 +2,15 @@ package pl.slaszu.todoapp.infrastructure.firebase.auth
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import pl.slaszu.todoapp.domain.auth.User
 import pl.slaszu.todoapp.domain.backup.BackupRepository
+import pl.slaszu.todoapp.domain.repeat.RepeatType
 import pl.slaszu.todoapp.domain.todo.TodoModel
+import pl.slaszu.todoapp.infrastructure.room.LocalDateTimeConverter
+import pl.slaszu.todoapp.infrastructure.room.TodoModelEntity
 
 class FirebaseBackupRepository(
     val db: FirebaseFirestore
@@ -12,7 +18,7 @@ class FirebaseBackupRepository(
     override fun saveItem(item: TodoModel, user: User) {
         db.collection("${user.id}")
             .document(item.id)
-            .set(item)
+            .set(toFirebaseTodoModel(item))
             .addOnCompleteListener {
                 Log.d("myapp", "Firestore. Document set ok")
             }
@@ -33,23 +39,55 @@ class FirebaseBackupRepository(
             }
     }
 
-    override fun getAll(user: User): Array<TodoModel> {
-        db.collection("${user.id}")
-            .get()
-            .addOnSuccessListener { result ->
-                Log.d("myapp","Fetched ${result.size()} documents")
-                for (document in result) {
-                    Log.d("myapp", "${document.id} => ${document.data}")
+    override suspend fun getAll(user: User): Array<TodoModel> =
+        withContext(Dispatchers.IO) {
+            return@withContext db.collection("${user.id}")
+                .get()
+                .await()
+                .toObjects(FirebaseTodoModel::class.java)
+                .map {
+                    toTodoModel(it)
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.d("myapp", "Firestore. Get all Error: ", exception)
-            }
+                .toTypedArray()
+        }
 
-        return arrayOf()
-    }
 
     override fun exportAll(items: Array<TodoModel>, user: User) {
-        TODO("Not yet implemented")
+
+    }
+
+    companion object Converter {
+        fun toFirebaseTodoModel(item: TodoModel): FirebaseTodoModel {
+            return FirebaseTodoModel(
+                id = item.id,
+                text = item.text,
+                done = item.done,
+                startDate = LocalDateTimeConverter().localDateTimeToString(item.startDate),
+                repeatType = item.repeatType?.toStringRepresentation()
+            )
+        }
+
+        fun toTodoModel(item: FirebaseTodoModel): TodoModel {
+            return TodoModelEntity(
+                id = item.id,
+                text = item.text,
+                done = item.done,
+                startDate = LocalDateTimeConverter().stringToLocalDateTime(item.startDate),
+                repeatType = item.repeatType?.let {
+                    RepeatType.toObject(it)
+                }
+            )
+        }
     }
 }
+
+data class FirebaseTodoModel(
+    val id: String = "",
+    val text: String = "",
+    val done: Boolean = false,
+    val startDate: String? = null,
+    val repeatType: String? = null
+) {
+    constructor() : this("")
+}
+
