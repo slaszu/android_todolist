@@ -44,4 +44,16 @@ class BackupManager @Inject constructor(
             todoRepository.save(it)
         }
     }
+
+    suspend fun exportAll() {
+        val user = userService.getUserOrNull()
+        if (user == null) {
+            Log.d("myapp", "Backup export unavailable: user is null")
+            return
+        }
+
+        todoRepository.getAll().forEach {
+            backupRepository.saveItem(it, user)
+        }
+    }
 }
