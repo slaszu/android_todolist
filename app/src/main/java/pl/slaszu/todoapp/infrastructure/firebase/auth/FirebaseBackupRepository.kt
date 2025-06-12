@@ -51,11 +51,6 @@ class FirebaseBackupRepository(
                 .toTypedArray()
         }
 
-
-    override fun exportAll(items: Array<TodoModel>, user: User) {
-
-    }
-
     companion object Converter {
         fun toFirebaseTodoModel(item: TodoModel): FirebaseTodoModel {
             return FirebaseTodoModel(

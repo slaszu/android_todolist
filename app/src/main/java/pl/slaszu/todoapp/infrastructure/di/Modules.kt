@@ -13,11 +13,14 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import pl.slaszu.todoapp.domain.auth.UserActivityService
 import pl.slaszu.todoapp.domain.auth.UserService
 import pl.slaszu.todoapp.domain.backup.BackupRepository
 import pl.slaszu.todoapp.domain.reminder.ReminderPermissionService
@@ -29,6 +32,7 @@ import pl.slaszu.todoapp.domain.todo.TodoRepository
 import pl.slaszu.todoapp.infrastructure.SettingDataStorageRepository
 import pl.slaszu.todoapp.infrastructure.TodoRoomRepository
 import pl.slaszu.todoapp.infrastructure.firebase.auth.FirebaseBackupRepository
+import pl.slaszu.todoapp.infrastructure.firebase.auth.FirebaseUserActivityService
 import pl.slaszu.todoapp.infrastructure.firebase.auth.FirebaseUserService
 import pl.slaszu.todoapp.infrastructure.reminder.FakeReminderPermissionServiceService
 import pl.slaszu.todoapp.infrastructure.reminder.SystemReminderPermissionServiceService
@@ -45,7 +49,21 @@ abstract class Binds {
     abstract fun getFavoriteRepository(repo: SettingDataStorageRepository): SettingRepository
 
     @Binds
-    abstract fun getUserService(service: FirebaseUserService): UserService
+    abstract fun getUserService(userService: FirebaseUserService): UserService
+}
+
+@InstallIn(ActivityComponent::class)
+@Module
+object ActivityProviders {
+
+    @Provides
+    fun getUserActivityService(
+        @ActivityContext context: Context,
+        userService: UserService
+    ): UserActivityService {
+        return FirebaseUserActivityService(context, userService)
+    }
+
 }
 
 @InstallIn(SingletonComponent::class)
@@ -55,7 +73,6 @@ object AppProviders {
     @Provides
     @Singleton
     fun getBackupRepository(): BackupRepository {
-
         return FirebaseBackupRepository(Firebase.firestore)
     }
 

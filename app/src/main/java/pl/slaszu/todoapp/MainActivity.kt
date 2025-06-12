@@ -37,6 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.domain.PresentationService
+import pl.slaszu.todoapp.domain.auth.UserActivityService
 import pl.slaszu.todoapp.domain.auth.UserService
 import pl.slaszu.todoapp.domain.navigation.TodoAppRouteEditOrNewForm
 import pl.slaszu.todoapp.domain.navigation.TodoAppRouteList
@@ -83,6 +84,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var userService: UserService
+
+    @Inject
+    lateinit var userActivityService: UserActivityService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -288,13 +292,13 @@ class MainActivity : ComponentActivity() {
                                     },
                                     user,
                                     onLogIn = {
-                                        userService.startLogInProcess(lifecycleScope) {
+                                        userActivityService.startLogInProcess(lifecycleScope) {
                                             user = it
                                             settingViewModel.setupBackup(snackbarHostState)
                                         }
                                     },
                                     onLogOut = {
-                                        userService.startLogoutProcess(lifecycleScope) {
+                                        userActivityService.startLogoutProcess(lifecycleScope) {
                                             user = null
                                         }
                                     }

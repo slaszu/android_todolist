@@ -9,7 +9,10 @@ import kotlinx.parcelize.Parcelize
 data class User(val id: String, val email: String) : Parcelable
 
 interface UserService {
+    fun getUserOrNull(): User?
+}
+
+interface UserActivityService {
     fun startLogInProcess(coroutineScope: CoroutineScope, callback: (User) -> Unit)
     fun startLogoutProcess(coroutineScope: CoroutineScope, callback: () -> Unit)
-    fun getUserOrNull(): User?
 }
