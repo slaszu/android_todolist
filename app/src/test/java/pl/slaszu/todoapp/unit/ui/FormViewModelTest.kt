@@ -85,12 +85,12 @@ class FormViewModelTest {
         runTest {
 
             // arrange
-            val item = FakeTodoModel(text = "item from repo")
+            val item = FakeTodoModel(id = "uuid", text = "item from repo")
 
             whenever(presentationService.getStringResource(R.string.todo_form_no_change)).thenReturn(
                 "no changes"
             )
-            whenever(todoRepo.getById(1)).thenReturn(item)
+            whenever(todoRepo.getById("uuid")).thenReturn(item)
 
             val viewModel = FormViewModel(
                 todoRepository = todoRepo,
@@ -100,7 +100,7 @@ class FormViewModelTest {
             )
 
             // act
-            viewModel.loadTodoItemToEditForm(1)
+            viewModel.loadTodoItemToEditForm("uuid")
             viewModel.save(
                 item = item,
                 snackbarHostState = snackbarHostState
@@ -132,7 +132,7 @@ class FormViewModelTest {
         )
 
         // act
-        viewModel.loadTodoItemToEditForm(0)
+        viewModel.loadTodoItemToEditForm(null)
 
         // assert
         Assert.assertEquals(item, viewModel.todoEditModel.value)
@@ -145,10 +145,10 @@ class FormViewModelTest {
         runTest {
 
             // arrange
-            val item = FakeTodoModel(text = "new item")
+            val item = FakeTodoModel(id = "uuid", text = "new item")
 
             whenever(todoFactory.createDefault()).thenReturn(item)
-            whenever(todoRepo.getById(1)).thenReturn(null)
+            whenever(todoRepo.getById("uuid")).thenReturn(null)
 
             val viewModel = FormViewModel(
                 todoRepository = todoRepo,
@@ -158,11 +158,11 @@ class FormViewModelTest {
             )
 
             // act
-            viewModel.loadTodoItemToEditForm(1)
+            viewModel.loadTodoItemToEditForm("uuid")
 
             // assert
             Assert.assertEquals(item, viewModel.todoEditModel.value)
-            verify(todoRepo).getById(1)
+            verify(todoRepo).getById("uuid")
             verify(todoFactory).createDefault()
         }
     }

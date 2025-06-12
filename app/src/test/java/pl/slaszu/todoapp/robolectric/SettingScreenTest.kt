@@ -25,7 +25,10 @@ class SettingScreenTest {
                     reminderRepeatHour = 10,
                     reminderRepeatMinute = 23
                 ),
-                onChange = {}
+                onChange = {},
+                onLogOut = {},
+                onLogIn = {},
+                user = null
             )
         }
 
