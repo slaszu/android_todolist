@@ -1,18 +1,25 @@
 package pl.slaszu.todoapp.ui.element.setting
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.auth.User
 import pl.slaszu.todoapp.domain.setting.Setting
@@ -80,7 +89,8 @@ fun SettingScreen(
 
         SettingOption(
             text = "Synchronizacja",
-            description = user?.email ?: "Niezalogowany"
+            description = user?.email ?: "Niezalogowany",
+            important = user == null
         ) {
             if (user === null) {
                 Button(
@@ -96,20 +106,6 @@ fun SettingScreen(
                 }
             }
         }
-//
-//
-//        SettingOption(
-//            text = stringResource(R.string.setting_reminder),
-//            description = stringResource(R.string.setting_reminder_info)
-//        ) {
-//            if (setting.reminderAllowed) {
-//                Text(stringResource(R.string.yes))
-//            } else {
-//                Text(
-//                    stringResource(R.string.no), color = MaterialTheme.colorScheme.error
-//                )
-//            }
-//        }
     }
 }
 
@@ -117,8 +113,22 @@ fun SettingScreen(
 private fun SettingOption(
     text: String,
     description: String,
+    important: Boolean = false,
     content: @Composable () -> Unit
 ) {
+
+    val scope = rememberCoroutineScope()
+    var visible by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        scope.launch {
+            while (true) {
+                delay(500)
+                visible = !visible
+            }
+        }
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -129,11 +139,27 @@ private fun SettingOption(
         Column(
             modifier = Modifier.weight(0.9f)
         ) {
-            Text(
-                text = text,
-                fontSize = TextUnit(4f, TextUnitType.Em),
-
+            BadgedBox(
+                badge = {
+                    if (important) {
+                        androidx.compose.animation.AnimatedVisibility(
+                            visible = visible,
+                            enter = fadeIn(),
+                            exit = fadeOut()
+                        ) {
+                            Badge(
+                                modifier = Modifier.size(10.dp)
+                            )
+                        }
+                    }
+                }
+            ) {
+                Text(
+                    text = text,
+                    fontSize = TextUnit(4f, TextUnitType.Em),
+                    modifier = Modifier.fillMaxWidth()
                 )
+            }
             Text(
                 text = description,
                 fontSize = TextUnit(3f, TextUnitType.Em),
@@ -152,7 +178,7 @@ fun TodoListSettingPreview() {
                 setting = Setting(),
                 onChange = {},
                 modifier = Modifier.padding(it),
-                user = User("asdasdasdasd","testowy.email@com.pl"),
+                user = null,//User("asdasdasdasd","testowy.email@com.pl"),
                 onLogOut = {},
                 onLogIn = {}
             )

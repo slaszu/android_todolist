@@ -1,6 +1,9 @@
 package pl.slaszu.todoapp.ui.element.top
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -13,9 +16,17 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.auth.User
 
@@ -28,6 +39,19 @@ fun StandardTopBar(
     onBackClick: () -> Unit,
     user: User?
 ) {
+
+    val scope = rememberCoroutineScope()
+    var visible by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        scope.launch {
+            while (true) {
+                delay(500)
+                visible = !visible
+            }
+        }
+    }
+
     TopAppBar(
         modifier = Modifier.padding(5.dp),
         title = {
@@ -50,7 +74,16 @@ fun StandardTopBar(
             BadgedBox(
                 badge = {
                     if (user == null) {
-                        Badge()
+                        androidx.compose.animation.AnimatedVisibility(
+                            visible = visible,
+                            enter = fadeIn(),
+                            exit = fadeOut()
+                        ) {
+
+                            Badge(
+                                modifier = Modifier.size(10.dp)
+                            )
+                        }
                     }
                 }
             ) {
