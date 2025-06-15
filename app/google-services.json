@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "272014256678-007v6h9g0dpo5cq7b3b9j09cgejbg8ve.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.slaszu.todoapp",
+            "certificate_hash": "a1c58f0326c6d623c8c6b317c6fef5fbe6734f82"
+          }
+        },
+        {
           "client_id": "272014256678-dd0pqtkrd2io2qaprgjch8gb8mgo0mb5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "pl.slaszu.todoapp",
             "certificate_hash": "ae62ef9768424d58097eec0a8ffa34f627a9f794"
+          }
+        },
+        {
+          "client_id": "272014256678-p2k4ri6o6u75uiuqbn23ln4t34e7objv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.slaszu.todoapp",
+            "certificate_hash": "b969f08a93c443754b6df4b1eb6b0c44d7e701ed"
           }
         },
         {
