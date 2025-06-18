@@ -36,6 +36,7 @@ class FirebaseUserActivityService @Inject constructor(
         val googleIdOption = GetGoogleIdOption
             .Builder()
             .setServerClientId("272014256678-j2rkvcvvk3bkro10f6jafld70r3i7rhi.apps.googleusercontent.com")
+            .setFilterByAuthorizedAccounts(false)
             .build()
 
         // Create the Credential Manager request
