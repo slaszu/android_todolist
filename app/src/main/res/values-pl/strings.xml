@@ -45,4 +45,5 @@
     <string name="permission_notification">Włącz powiadomienia</string>
     <string name="permission_reminder">Włącz alarmy/przypomnienia</string>
     <string name="backup_done">Backup wczytany</string>
+    <string name="timeline_finished">zakończone</string>
 </resources>

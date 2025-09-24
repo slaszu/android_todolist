@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -52,7 +53,7 @@ import pl.slaszu.todoapp.domain.todo.TodoItemType
 import pl.slaszu.todoapp.ui.element.bottom.BottomBar
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoFloatingActionButton
-import pl.slaszu.todoapp.ui.element.list.TodoListScreen
+import pl.slaszu.todoapp.ui.element.list.TodoListScreenSimple
 import pl.slaszu.todoapp.ui.element.setting.SettingScreen
 import pl.slaszu.todoapp.ui.element.top.TopBar
 import pl.slaszu.todoapp.ui.theme.TodoAppTheme
@@ -231,17 +232,10 @@ class MainActivity : ComponentActivity() {
                         ) {
                             composable<TodoAppRouteList> {
                                 Column {
-                                    TodoListScreen(
-                                        generalItemList = todoList.filter {
-                                            it.startDate == null && !it.done
-                                        },
+                                    HorizontalDivider()
+                                    TodoListScreenSimple(
                                         timelineItemList = todoList.filter {
-                                            it.startDate != null && !it.done
-                                        }.let {
-                                            PresentationService.convertToTimelineMap(it)
-                                        },
-                                        doneTimelineList = todoList.filter {
-                                            it.done
+                                            setting.showFinished || !it.done
                                         }.let {
                                             PresentationService.convertToTimelineMap(it)
                                         },
@@ -262,10 +256,6 @@ class MainActivity : ComponentActivity() {
                                                 item,
                                                 snackbarHostState
                                             )
-                                        },
-                                        tabSelectedRemember = tabSelectedRemember,
-                                        onTabChange = { selectedTabIndex ->
-                                            tabSelectedRemember = selectedTabIndex
                                         }
                                     )
                                 }

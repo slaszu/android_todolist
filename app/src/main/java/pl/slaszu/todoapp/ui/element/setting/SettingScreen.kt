@@ -72,22 +72,6 @@ fun SettingScreen(
     Column(modifier = Modifier.padding(10.dp)) {
 
         SettingOption(
-            text = stringResource(R.string.setting_daily),
-            description = stringResource(R.string.setting_daily_info)
-        ) {
-            Button(
-                onClick = { chooseTimeDialog = true },
-                modifier = Modifier.testTag("repeat_time")
-            ) {
-                Text(
-                    text = "${setting.reminderRepeatHour}:${
-                        setting.reminderRepeatMinute.toString().padStart(2, '0')
-                    }"
-                )
-            }
-        }
-
-        SettingOption(
             text = "Synchronizacja",
             description = user?.email ?: "Niezalogowany",
             important = user == null
@@ -106,6 +90,37 @@ fun SettingScreen(
                 }
             }
         }
+
+        SettingOption(
+            text = stringResource(R.string.setting_daily),
+            description = stringResource(R.string.setting_daily_info)
+        ) {
+            Button(
+                onClick = { chooseTimeDialog = true },
+                modifier = Modifier.testTag("repeat_time")
+            ) {
+                Text(
+                    text = "${setting.reminderRepeatHour}:${
+                        setting.reminderRepeatMinute.toString().padStart(2, '0')
+                    }"
+                )
+            }
+        }
+
+        SettingOption(
+            text = "Pokazywać zakończone zadania",
+            description = "Zakończone zadania będą sie wyświetlać na liscie"
+        ) {
+            Button(
+                onClick = { onChange(setting.copy(showFinished = !setting.showFinished)) },
+                modifier = Modifier.testTag("finished")
+            ) {
+                Text(
+                    text = if (setting.showFinished) "tak" else "nie"
+                )
+            }
+        }
+
     }
 }
 

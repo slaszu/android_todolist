@@ -31,6 +31,7 @@ class PresentationService @Inject constructor(
 
         private fun getTimelineForTodoModel(item: TodoModel, now: LocalDateTime): TimelineHeader {
             return when {
+                item.done -> TimelineHeader.FINISHED
                 item.startDate == null -> TimelineHeader.NO_DATE
                 item.startDate!! < now -> TimelineHeader.OUT_OF_DATE
                 item.startDate!! < now.plusDays(1) -> TimelineHeader.TODAY

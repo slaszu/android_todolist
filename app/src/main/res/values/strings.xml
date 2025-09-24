@@ -45,4 +45,5 @@
     <string name="permission_notification">Turn on notifications</string>
     <string name="permission_reminder">Turn on alarms/reminders</string>
     <string name="backup_done">Backup loaded</string>
+    <string name="timeline_finished">finished</string>
 </resources>

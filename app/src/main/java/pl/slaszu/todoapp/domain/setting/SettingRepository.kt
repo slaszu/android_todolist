@@ -8,6 +8,7 @@ data class Setting(
     val tabSelectedIndex: Int = 0,
     val reminderRepeatHour: Int = 8,
     val reminderRepeatMinute: Int = 0,
+    val showFinished: Boolean = false
 )
 
 interface SettingRepository {
