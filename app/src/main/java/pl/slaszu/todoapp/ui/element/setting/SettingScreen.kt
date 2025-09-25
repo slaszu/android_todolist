@@ -116,7 +116,7 @@ fun SettingScreen(
                 modifier = Modifier.testTag("finished")
             ) {
                 Text(
-                    text = if (setting.showFinished) "tak" else "nie"
+                    text = if (setting.showFinished) stringResource(R.string.yes) else stringResource(R.string.no)
                 )
             }
         }
