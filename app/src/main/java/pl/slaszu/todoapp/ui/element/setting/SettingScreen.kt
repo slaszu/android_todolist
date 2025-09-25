@@ -72,21 +72,21 @@ fun SettingScreen(
     Column(modifier = Modifier.padding(10.dp)) {
 
         SettingOption(
-            text = "Synchronizacja",
-            description = user?.email ?: "Niezalogowany",
+            text = stringResource(R.string.synchro_title),
+            description = user?.email ?: stringResource(R.string.synchro_desc),
             important = user == null
         ) {
             if (user === null) {
                 Button(
                     onClick = onLogIn
                 ) {
-                    Text("Zaloguj")
+                    Text(stringResource(R.string.login))
                 }
             } else {
                 Button(
                     onClick = onLogOut
                 ) {
-                    Text("Wyloguj")
+                    Text(stringResource(R.string.logout))
                 }
             }
         }

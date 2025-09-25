@@ -46,4 +46,9 @@
     <string name="permission_reminder">Turn on alarms/reminders</string>
     <string name="backup_done">Backup loaded</string>
     <string name="timeline_finished">finished</string>
+    <string name="synchro_title">Synchronization</string>
+    <string name="synchro_desc">Login to enable backup</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="showhidden_title">Show finished tasks</string>
 </resources>

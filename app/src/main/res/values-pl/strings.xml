@@ -46,4 +46,9 @@
     <string name="permission_reminder">Włącz alarmy/przypomnienia</string>
     <string name="backup_done">Backup wczytany</string>
     <string name="timeline_finished">zakończone</string>
+    <string name="synchro_title">Synchronizacja</string>
+    <string name="synchro_desc">Włącz tworzenie kopii zapasowej</string>
+    <string name="login">Zaloguj</string>
+    <string name="logout">Wyloguj</string>
+    <string name="showhidden_title">Pokazywać zakończone zadania</string>
 </resources>
