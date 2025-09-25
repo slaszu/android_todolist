@@ -50,5 +50,6 @@
     <string name="synchro_desc">Włącz tworzenie kopii zapasowej</string>
     <string name="login">Zaloguj</string>
     <string name="logout">Wyloguj</string>
-    <string name="showhidden_title">Pokazywać zakończone zadania</string>
+    <string name="showhidden_title">Zakończone zadania</string>
+    <string name="showhidden_desc">Pokazywać zakończone zadania na liście ?</string>
 </resources>

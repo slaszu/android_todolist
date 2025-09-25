@@ -108,8 +108,8 @@ fun SettingScreen(
         }
 
         SettingOption(
-            text = "Pokazywać zakończone zadania",
-            description = "Zakończone zadania będą sie wyświetlać na liscie"
+            text = stringResource(R.string.showhidden_title),
+            description = stringResource(R.string.showhidden_desc)
         ) {
             Button(
                 onClick = { onChange(setting.copy(showFinished = !setting.showFinished)) },

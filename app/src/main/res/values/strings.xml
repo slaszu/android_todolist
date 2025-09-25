@@ -50,5 +50,6 @@
     <string name="synchro_desc">Login to enable backup</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
-    <string name="showhidden_title">Show finished tasks</string>
+    <string name="showhidden_title">Finished tasks</string>
+    <string name="showhidden_desc">Show finished tasks on list ?</string>
 </resources>
