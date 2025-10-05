@@ -23,7 +23,7 @@ android {
     }
 
     namespace = "pl.slaszu.todoapp"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "pl.slaszu.todoapp"
@@ -109,6 +109,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.material.icons.extended.android) // Or a newer version
+
 //    androidTestImplementation(libs.androidx.junit)
 //    androidTestImplementation(platform(libs.androidx.compose.bom))
 //    androidTestImplementation(libs.androidx.ui.test.junit4)

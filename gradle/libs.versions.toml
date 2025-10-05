@@ -7,7 +7,8 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
-composeBom = "2025.04.00"
+composeBom = "2025.09.01"
+materialIconsExtendedAndroid = "1.7.8"
 roomRuntime = "2.7.0"
 media3CommonKtx = "1.6.1"
 uiTextGoogleFonts = "1.7.8"
@@ -19,6 +20,7 @@ credentialsPlayServicesAuth = "1.5.0"
 googleid = "1.1.1"
 
 [libraries]
+androidx-compose-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }

@@ -117,21 +117,24 @@ fun RepeatDialogModel(
 @Composable
 fun DropdownExample(initialState: Boolean) {
 
-    val options = List(12) {
-        it.toString()
-    }
+    val periods = listOf(
+        Pair("D", "days"),
+        Pair("W", "weeks"),
+        Pair("M", "months"),
+        Pair("Y", "years")
+    )
+
     var expanded by remember { mutableStateOf(false) }
-    var text by remember { mutableStateOf(options[0]) }
+    var digit by remember { mutableStateOf(2) }
+    var text by remember { mutableStateOf(periods[0].first) }
+
+    var periodChoose by remember { mutableStateOf(periods[0].second) }
 
 
     Row {
         // digit
         OutlinedTextField(
-            // The `menuAnchor` modifier must be passed to the text field to handle
-            // expanding/collapsing the menu on click. A read-only text field has
-            // the anchor type `PrimaryNotEditable`.
-            //modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).weight(0.1f),
-            value = text,
+            value = digit.toString(),
             onValueChange = {},
             //readOnly = true,
             singleLine = true,
@@ -162,11 +165,11 @@ fun DropdownExample(initialState: Boolean) {
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
             ) {
-                options.forEach { option ->
+                periods.forEach { option ->
                     DropdownMenuItem(
-                        text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
+                        text = { Text(option.second, style = MaterialTheme.typography.bodyLarge) },
                         onClick = {
-                            text = option
+                            text = option.second
                             expanded = false
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
