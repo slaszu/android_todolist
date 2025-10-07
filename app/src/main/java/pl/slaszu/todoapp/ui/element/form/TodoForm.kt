@@ -234,7 +234,7 @@ fun TodoForm(
                     )
                 } else {
                     Text(
-                        text = stringResource(repeatType?.translationKey ?: 0)
+                        text = repeatType?.toStringRepresentation() ?: "undefined"
                     )
                 }
 

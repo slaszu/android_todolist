@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,9 +27,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.repeat.RepeatType
+import pl.slaszu.todoapp.domain.utils.createPeriodFromTypeAndCount
+import pl.slaszu.todoapp.domain.utils.getTypeAndCount
+import java.time.Period
 
 @Composable
 fun RepeatDialogModel(
@@ -82,30 +87,15 @@ fun RepeatDialogModel(
                 item {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                type = null
-                            },
+                            .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Column {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = false,
-                                    onClick = {
-                                        type = null
-                                    }
-                                )
-                                Text(
-                                    text = "other"
-                                )
+                        PeriodRadioButton(
+                            type = type,
+                            onSelect = {
+                                type = it
                             }
-                            Row {
-                                DropdownExample(initialState = false)
-                            }
-                        }
+                        )
                     }
                 }
             }
@@ -113,9 +103,48 @@ fun RepeatDialogModel(
     )
 }
 
+@Composable
+fun PeriodRadioButton(
+    type: RepeatType?,
+    onSelect: (RepeatType?) -> Unit
+) {
+    var selected = false
+    var otherType by remember { mutableStateOf(RepeatType.toObject("P2D")) }
+    if (type is RepeatType.RepeatTypeOther) {
+        selected = true
+        otherType = RepeatType.toObject(type.toStringRepresentation())
+    }
+
+    Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = selected,
+                onClick = { onSelect(otherType) }
+            )
+            Text(
+                text = "other"
+            )
+        }
+        Row {
+            PeriodWizard(
+                initialPeriod = otherType.period,
+                onChange = {
+                    otherType = RepeatType.RepeatTypeOther(it)
+                    onSelect(otherType)
+                }
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropdownExample(initialState: Boolean) {
+fun PeriodWizard(
+    initialPeriod: Period,
+    onChange: (Period) -> Unit
+) {
 
     val periods = listOf(
         Pair("D", "days"),
@@ -124,23 +153,39 @@ fun DropdownExample(initialState: Boolean) {
         Pair("Y", "years")
     )
 
+    val periodData = initialPeriod.getTypeAndCount()
+
     var expanded by remember { mutableStateOf(false) }
-    var digit by remember { mutableStateOf(2) }
-    var text by remember { mutableStateOf(periods[0].first) }
+    var digit by remember { mutableStateOf(periodData.second.toString()) }
 
-    var periodChoose by remember { mutableStateOf(periods[0].second) }
+    var periodChoose by remember {
+        mutableStateOf(periods.find { it.first == periodData.first } ?: periods.first())
+    }
 
+    fun changeAction() {
+        onChange(
+            createPeriodFromTypeAndCount(
+                type = periodChoose.first,
+                count = digit.takeIf { it.isNotEmpty() }?.toInt() ?: 1
+            )
+        )
+    }
 
     Row {
         // digit
         OutlinedTextField(
-            value = digit.toString(),
-            onValueChange = {},
-            //readOnly = true,
-            singleLine = true,
+            value = digit,
+            onValueChange = {
+                digit = it
+                changeAction()
+            },
             label = { Text("digit") },
+            singleLine = true,
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = Modifier.weight(0.3f)
+            modifier = Modifier.weight(0.3f),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number
+            )
         )
 
 
@@ -154,9 +199,10 @@ fun DropdownExample(initialState: Boolean) {
                 // expanding/collapsing the menu on click. A read-only text field has
                 // the anchor type `PrimaryNotEditable`.
                 modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
-                value = text,
+                value = periodChoose.second,
                 onValueChange = {},
                 singleLine = true,
+                readOnly = true,
                 label = { Text("period") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 colors = ExposedDropdownMenuDefaults.textFieldColors(),
@@ -165,21 +211,20 @@ fun DropdownExample(initialState: Boolean) {
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
             ) {
-                periods.forEach { option ->
+                periods.forEach { period ->
                     DropdownMenuItem(
-                        text = { Text(option.second, style = MaterialTheme.typography.bodyLarge) },
+                        text = { Text(period.second, style = MaterialTheme.typography.bodyLarge) },
                         onClick = {
-                            text = option.second
+                            periodChoose = period
                             expanded = false
+                            changeAction()
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                     )
                 }
             }
         }
-
     }
-
 }
 
 
