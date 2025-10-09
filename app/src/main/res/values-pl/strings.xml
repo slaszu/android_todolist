@@ -52,4 +52,24 @@
     <string name="logout">Wyloguj</string>
     <string name="showhidden_title">Zakończone zadania</string>
     <string name="showhidden_desc">Pokazywać zakończone zadania na liście ?</string>
+    <plurals name="repeat_period_other_d">
+        <item quantity="one">codziennie</item>
+        <item quantity="few">co %d dni</item>
+        <item quantity="many">co %s dni</item>
+    </plurals>
+    <plurals name="repeat_period_other_w">
+        <item quantity="one">co tydzień</item>
+        <item quantity="few">co %d tygodnie</item>
+        <item quantity="many">co %d tygodni</item>
+    </plurals>
+    <plurals name="repeat_period_other_m">
+        <item quantity="one">co miesiąc</item>
+        <item quantity="few">co %d miesiące</item>
+        <item quantity="many">co %d miesięcy</item>
+    </plurals>
+    <plurals name="repeat_period_other_y">
+        <item quantity="one">co rok</item>
+        <item quantity="few">co %d lata</item>
+        <item quantity="many">co %d lat</item>
+    </plurals>
 </resources>

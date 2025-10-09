@@ -52,4 +52,20 @@
     <string name="logout">Logout</string>
     <string name="showhidden_title">Finished tasks</string>
     <string name="showhidden_desc">Show finished tasks on list ?</string>
+    <plurals name="repeat_period_other_d">
+        <item quantity="one">every %d day</item>
+        <item quantity="other">every %d days</item>
+    </plurals>
+    <plurals name="repeat_period_other_w">
+        <item quantity="one">every %d week</item>
+        <item quantity="other">every %d weeks</item>
+    </plurals>
+    <plurals name="repeat_period_other_m">
+        <item quantity="one">every %d month</item>
+        <item quantity="other">every %d months</item>
+    </plurals>
+    <plurals name="repeat_period_other_y">
+        <item quantity="one">every %d year</item>
+        <item quantity="other">every %d years</item>
+    </plurals>
 </resources>

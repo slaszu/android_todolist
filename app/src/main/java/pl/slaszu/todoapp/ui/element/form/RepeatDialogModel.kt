@@ -26,11 +26,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.repeat.RepeatType
+import pl.slaszu.todoapp.domain.repeat.RepeatTypeOther
 import pl.slaszu.todoapp.domain.utils.createPeriodFromTypeAndCount
 import pl.slaszu.todoapp.domain.utils.getTypeAndCount
 import java.time.Period
@@ -78,7 +80,7 @@ fun RepeatDialogModel(
                             }
                         )
                         Text(
-                            text = stringResource(it.translationKey ?: 0)
+                            text = it.getTranslation(resource = LocalResources.current)
                         )
                     }
 
@@ -110,7 +112,7 @@ fun PeriodRadioButton(
 ) {
     var selected = false
     var otherType by remember { mutableStateOf(RepeatType.toObject("P2D")) }
-    if (type is RepeatType.RepeatTypeOther) {
+    if (type is RepeatTypeOther) {
         selected = true
         otherType = RepeatType.toObject(type.toStringRepresentation())
     }
@@ -131,7 +133,7 @@ fun PeriodRadioButton(
             PeriodWizard(
                 initialPeriod = otherType.period,
                 onChange = {
-                    otherType = RepeatType.RepeatTypeOther(it)
+                    otherType = RepeatTypeOther(it)
                     onSelect(otherType)
                 }
             )
