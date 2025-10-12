@@ -89,7 +89,10 @@ fun RepeatDialogModel(
                 item {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .clickable {
+                                type = getOtherType(type)
+                            },
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         PeriodRadioButton(
@@ -105,24 +108,26 @@ fun RepeatDialogModel(
     )
 }
 
+private fun getOtherType(type: RepeatType?): RepeatType {
+    if (type is RepeatTypeOther) {
+        return type
+    }
+    return RepeatType.toObject("P2D")
+}
+
 @Composable
 fun PeriodRadioButton(
     type: RepeatType?,
     onSelect: (RepeatType?) -> Unit
 ) {
-    var selected = false
-    var otherType by remember { mutableStateOf(RepeatType.toObject("P2D")) }
-    if (type is RepeatTypeOther) {
-        selected = true
-        otherType = RepeatType.toObject(type.toStringRepresentation())
-    }
+    var otherType = getOtherType(type)
 
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             RadioButton(
-                selected = selected,
+                selected = type is RepeatTypeOther,
                 onClick = { onSelect(otherType) }
             )
             Text(
@@ -133,8 +138,7 @@ fun PeriodRadioButton(
             PeriodWizard(
                 initialPeriod = otherType.period,
                 onChange = {
-                    otherType = RepeatTypeOther(it)
-                    onSelect(otherType)
+                    onSelect(RepeatTypeOther(it))
                 }
             )
         }
@@ -178,7 +182,7 @@ fun PeriodWizard(
         OutlinedTextField(
             value = digit,
             onValueChange = {
-                digit = it
+                digit = it.replace(Regex("[^0-9]"), "").toIntOrNull()?.toString() ?: ""
                 changeAction()
             },
             label = { Text("digit") },
@@ -217,8 +221,8 @@ fun PeriodWizard(
                     DropdownMenuItem(
                         text = { Text(period.second, style = MaterialTheme.typography.bodyLarge) },
                         onClick = {
-                            periodChoose = period
                             expanded = false
+                            periodChoose = period
                             changeAction()
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
