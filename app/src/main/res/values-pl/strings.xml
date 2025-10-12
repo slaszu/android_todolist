@@ -72,4 +72,10 @@
         <item quantity="few">co %d lata</item>
         <item quantity="many">co %d lat</item>
     </plurals>
+    <string name="days">dni</string>
+    <string name="months">miesiące</string>
+    <string name="weeks">tygodnie</string>
+    <string name="years">lata</string>
+    <string name="quantity">ilość</string>
+    <string name="type">typ</string>
 </resources>

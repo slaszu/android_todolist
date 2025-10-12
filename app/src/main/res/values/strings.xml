@@ -68,4 +68,11 @@
         <item quantity="one">every %d year</item>
         <item quantity="other">every %d years</item>
     </plurals>
+    <string name="days">days</string>
+    <string name="months">month</string>
+    <string name="weeks">weeks</string>
+    <string name="years">years</string>
+    <string name="quantity">quantity</string>
+    <string name="type">type</string>
+
 </resources>

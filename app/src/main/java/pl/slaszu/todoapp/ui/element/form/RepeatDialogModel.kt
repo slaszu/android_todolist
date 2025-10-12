@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -74,7 +75,7 @@ fun RepeatDialogModel(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         RadioButton(
-                            selected = (it.period == type?.period),
+                            selected = (it.period == type?.period && type !is RepeatTypeOther),
                             onClick = {
                                 type = it
                             }
@@ -108,11 +109,11 @@ fun RepeatDialogModel(
     )
 }
 
-private fun getOtherType(type: RepeatType?): RepeatType {
+private fun getOtherType(type: RepeatType?): RepeatTypeOther {
     if (type is RepeatTypeOther) {
         return type
     }
-    return RepeatType.toObject("P2D")
+    return RepeatTypeOther(Period.parse("P2D"))
 }
 
 @Composable
@@ -153,10 +154,10 @@ fun PeriodWizard(
 ) {
 
     val periods = listOf(
-        Pair("D", "days"),
-        Pair("W", "weeks"),
-        Pair("M", "months"),
-        Pair("Y", "years")
+        Pair("D", stringResource(R.string.days)),
+        Pair("W", stringResource(R.string.weeks)),
+        Pair("M", stringResource(R.string.months)),
+        Pair("Y", stringResource(R.string.years))
     )
 
     val periodData = initialPeriod.getTypeAndCount()
@@ -185,10 +186,18 @@ fun PeriodWizard(
                 digit = it.replace(Regex("[^0-9]"), "").toIntOrNull()?.toString() ?: ""
                 changeAction()
             },
-            label = { Text("digit") },
+            label = { Text(stringResource(R.string.quantity)) },
             singleLine = true,
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = Modifier.weight(0.3f),
+            modifier = Modifier
+                .weight(0.3f)
+                .onFocusChanged(
+                    onFocusChanged = {
+                        if (!it.isFocused && digit.isEmpty()) {
+                            digit = "1"
+                        }
+                    }
+                ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number
             )
@@ -209,7 +218,7 @@ fun PeriodWizard(
                 onValueChange = {},
                 singleLine = true,
                 readOnly = true,
-                label = { Text("period") },
+                label = { Text(stringResource(R.string.type)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 colors = ExposedDropdownMenuDefaults.textFieldColors(),
             )
