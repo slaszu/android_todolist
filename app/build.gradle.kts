@@ -28,10 +28,10 @@ android {
     defaultConfig {
         applicationId = "pl.slaszu.todoapp"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
 
-        versionCode = 130
-        versionName = "1.3.0"
+        versionCode = 131
+        versionName = "1.3.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -89,6 +89,7 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.ui.test.junit4.android)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.compose.material3)
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)

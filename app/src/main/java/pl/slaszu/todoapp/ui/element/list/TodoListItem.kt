@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,13 +62,15 @@ fun TodoListItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
-        Checkbox(
-            checked = item.done,
-            onCheckedChange = { checked ->
-                onCheckItem(checked)
-            },
-            modifier = modifier.weight(0.1f)
-        )
+        ToggleIconButton()
+
+//        Checkbox(
+//            checked = item.done,
+//            onCheckedChange = { checked ->
+//                onCheckItem(checked)
+//            },
+//            modifier = modifier.weight(0.1f)
+//        )
 
         Column(
             modifier = modifier
@@ -86,14 +89,14 @@ fun TodoListItem(
             )
         }
 
-        IconButton(
-            onClick = { alertDialog = true }
-        ) {
-            Icon(
-                Icons.Filled.Delete,
-                contentDescription = "Delete item"
-            )
-        }
+//        IconButton(
+//            onClick = { alertDialog = true }
+//        ) {
+//            Icon(
+//                Icons.Filled.Delete,
+//                contentDescription = "Delete item"
+//            )
+//        }
     }
 
     if (alertDialog) {
@@ -110,6 +113,20 @@ fun TodoListItem(
     }
 
     HorizontalDivider()
+}
+
+@Composable
+private fun ToggleIconButton() {
+    var isToggled by rememberSaveable { mutableStateOf(false) }
+
+    IconButton(
+        onClick = { isToggled = !isToggled }
+    ) {
+        Icon(
+            imageVector = if (!isToggled) Icons.Filled.Check else Icons.Filled.CheckBox,
+            contentDescription = if (isToggled) "Selected icon button" else "Unselected icon button."
+        )
+    }
 }
 
 @Composable
@@ -136,7 +153,9 @@ private fun TodoItemInfo(
                 Text(
                     text = item.printStartDate(
                         stringResource(R.string.todo_item_no_date),
-                        "${setting.reminderRepeatHour}:${setting.reminderRepeatMinute.toString().padStart(2,'0')}"
+                        "${setting.reminderRepeatHour}:${
+                            setting.reminderRepeatMinute.toString().padStart(2, '0')
+                        }"
                     ),
                     fontSize = TextUnit(3f, TextUnitType.Em)
                 )
@@ -159,13 +178,6 @@ private fun TodoItemInfo(
                 }
             }
         }
-//        if (!setting.notificationAllowed) {
-//            Text(
-//                text = stringResource(R.string.notification_disabled),
-//                style = TodoAppTypography.labelSmall,
-//                color = MaterialTheme.colorScheme.error
-//            )
-//        }
     }
 }
 
