@@ -47,11 +47,31 @@ sealed class RepeatType(val period: Period, private val translationKey: Int? = n
 class RepeatTypeOther(private val otherPeriod: Period) : RepeatType(otherPeriod) {
     override fun getTranslation(resource: Resources): String {
         val periodData = this.period.getTypeAndCount()
-        return when(periodData.first) {
-            "D" -> resource.getQuantityString(R.plurals.repeat_period_other_d, periodData.second, periodData.second)
-            "W" -> resource.getQuantityString(R.plurals.repeat_period_other_w, periodData.second, periodData.second)
-            "M" -> resource.getQuantityString(R.plurals.repeat_period_other_m, periodData.second, periodData.second)
-            "Y" -> resource.getQuantityString(R.plurals.repeat_period_other_y, periodData.second, periodData.second)
+        return when (periodData.first) {
+            "D" -> resource.getQuantityString(
+                R.plurals.repeat_period_other_d,
+                periodData.second,
+                periodData.second
+            )
+
+            "W" -> resource.getQuantityString(
+                R.plurals.repeat_period_other_w,
+                periodData.second,
+                periodData.second
+            )
+
+            "M" -> resource.getQuantityString(
+                R.plurals.repeat_period_other_m,
+                periodData.second,
+                periodData.second
+            )
+
+            "Y" -> resource.getQuantityString(
+                R.plurals.repeat_period_other_y,
+                periodData.second,
+                periodData.second
+            )
+
             else -> "undefined"
         }
     }

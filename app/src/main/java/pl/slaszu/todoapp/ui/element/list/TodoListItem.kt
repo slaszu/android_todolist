@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,6 +51,7 @@ fun TodoListItem(
 ) {
 
     var alertDialog by remember { mutableStateOf(false) }
+    var itemChecked by remember { mutableStateOf(item.done) }
 
     Row(
         modifier = Modifier
@@ -62,7 +62,13 @@ fun TodoListItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
-        ToggleIconButton()
+        ToggleIconButton(
+            checked = itemChecked,
+            onChange = { checked ->
+                itemChecked = checked
+                onCheckItem(checked)
+            }
+        )
 
 //        Checkbox(
 //            checked = item.done,
@@ -82,7 +88,6 @@ fun TodoListItem(
                 textDecoration = TextDecoration.LineThrough.takeIf { item.done },
                 fontSize = TextUnit(4f, TextUnitType.Em)
             )
-
             TodoItemInfo(
                 item = item,
                 setting = setting
@@ -116,15 +121,18 @@ fun TodoListItem(
 }
 
 @Composable
-private fun ToggleIconButton() {
-    var isToggled by rememberSaveable { mutableStateOf(false) }
-
+private fun ToggleIconButton(
+    checked: Boolean,
+    onChange: (Boolean) -> Unit
+) {
     IconButton(
-        onClick = { isToggled = !isToggled }
+        onClick = {
+            onChange(!checked)
+        }
     ) {
         Icon(
-            imageVector = if (!isToggled) Icons.Filled.Check else Icons.Filled.CheckBox,
-            contentDescription = if (isToggled) "Selected icon button" else "Unselected icon button."
+            imageVector = if (!checked) Icons.Filled.Check else Icons.Filled.CheckBox,
+            contentDescription = if (checked) "Selected icon button" else "Unselected icon button."
         )
     }
 }

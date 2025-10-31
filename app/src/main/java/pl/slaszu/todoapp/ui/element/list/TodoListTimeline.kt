@@ -31,13 +31,16 @@ fun TodoListTimeline(
 ) {
     LazyColumn {
         itemsGrouped.forEach { header, todoList ->
-            stickyHeader {
+            stickyHeader(
+                key = header.toString()
+            ) {
                 TodoListHeader(
                     header = header
                 )
             }
             items(
-                items = todoList
+                items = todoList,
+                key = { todoItem -> todoItem.hashCode() }
             ) { todoItem ->
                 TodoListItem(
                     item = todoItem,
