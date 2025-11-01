@@ -18,6 +18,8 @@
     <string name="item_type_timeline">Timeline</string>
     <string name="item_type_general">General</string>
     <string name="item_type_done">Done</string>
+    <string name="item_type_reopen">Open</string>
+    <string name="item_type_done_with_period">Repeat set</string>
     <string name="undo">undo</string>
     <string name="deleted">Deleted</string>
     <string name="todo_form_no_date">Select a date to receive a notification</string>

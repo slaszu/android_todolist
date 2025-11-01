@@ -42,26 +42,43 @@ class ListViewModel @Inject constructor(
              * - set done to cheked
              */
 
-            var showSnackbar = true
+            var message = ""
             var itemToSave = item.copy()
-            if (checked && item.startDate != null && item.repeatType != null) {
-                itemToSave = itemToSave.copy(
-                    "startDate" to item.repeatType!!.calculateNewDate(item.startDate!!)
-                )
-                showSnackbar = false
-            } else {
-                itemToSave = itemToSave.copy(
-                    "done" to checked
-                )
+
+            when {
+                checked && item.startDate != null && item.repeatType != null -> {
+                    itemToSave = itemToSave.copy(
+                        "startDate" to item.repeatType!!.calculateNewDate(item.startDate!!)
+                    )
+                    message =
+                        "${presentationService.getStringResource(R.string.item_type_done_with_period)}: ${item.text}"
+                }
+
+                checked -> {
+                    itemToSave = itemToSave.copy(
+                        "done" to checked
+                    )
+                    message =
+                        "${presentationService.getStringResource(R.string.item_type_done)}: ${item.text}"
+                }
+
+                !checked -> {
+                    itemToSave = itemToSave.copy(
+                        "done" to checked
+                    )
+                    message =
+                        "${presentationService.getStringResource(R.string.item_type_reopen)}: ${item.text}"
+                }
             }
+
             delay(300)
             todoManager.save(itemToSave)
 
             // snackbar only on close item
-            if (!showSnackbar || snackbarHostState == null || !checked) return@launch
+            if (snackbarHostState == null) return@launch
 
             val result = snackbarHostState.showSnackbar(
-                message = "${presentationService.getStringResource(R.string.item_type_done)}: ${item.text}",
+                message = message,
                 actionLabel = presentationService.getStringResource(R.string.undo),
                 duration = SnackbarDuration.Short,
                 withDismissAction = true

@@ -18,6 +18,8 @@
     <string name="item_type_timeline">Oś czasu</string>
     <string name="item_type_general">Ogólne</string>
     <string name="item_type_done">Zakończone</string>
+    <string name="item_type_reopen">Otwarte</string>
+    <string name="item_type_done_with_period">Powtórzenie ustawione</string>
     <string name="undo">cofnij</string>
     <string name="deleted">Usunięte</string>
     <string name="todo_form_no_date">Wybierz date aby otrzymać powiadomienie</string>
