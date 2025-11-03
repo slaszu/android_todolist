@@ -131,7 +131,7 @@ dependencies {
     testImplementation(libs.junit)
     // Optional -- Robolectric environment
     //testImplementation("androidx.test:core:$androidXTestVersion")
-    testImplementation("org.robolectric:robolectric:4.14")
+    testImplementation("org.robolectric:robolectric:4.16")
     // Optional -- Mockito framework
     //testImplementation("org.mockito:mockito-core:")
     // Optional -- mockito-kotlin
