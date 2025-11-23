@@ -44,7 +44,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'corretto' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
 
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
