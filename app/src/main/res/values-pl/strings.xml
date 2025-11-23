@@ -80,4 +80,6 @@
     <string name="years">lata</string>
     <string name="quantity">ilość</string>
     <string name="type">typ</string>
+    <string name="other">inne</string>
+
 </resources>

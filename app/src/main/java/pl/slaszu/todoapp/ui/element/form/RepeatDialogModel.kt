@@ -10,11 +10,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -132,7 +132,7 @@ fun PeriodRadioButton(
                 onClick = { onSelect(otherType) }
             )
             Text(
-                text = "other"
+                text = stringResource(R.string.other)
             )
         }
         Row {
@@ -213,7 +213,7 @@ fun PeriodWizard(
                 // The `menuAnchor` modifier must be passed to the text field to handle
                 // expanding/collapsing the menu on click. A read-only text field has
                 // the anchor type `PrimaryNotEditable`.
-                modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
                 value = periodChoose.second,
                 onValueChange = {},
                 singleLine = true,
