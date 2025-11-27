@@ -2,8 +2,10 @@ package pl.slaszu.todoapp.ui.element.setting
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import pl.slaszu.todoapp.BuildConfig
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.auth.User
 import pl.slaszu.todoapp.domain.setting.Setting
@@ -119,6 +122,17 @@ fun SettingScreen(
                     text = if (setting.showFinished) stringResource(R.string.yes) else stringResource(R.string.no)
                 )
             }
+        }
+
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter // Aligns children to the bottom center
+        ) {
+            Text(
+                text = "application version: ${BuildConfig.VERSION_NAME}",
+                modifier = Modifier.padding(16.dp) // Add some padding
+            )
         }
     }
 }
