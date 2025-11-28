@@ -45,11 +45,11 @@ import pl.slaszu.todoapp.domain.navigation.TodoAppRouteList
 import pl.slaszu.todoapp.domain.navigation.TodoAppSetting
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionLauncher
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionService
+import pl.slaszu.todoapp.domain.notification.NotificationService
 import pl.slaszu.todoapp.domain.reminder.ReminderPermissionLauncher
 import pl.slaszu.todoapp.domain.reminder.ReminderPermissionService
 import pl.slaszu.todoapp.domain.reminder.exact.ReminderExactManager
 import pl.slaszu.todoapp.domain.setting.SettingManager
-import pl.slaszu.todoapp.domain.todo.TodoItemType
 import pl.slaszu.todoapp.ui.element.bottom.BottomBar
 import pl.slaszu.todoapp.ui.element.form.TodoForm
 import pl.slaszu.todoapp.ui.element.list.TodoFloatingActionButton
@@ -149,8 +149,6 @@ class MainActivity : ComponentActivity() {
 
             val snackbarHostState = remember { SnackbarHostState() }
 
-            var tabSelectedRemember by rememberSaveable { mutableStateOf(TodoItemType.TIMELINE) }
-
             if (setting == null || todoList == null) {
                 TodoAppTheme {
                     Scaffold { innerPadding ->
@@ -216,8 +214,14 @@ class MainActivity : ComponentActivity() {
                         TodoFloatingActionButton(
                             navController = navController,
                             onClick = {
-                                formViewModel.loadTodoItemToEditForm(null)
-                                navController.navigate(TodoAppRouteEditOrNewForm)
+                                val notificationService = NotificationService(this)
+                                notificationService.sendNotification(
+                                    item = todoList.filter {
+                                        !it.done
+                                    }.get(0)
+                                )
+                                //formViewModel.loadTodoItemToEditForm(null)
+                                //navController.navigate(TodoAppRouteEditOrNewForm)
                             }
                         )
                     }
@@ -264,11 +268,6 @@ class MainActivity : ComponentActivity() {
                                 TodoForm(
                                     item = formViewModel.todoEditModel.value,
                                     onSave = { item ->
-                                        if (item.startDate == null) {
-                                            tabSelectedRemember = TodoItemType.GENERAL
-                                        } else {
-                                            tabSelectedRemember = TodoItemType.TIMELINE
-                                        }
                                         navController.navigate(TodoAppRouteList)
                                         formViewModel.save(item, snackbarHostState)
                                     }

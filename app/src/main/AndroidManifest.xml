@@ -27,6 +27,7 @@
 
         <receiver android:name=".domain.reminder.exact.ReminderExactReceiver" />
         <receiver android:name=".domain.reminder.repeat.ReminderRepeatReceiver" />
+        <receiver android:name=".domain.notification.action.NotificationFinishActionReceiver" />
 
         <!-- Required: set your sentry.io project identifier (DSN) -->
         <meta-data

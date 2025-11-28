@@ -11,8 +11,9 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import pl.slaszu.todoapp.MainActivity
 import pl.slaszu.todoapp.R
+import pl.slaszu.todoapp.domain.notification.action.NotificationFinishActionReceiver
 import pl.slaszu.todoapp.domain.todo.TodoModel
-import java.util.Random
+import pl.slaszu.todoapp.domain.utils.getUniqueInt
 
 class NotificationService(
     private val context: Context
@@ -29,11 +30,20 @@ class NotificationService(
     fun sendNotification(items: Array<TodoModel>) {
         val notificationManagerCompat = NotificationManagerCompat.from(context)
         if (notificationManagerCompat.areNotificationsEnabled()) {
-            notificationManagerCompat.notify(Random().nextInt(), this.buildNotification(items))
+            val notificationId = items.getUniqueInt()
+            notificationManagerCompat.notify(
+                notificationId, this.buildNotification(
+                    items = items,
+                    finishIntend = this.getFinishAction(items, notificationId)
+                )
+            )
         }
     }
 
-    private fun buildNotification(items: Array<TodoModel>): Notification {
+    private fun buildNotification(
+        items: Array<TodoModel>,
+        finishIntend: PendingIntent
+    ): Notification {
         Log.d("myapp", "buildNotification")
 
         // Create an explicit intent for an Activity in your app.
@@ -56,7 +66,30 @@ class NotificationService(
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setGroup("todo_app_notification_group")
+            .addAction(
+                R.drawable.baseline_access_time_filled_24,
+                "Done",
+                finishIntend
+            )
             .build()
+    }
+
+    private fun getFinishAction(items: Array<TodoModel>, notificationId: Int): PendingIntent {
+        return PendingIntent.getBroadcast(
+            context,
+            0,
+            Intent(context, NotificationFinishActionReceiver::class.java).apply {
+                this.putExtra(
+                    NotificationFinishActionReceiver.ITEMS_EXTRAS,
+                    items.map { it.id }.toTypedArray()
+                )
+                this.putExtra(
+                    NotificationFinishActionReceiver.NOTIFICATION_ID_EXTRAS,
+                    notificationId
+                )
+            },
+            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 
     private fun prepareTextForNotification(items: Array<TodoModel>): Pair<String, String> {
