@@ -6,7 +6,6 @@ import androidx.compose.material3.SnackbarResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import pl.slaszu.todoapp.R
@@ -71,7 +70,7 @@ class ListViewModel @Inject constructor(
                 }
             }
 
-            delay(300)
+            //delay(300)
             todoManager.save(itemToSave)
 
             // snackbar only on close item

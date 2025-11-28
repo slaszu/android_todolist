@@ -6,7 +6,10 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
 import pl.slaszu.todoapp.domain.todo.TodoManager
+import pl.slaszu.todoapp.domain.todo.TodoModel
+import pl.slaszu.todoapp.domain.todo.TodoRepository
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -14,6 +17,9 @@ class NotificationFinishActionReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var todoManager: TodoManager
+
+    @Inject
+    lateinit var todoRepository: TodoRepository<TodoModel>
 
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.d("myapp", "Receiver")
@@ -29,20 +35,20 @@ class NotificationFinishActionReceiver : BroadcastReceiver() {
         Log.d("myapp", "Receiver: notificationId = $notificationId")
         Log.d("myapp", "Receiver: items = ${items.toList()}")
 
+        runBlocking {
+            items.forEach { todoId ->
+                todoRepository.getById(todoId).run {
+                    if (this != null) {
+                        val finishTodo = this.finishCopy() ?: return@forEach
+                        todoManager.save(finishTodo)
+                        Log.d("myapp", "Receiver: finishTodo = $finishTodo")
+                    }
+                }
+            }
+        }
+
         val notificationManagerCompat = NotificationManagerCompat.from(context)
         notificationManagerCompat.cancel(notificationId)
-
-
-//        val notificationService = NotificationService(context)
-//        val itemId = intent.getStringExtra("ITEM_ID") ?: return
-//
-//        runBlocking {
-//            val item = repository.getById(itemId) ?: return@runBlocking
-//            Log.d("myapp", "Receiver: notification send")
-//            notificationService.sendNotification(item)
-//
-//            Log.d("myapp", "Receiver: coroutine done")
-//        }
     }
 
     companion object {
