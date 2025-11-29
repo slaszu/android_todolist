@@ -45,7 +45,6 @@ import pl.slaszu.todoapp.domain.navigation.TodoAppRouteList
 import pl.slaszu.todoapp.domain.navigation.TodoAppSetting
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionLauncher
 import pl.slaszu.todoapp.domain.notification.NotificationPermissionService
-import pl.slaszu.todoapp.domain.notification.NotificationService
 import pl.slaszu.todoapp.domain.reminder.ReminderPermissionLauncher
 import pl.slaszu.todoapp.domain.reminder.ReminderPermissionService
 import pl.slaszu.todoapp.domain.reminder.exact.ReminderExactManager
@@ -214,14 +213,8 @@ class MainActivity : ComponentActivity() {
                         TodoFloatingActionButton(
                             navController = navController,
                             onClick = {
-                                val notificationService = NotificationService(this)
-                                notificationService.sendNotification(
-                                    item = todoList.filter {
-                                        !it.done
-                                    }.get(0)
-                                )
-                                //formViewModel.loadTodoItemToEditForm(null)
-                                //navController.navigate(TodoAppRouteEditOrNewForm)
+                                formViewModel.loadTodoItemToEditForm(null)
+                                navController.navigate(TodoAppRouteEditOrNewForm)
                             }
                         )
                     }

@@ -77,5 +77,6 @@
     <string name="quantity">quantity</string>
     <string name="type">type</string>
     <string name="other">other</string>
+    <string name="notification_finish">Done</string>
 
 </resources>

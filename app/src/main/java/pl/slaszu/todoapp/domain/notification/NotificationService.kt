@@ -68,7 +68,7 @@ class NotificationService(
             .setGroup("todo_app_notification_group")
             .addAction(
                 R.drawable.baseline_access_time_filled_24,
-                "Done",
+                context.getString(R.string.notification_finish),
                 finishIntend
             )
             .build()

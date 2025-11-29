@@ -81,5 +81,6 @@
     <string name="quantity">ilość</string>
     <string name="type">typ</string>
     <string name="other">inne</string>
+    <string name="notification_finish">Zrobione</string>
 
 </resources>
