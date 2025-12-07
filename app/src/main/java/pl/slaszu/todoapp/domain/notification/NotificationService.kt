@@ -31,6 +31,7 @@ class NotificationService(
         val notificationManagerCompat = NotificationManagerCompat.from(context)
         if (notificationManagerCompat.areNotificationsEnabled()) {
             val notificationId = items.getUniqueInt()
+            Log.d("myapp", "sendNotification: notificationId = $notificationId")
             notificationManagerCompat.notify(
                 notificationId, this.buildNotification(
                     items = items,
@@ -77,7 +78,7 @@ class NotificationService(
     private fun getFinishAction(items: Array<TodoModel>, notificationId: Int): PendingIntent {
         return PendingIntent.getBroadcast(
             context,
-            0,
+            notificationId,
             Intent(context, NotificationFinishActionReceiver::class.java).apply {
                 this.putExtra(
                     NotificationFinishActionReceiver.ITEMS_EXTRAS,
@@ -87,8 +88,9 @@ class NotificationService(
                     NotificationFinishActionReceiver.NOTIFICATION_ID_EXTRAS,
                     notificationId
                 )
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             },
-            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_MUTABLE
         )
     }
 
