@@ -1,14 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("com.google.dagger.hilt.android")
-    kotlin("plugin.serialization") version "2.1.20"
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
-    id("androidx.room")
-    id("io.sentry.android.gradle") version "5.2.0"
-    id("com.google.gms.google-services")
-    id("com.google.devtools.ksp")
-    id("kotlin-parcelize")
+    alias(libs.plugins.room.plugin)
+    alias(libs.plugins.sentry)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.ksp)
+    id(libs.plugins.kotlin.parcelize.get().pluginId)
 }
 
 android {
@@ -30,8 +30,8 @@ android {
         minSdk = 26
         targetSdk = 36
 
-        versionCode = 134
-        versionName = "1.3.4"
+        versionCode = 140
+        versionName = "1.4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -60,9 +60,6 @@ android {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -81,27 +78,21 @@ android {
 }
 
 dependencies {
-
-//    implementation("androidx.activity:activity-ktx:1.10.0")
-//    implementation("androidx.fragment:fragment-ktx:1.8.5")
-
-
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.ui.test.junit4.android)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.compose.material3)
-    annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    implementation("androidx.navigation:navigation-compose:2.8.3")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.5")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
-    implementation("androidx.datastore:datastore:1.1.1")
-    implementation("com.google.dagger:hilt-android:2.51.1")
-    ksp("com.google.dagger:hilt-android-compiler:2.51.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.datastore)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -111,43 +102,26 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.compose.material.icons.extended.android) // Or a newer version
+    implementation(libs.androidx.compose.material.icons.extended.android)
 
-//    androidTestImplementation(libs.androidx.junit)
-//    androidTestImplementation(platform(libs.androidx.compose.bom))
-//    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.test.manifest)
 
-    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("androidx.credentials:credentials:1.3.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 
-    implementation("com.google.firebase:firebase-firestore")
-
-
-    // Required -- JUnit 4 framework
     testImplementation(libs.junit)
-    // Optional -- Robolectric environment
-    //testImplementation("androidx.test:core:$androidXTestVersion")
-    testImplementation("org.robolectric:robolectric:4.16")
-    // Optional -- Mockito framework
-    //testImplementation("org.mockito:mockito-core:")
-    // Optional -- mockito-kotlin
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
-
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
-    // Optional -- Mockk framework
-    //testImplementation("io.mockk:mockk:")
+    testImplementation(libs.robolectric)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 
 sentry {
     org.set("piotr-flasza")
     projectName.set("android_todo")
-
-    // this will upload your source code to Sentry to show it as part of the stack traces
-    // disable if you don't want to expose your sources
     includeSourceContext.set(true)
 }
