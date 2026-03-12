@@ -83,4 +83,33 @@
     <string name="other">inne</string>
     <string name="notification_finish">Zrobione</string>
 
+    <string name="todo_form_quick_date">Szybki termin</string>
+    <string name="todo_form_one_hour">Za godzinę</string>
+    <string name="todo_form_few_hours">Za 3 godziny</string>
+    <string name="todo_form_tomorrow">Jutro</string>
+    <string name="todo_form_next_week">Za tydzień</string>
+    <string name="todo_form_next_month">Za miesiąc</string>
+    <string name="todo_form_clear">Wyczyść</string>
+    <string name="todo_form_reminder_details">Szczegóły przypomnienia</string>
+    <string name="todo_form_date">Data</string>
+    <string name="todo_form_not_set">Nie ustawiono</string>
+    <string name="todo_form_time">Godzina</string>
+    <string name="todo_form_select_time">Wybierz godzinę</string>
+    <string name="todo_form_repeat">Powtarzanie</string>
+    <string name="todo_form_none">Brak</string>
+
+    <string name="setting_app_preferences">Preferencje aplikacji</string>
+    <string name="setting_data_not_safe">Twoje dane nie synchronizowane</string>
+    <string name="setting_login_sync_info">Zaloguj się, aby synchronizować zadania w chmurze.</string>
+    <string name="setting_login_firebase">Zaloguj przez Google</string>
+    <string name="setting_user_logged_in">Użytkownik zalogowany</string>
+    <string name="setting_sync_active">Synchronizacja aktywna</string>
+    <string name="setting_logout_btn">Wyloguj się</string>
+
+    <string name="top_bar_my_tasks">Moje zadania</string>
+    <string name="top_bar_edit_task">Edycja zadania</string>
+    <string name="top_bar_settings">Ustawienia</string>
+    <string name="top_bar_back">Cofnij</string>
+    <string name="top_bar_search">Szukaj</string>
+    <string name="top_bar_more_options">Więcej opcji</string>
 </resources>

@@ -42,11 +42,15 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import pl.slaszu.todoapp.R
 import pl.slaszu.todoapp.domain.auth.User
+import pl.slaszu.todoapp.domain.navigation.TodoAppRouteEditOrNewForm
+import pl.slaszu.todoapp.domain.navigation.TodoAppRouteList
+import pl.slaszu.todoapp.domain.navigation.TodoAppSetting
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StandardTopBar(
     isListRoute: Boolean,
+    route: String? = null,
     onOptionClick: () -> Unit,
     onSearchClick: () -> Unit,
     onBackClick: () -> Unit,
@@ -79,7 +83,12 @@ fun StandardTopBar(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = if (isListRoute) "Moje zadania" else "Edycja zadania",
+                    text = when (route) {
+                        TodoAppRouteList::class.qualifiedName -> stringResource(R.string.top_bar_my_tasks)
+                        TodoAppRouteEditOrNewForm::class.qualifiedName -> stringResource(R.string.top_bar_edit_task)
+                        TodoAppSetting::class.qualifiedName -> stringResource(R.string.top_bar_settings)
+                        else -> ""
+                    },
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
@@ -90,7 +99,7 @@ fun StandardTopBar(
                 IconButton(onClick = onBackClick) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                        contentDescription = "Cofnij",
+                        contentDescription = stringResource(R.string.top_bar_back),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -101,7 +110,7 @@ fun StandardTopBar(
                 IconButton(onClick = onSearchClick) {
                     Icon(
                         imageVector = Icons.Rounded.Search,
-                        contentDescription = "Szukaj",
+                        contentDescription = stringResource(R.string.top_bar_search),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -130,7 +139,7 @@ fun StandardTopBar(
                     IconButton(onClick = onOptionClick) {
                         Icon(
                             imageVector = Icons.Rounded.MoreVert,
-                            contentDescription = "Więcej opcji",
+                            contentDescription = stringResource(R.string.top_bar_more_options),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }

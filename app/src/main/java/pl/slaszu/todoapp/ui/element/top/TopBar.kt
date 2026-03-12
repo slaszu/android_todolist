@@ -40,6 +40,7 @@ fun TopBar(
     } else {
         StandardTopBar(
             isListRoute = isListRoute,
+            route = navBackStackEntry?.destination?.route,
             onBackClick = { navController.navigate(TodoAppRouteList) },
             onOptionClick = onOptionClick,
             onSearchClick = { searchToggle = true },

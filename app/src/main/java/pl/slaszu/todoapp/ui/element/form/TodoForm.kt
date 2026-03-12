@@ -147,7 +147,7 @@ fun TodoForm(
         )
 
         Text(
-            text = "Szybki termin",
+            text = stringResource(R.string.todo_form_quick_date),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -159,22 +159,27 @@ fun TodoForm(
             maxItemsInEachRow = Int.MAX_VALUE // Pozwól na dowolną liczbę elementów w wierszu
         ) {
             // 1. Za godzinę
-            QuickDateChip("Za godzinę", isSelected = false) {
+            QuickDateChip(stringResource(R.string.todo_form_one_hour), isSelected = false) {
                 todoLocalDateTime = LocalDateTime.now().plusHours(1)
             }
 
+            // 1.1 Za 3 godziny
+            QuickDateChip(stringResource(R.string.todo_form_few_hours), isSelected = false) {
+                todoLocalDateTime = LocalDateTime.now().plusHours(3)
+            }
+
             // 2. Jutro
-            QuickDateChip("Jutro", isSelected = false) {
+            QuickDateChip(stringResource(R.string.todo_form_tomorrow), isSelected = false) {
                 todoLocalDateTime = LocalDateTime.now().plusDays(1).clearTime()
             }
 
             // 3. Za tydzień
-            QuickDateChip("Za tydzień", isSelected = false) {
+            QuickDateChip(stringResource(R.string.todo_form_next_week), isSelected = false) {
                 todoLocalDateTime = LocalDateTime.now().plusWeeks(1).clearTime()
             }
 
             // 4. Za miesiąc
-            QuickDateChip("Za miesiąc", isSelected = false) {
+            QuickDateChip(stringResource(R.string.todo_form_next_month), isSelected = false) {
                 todoLocalDateTime = LocalDateTime.now().plusMonths(1).clearTime()
             }
 
@@ -185,7 +190,7 @@ fun TodoForm(
                         todoLocalDateTime = null
                         repeatType = null
                     },
-                    label = { Text("Wyczyść") },
+                    label = { Text(stringResource(R.string.todo_form_clear)) },
                     leadingIcon = { Icon(Icons.Default.Clear, null, Modifier.size(16.dp)) },
                     shape = RoundedCornerShape(12.dp),
                     colors = AssistChipDefaults.assistChipColors(
@@ -196,7 +201,7 @@ fun TodoForm(
         }
 
         Text(
-            text = "Szczegóły przypomnienia",
+            text = stringResource(R.string.todo_form_reminder_details),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold
@@ -211,8 +216,8 @@ fun TodoForm(
         ) {
             FormRow(
                 icon = Icons.Rounded.Event,
-                label = "Data",
-                value = todoLocalDateTime?.printDate() ?: "Nie ustawiono",
+                label = stringResource(R.string.todo_form_date),
+                value = todoLocalDateTime?.printDate() ?: stringResource(R.string.todo_form_not_set),
                 onClick = { chooseDateDialog = true },
                 onClear = if (todoLocalDateTime != null) {
                     { todoLocalDateTime = null }
@@ -224,8 +229,8 @@ fun TodoForm(
             AnimatedVisibility(visible = todoLocalDateTime != null) {
                 FormRow(
                     icon = Icons.Rounded.Schedule,
-                    label = "Godzina",
-                    value = todoLocalDateTime?.printTime() ?: "Wybierz godzinę",
+                    label = stringResource(R.string.todo_form_time),
+                    value = todoLocalDateTime?.printTime() ?: stringResource(R.string.todo_form_select_time),
                     onClick = { chooseTimeDialog = true },
                     onClear = if (todoLocalDateTime?.isTimeSet() == true) {
                         { todoLocalDateTime = todoLocalDateTime?.clearTime() }
@@ -238,8 +243,8 @@ fun TodoForm(
             AnimatedVisibility(visible = todoLocalDateTime != null) {
                 FormRow(
                     icon = Icons.Rounded.Update,
-                    label = "Powtarzanie",
-                    value = repeatType?.getTranslation(LocalResources.current) ?: "Brak",
+                    label = stringResource(R.string.todo_form_repeat),
+                    value = repeatType?.getTranslation(LocalResources.current) ?: stringResource(R.string.todo_form_none),
                     onClick = { showRepeatOptions = true },
                     onClear = if (repeatType != null) {
                         { repeatType = null }

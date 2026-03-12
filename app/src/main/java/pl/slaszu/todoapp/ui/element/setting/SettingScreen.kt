@@ -103,7 +103,7 @@ fun SettingScreen(
         )
 
         Text(
-            text = "Preferencje aplikacji",
+            text = stringResource(R.string.setting_app_preferences),
             modifier = Modifier.fillMaxWidth(),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary,
@@ -193,12 +193,12 @@ fun UserAccountCard(
 
             if (user == null) {
                 Text(
-                    "Twoje dane nie są bezpieczne",
+                    stringResource(R.string.setting_data_not_safe),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    "Zaloguj się, aby synchronizować zadania w chmurze.",
+                    stringResource(R.string.setting_login_sync_info),
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -211,17 +211,17 @@ fun UserAccountCard(
                 ) {
                     Icon(Icons.Rounded.Login, null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Zaloguj przez Firebase")
+                    Text(stringResource(R.string.setting_login_firebase))
                 }
             } else {
                 Text(
-                    user.email ?: "Użytkownik zalogowany",
+                    user.email ?: stringResource(R.string.setting_user_logged_in),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
                 Text(
-                    "Synchronizacja aktywna",
+                    stringResource(R.string.setting_sync_active),
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White.copy(alpha = 0.8f)
                 )
@@ -232,7 +232,7 @@ fun UserAccountCard(
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Wyloguj się")
+                    Text(stringResource(R.string.setting_logout_btn))
                 }
             }
         }
