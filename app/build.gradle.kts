@@ -50,12 +50,10 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+
     buildFeatures {
         compose = true
         buildConfig = true
@@ -75,6 +73,10 @@ android {
     room {
         schemaDirectory("$projectDir/schemas")
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
