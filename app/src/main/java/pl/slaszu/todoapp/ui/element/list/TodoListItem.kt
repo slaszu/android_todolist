@@ -4,18 +4,23 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.RadioButtonUnchecked
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,22 +29,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.R
-import pl.slaszu.todoapp.domain.repeat.RepeatType
 import pl.slaszu.todoapp.domain.setting.Setting
-import pl.slaszu.todoapp.domain.todo.FakeTodoModel
 import pl.slaszu.todoapp.domain.todo.TodoModel
 import pl.slaszu.todoapp.domain.utils.printStartDate
-import pl.slaszu.todoapp.ui.theme.TodoAppTheme
-import java.time.LocalDateTime
 
 @Composable
 fun TodoListItem(
@@ -50,58 +51,61 @@ fun TodoListItem(
     onDeleteItem: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     var alertDialog by remember { mutableStateOf(false) }
-    var itemChecked by remember { mutableStateOf(item.done) }
 
-    Row(
-        modifier = Modifier
+    // Używamy surfaceContainer dla karty, aby lekko odcinała się od background
+    Surface(
+        modifier = modifier
             .fillMaxWidth()
-            .clickable {
-                onEditItem()
-            },
-        verticalAlignment = Alignment.CenterVertically,
+            .clip(RoundedCornerShape(16.dp))
+            .clickable { onEditItem() },
+        color = if (item.done) MaterialTheme.colorScheme.surfaceContainerLow else MaterialTheme.colorScheme.surfaceContainer,
+        shape = RoundedCornerShape(16.dp)
     ) {
+        Row(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Nowoczesny Toggle Checkbox
+            CustomCheckbox(
+                checked = item.done,
+                onCheckedChange = { onCheckItem(it) }
+            )
 
-        ToggleIconButton(
-            checked = itemChecked,
-            onChange = { checked ->
-                itemChecked = checked
-                onCheckItem(checked)
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 12.dp)
+            ) {
+                Text(
+                    text = item.text,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = if (item.done) FontWeight.Normal else FontWeight.Medium,
+                        textDecoration = if (item.done) TextDecoration.LineThrough else null,
+                        color = if (item.done) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        else MaterialTheme.colorScheme.onSurface
+                    ),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                TodoItemInfo(item = item, setting = setting)
             }
-        )
 
-//        Checkbox(
-//            checked = item.done,
-//            onCheckedChange = { checked ->
-//                onCheckItem(checked)
-//            },
-//            modifier = modifier.weight(0.1f)
-//        )
-
-        Column(
-            modifier = modifier
-                .weight(0.9f)
-                .padding(start = 16.dp, top = 5.dp, bottom = 5.dp, end = 5.dp)
-        ) {
-            Text(
-                text = item.text,
-                textDecoration = TextDecoration.LineThrough.takeIf { item.done },
-                fontSize = TextUnit(4f, TextUnitType.Em)
-            )
-            TodoItemInfo(
-                item = item,
-                setting = setting
-            )
-        }
-
-        IconButton(
-            onClick = { alertDialog = true }
-        ) {
-            Icon(
-                Icons.Filled.Delete,
-                contentDescription = "Delete item"
-            )
+            IconButton(
+                onClick = { alertDialog = true },
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
+                )
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Delete",
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
     }
 
@@ -112,28 +116,22 @@ fun TodoListItem(
                 onDeleteItem()
                 alertDialog = false
             },
-            onDismiss = {
-                alertDialog = false
-            }
+            onDismiss = { alertDialog = false }
         )
     }
-
-    HorizontalDivider()
 }
 
 @Composable
-private fun ToggleIconButton(
+private fun CustomCheckbox(
     checked: Boolean,
-    onChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit
 ) {
-    IconButton(
-        onClick = {
-            onChange(!checked)
-        }
-    ) {
+    IconButton(onClick = { onCheckedChange(!checked) }) {
         Icon(
-            imageVector = if (!checked) Icons.Filled.Check else Icons.Filled.CheckBox,
-            contentDescription = if (checked) "Selected icon button" else "Unselected icon button."
+            imageVector = if (checked) Icons.Rounded.CheckCircle else Icons.Rounded.RadioButtonUnchecked,
+            contentDescription = null,
+            modifier = Modifier.size(28.dp),
+            tint = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
         )
     }
 }
@@ -143,72 +141,48 @@ private fun TodoItemInfo(
     item: TodoModel,
     setting: Setting
 ) {
-    if (item.startDate != null) {
+    if (item.startDate != null || item.repeatType != null) {
+        Spacer(modifier = Modifier.height(4.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(0.8f)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.baseline_access_time_filled_24),
-                    contentDescription = "Choose date",
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    text = item.printStartDate(
-                        stringResource(R.string.todo_item_no_date),
-                        "${setting.reminderRepeatHour}:${
-                            setting.reminderRepeatMinute.toString().padStart(2, '0')
-                        }"
-                    ),
-                    fontSize = TextUnit(3f, TextUnitType.Em)
-                )
-            }
-
-            if (item.repeatType != null) {
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = item.repeatType!!.getTranslation(resource = LocalResources.current),
-                        fontSize = TextUnit(3f, TextUnitType.Em)
-                    )
+            if (item.startDate != null) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        Icons.Filled.Refresh,
-                        contentDescription = "Repeat type",
-                        modifier = Modifier.size(16.dp)
+                        painter = painterResource(R.drawable.baseline_access_time_filled_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp),
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = item.printStartDate(
+                            stringResource(R.string.todo_item_no_date),
+                            "${setting.reminderRepeatHour}:${setting.reminderRepeatMinute.toString().padStart(2, '0')}"
+                        ),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.secondary
                     )
                 }
             }
-        }
-    }
-}
 
-@Preview
-@Composable
-fun TodoListItemPreview() {
-    TodoAppTheme {
-        Scaffold() { it ->
-            TodoListItem(
-                item = FakeTodoModel(
-                    text = "Jakieś tam przypomnienie, które jest testowe",
-                    startDate = LocalDateTime.now(),
-                    repeatType = RepeatType.RepeatTypeWeek()
-                ),
-                setting = Setting(
-
-                ),
-                onCheckItem = {},
-                onEditItem = {},
-                onDeleteItem = {},
-                modifier = Modifier.padding(it)
-            )
+            if (item.repeatType != null) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Filled.Refresh,
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp),
+                        tint = MaterialTheme.colorScheme.tertiary
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = item.repeatType!!.getTranslation(resource = LocalResources.current),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                }
+            }
         }
     }
 }
