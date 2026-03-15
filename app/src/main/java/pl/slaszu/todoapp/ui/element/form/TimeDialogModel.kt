@@ -12,7 +12,10 @@ import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import pl.slaszu.todoapp.R
@@ -50,7 +53,10 @@ fun TimeDialogModel(
                     timeSelectorSelectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                     timeSelectorUnselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                ),
+                modifier = Modifier.semantics {
+                    contentDescription = "time_picker"
+                }
             )
         }
     }

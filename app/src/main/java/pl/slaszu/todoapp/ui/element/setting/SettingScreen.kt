@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -125,10 +126,18 @@ fun SettingScreen(
                     icon = Icons.Rounded.NotificationsActive,
                     title = stringResource(R.string.setting_daily),
                     subtitle = stringResource(R.string.setting_daily_info),
-                    trailingText = "${setting.reminderRepeatHour}:${
-                        setting.reminderRepeatMinute.toString().padStart(2, '0')
-                    }",
-                    onClick = { chooseTimeDialog = true }
+                    onClick = { chooseTimeDialog = true },
+                    modifier = Modifier.testTag("repeat_time"),
+                    trailingContent = {
+                        Text(
+                            "${setting.reminderRepeatHour}:${
+                                setting.reminderRepeatMinute.toString().padStart(2, '0')
+                            }",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    },
                 )
 
                 HorizontalDivider(Modifier.padding(horizontal = 16.dp), thickness = 0.5.dp)
@@ -244,12 +253,12 @@ fun SettingRow(
     icon: ImageVector,
     title: String,
     subtitle: String,
-    trailingText: String? = null,
-    trailingContent: (@Composable () -> Unit)? = null,
-    onClick: (() -> Unit)? = null
+    trailingContent: (@Composable () -> Unit),
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
             .padding(16.dp),
@@ -268,9 +277,11 @@ fun SettingRow(
             )
         }
 
-        Column(modifier = Modifier
-            .padding(start = 16.dp)
-            .weight(1f)) {
+        Column(
+            modifier = Modifier
+                .padding(start = 16.dp)
+                .weight(1f)
+        ) {
             Text(
                 title,
                 style = MaterialTheme.typography.bodyLarge,
@@ -283,15 +294,6 @@ fun SettingRow(
             )
         }
 
-        if (trailingText != null) {
-            Text(
-                trailingText,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
-
-        trailingContent?.invoke()
+        trailingContent.invoke()
     }
 }
