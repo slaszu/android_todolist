@@ -85,7 +85,7 @@ private fun TimePickerDialog(
         confirmButton = {
             TextButton(onClick = onConfirm) {
                 Text(
-                    text = "OK",
+                    text = stringResource(R.string.ok),
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -93,7 +93,7 @@ private fun TimePickerDialog(
         },
         title = {
             Text(
-                text = "Wybierz godzinę",
+                text = stringResource(R.string.time_picker_description),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

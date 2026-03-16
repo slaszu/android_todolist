@@ -112,4 +112,5 @@
 
     <string name="todo_repeat_dialog_title">Task repetition</string>
     <string name="ok">OK</string>
+    <string name="time_picker_description">Select time</string>
 </resources>
