@@ -41,6 +41,7 @@
     <string name="timeline_today">dzisiaj</string>
     <string name="repeat_period_year">co rok</string>
     <string name="todo_item_no_repeat">Możesz ustawić powtórzenia</string>
+    <string name="todo_form_no_repeat">Bez powtórzeń</string>
     <string name="todo_form_field_require">Pole wymagane</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
@@ -112,4 +113,7 @@
     <string name="top_bar_back">Cofnij</string>
     <string name="top_bar_search">Szukaj</string>
     <string name="top_bar_more_options">Więcej opcji</string>
+
+    <string name="todo_repeat_dialog_title">Powtarzanie zadania</string>
+    <string name="ok">OK</string>
 </resources>

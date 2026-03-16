@@ -41,6 +41,7 @@
     <string name="timeline_today">today</string>
     <string name="repeat_period_year">every year</string>
     <string name="todo_item_no_repeat">You can set it to repeat</string>
+    <string name="todo_form_no_repeat">No repeat</string>
     <string name="todo_form_field_require">Required field</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -108,4 +109,7 @@
     <string name="top_bar_back">Back</string>
     <string name="top_bar_search">Search</string>
     <string name="top_bar_more_options">More options</string>
+
+    <string name="todo_repeat_dialog_title">Task repetition</string>
+    <string name="ok">OK</string>
 </resources>

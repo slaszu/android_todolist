@@ -61,7 +61,11 @@ fun RepeatDialogModel(
                 onClick(type)
                 onDismiss()
             }) {
-                Text("OK", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                Text(
+                    text = stringResource(R.string.ok),
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         },
         dismissButton = {
@@ -71,7 +75,7 @@ fun RepeatDialogModel(
         },
         title = {
             Text(
-                text = "Powtarzanie zadania",
+                text = stringResource(R.string.todo_repeat_dialog_title),
                 style = MaterialTheme.typography.headlineSmall
             )
         },
